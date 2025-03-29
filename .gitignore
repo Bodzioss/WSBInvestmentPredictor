@@ -67,8 +67,6 @@ __pycache__/
 
 # CSV i dane lokalne
 *.csv
-dane_sp500/
-data/
 *.tsv
 *.xlsx
 
