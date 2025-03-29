@@ -1,0 +1,82 @@
+## --- Visual Studio ---
+.vs/
+.vscode/
+*.code-workspace
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+out/
+[Ll]og/
+artifacts/
+*.exe
+*.dll
+*.app
+*.pdb
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+.nuget/
+packages/
+project.lock.json
+project.assets.json
+*.psmdcp
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# ASP.NET
+wwwroot/
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+*.log
+
+# DotCover
+*.dcvr
+
+# Coverage
+TestResults/
+coverage/
+coverage.cobertura.xml
+
+# Python (jeśli np. używasz skryptów do danych)
+__pycache__/
+*.py[cod]
+*.py~
+
+# Jupyter Notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# CSV i dane lokalne
+*.csv
+dane_sp500/
+data/
+*.tsv
+*.xlsx
+
+# JSON test files
+*.json
+*.parquet
+
+# Auto-generated model files (ML.NET)
+MLModel.zip
+*.onnx
+*.model
