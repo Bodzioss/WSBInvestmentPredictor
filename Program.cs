@@ -1,8 +1,11 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using Microsoft.ML;
 
 namespace WSBInvestmentPredictor
 {
+    enum RunMode { CurrentPrediction, HistoricalBacktest }
+
     class Program
     {
         static void Main(string[] args)
@@ -10,104 +13,164 @@ namespace WSBInvestmentPredictor
             var stopwatch = Stopwatch.StartNew();
             var mlContext = new MLContext();
 
-            // Ścieżka do przykładowego pliku CSV (np. AAPL.csv)
-            var path = Path.Combine(AppContext.BaseDirectory, @"..\..\..\Data\TargetData\AAPL.csv");
-            path = Path.GetFullPath(path);
+            // === KONFIGURACJA ===
+            int maxTickersToAnalyze = 1;           // Ile spółek analizować (0 = wszystkie)
+            RunMode mode = RunMode.HistoricalBacktest; // Tryb działania programu
+            int minTrainSize = 500;                 // Minimalna liczba dni do trenowania modelu
+            int maxBacktestPoints = 5000;            // Maksymalna liczba dat, dla których wykonujemy predykcję
 
-            if (!File.Exists(path))
+            var dataDir = Path.Combine(AppContext.BaseDirectory, @"..\..\..\Data\TargetData");
+            dataDir = Path.GetFullPath(dataDir);
+
+            if (!Directory.Exists(dataDir))
             {
-                Console.WriteLine($"Błąd: Plik nie istnieje: {path}");
+                Console.WriteLine($"Brak katalogu danych: {dataDir}");
                 return;
             }
 
-            // Wczytanie danych
-            IDataView data = mlContext.Data.LoadFromTextFile<MarketData>(
-                path: path,
-                hasHeader: true,
-                separatorChar: ',');
+            var files = Directory.GetFiles(dataDir, "*.csv");
+            if (maxTickersToAnalyze > 0)
+                files = files.Take(maxTickersToAnalyze).ToArray();
 
-            var dataEnumerable = mlContext.Data.CreateEnumerable<MarketData>(data, reuseRowObject: false).ToList();
+            Console.WriteLine(new string('=', 70));
+            Console.WriteLine(mode == RunMode.CurrentPrediction ? "Tryb: BIEŻĄCA PREDYKCJA" : "Tryb: BACKTEST HISTORYCZNY");
+            Console.WriteLine(new string('=', 70));
+            Console.WriteLine($"Znaleziono {files.Length} plików do przetworzenia.\n");
 
-            // Statystyki danych wejściowych
-            Console.WriteLine("\n" + new string('=', 60));
-            Console.WriteLine("STATYSTYKI DANYCH RYNKOWYCH");
-            Console.WriteLine(new string('=', 60));
-            Console.WriteLine($"Liczba wierszy: {dataEnumerable.Count}");
-            Console.WriteLine($"Target (zwrot 30-dniowy):");
-            Console.WriteLine($"  Min:     {dataEnumerable.Min(x => x.Target):P2}");
-            Console.WriteLine($"  Max:     {dataEnumerable.Max(x => x.Target):P2}");
-            Console.WriteLine($"  Średnia: {dataEnumerable.Average(x => x.Target):P2}");
+            var results = new List<ModelResult>();
 
-            // Podział na dane treningowe i testowe
-            var split = mlContext.Data.TrainTestSplit(data, testFraction: 0.2);
+            var resultDir = Path.Combine(AppContext.BaseDirectory, @"..\..\..\Data\Result");
+            Directory.CreateDirectory(resultDir);
+            var predictionPath = Path.Combine(resultDir, "predictions.csv");
+            File.WriteAllText(predictionPath, "Date,Ticker,Prediction,Target\n");
 
-            // Pipeline modelu
-            var pipeline = mlContext.Transforms.CopyColumns("Label", "Target")
-                .Append(mlContext.Transforms.Concatenate("Features",
-                    nameof(MarketData.Open),
-                    nameof(MarketData.High),
-                    nameof(MarketData.Low),
-                    nameof(MarketData.Close),
-                    nameof(MarketData.Volume),
-                    nameof(MarketData.SMA_5),
-                    nameof(MarketData.SMA_10),
-                    nameof(MarketData.SMA_20),
-                    nameof(MarketData.Volatility_10),
-                    nameof(MarketData.RSI_14)))
-                .Append(mlContext.Regression.Trainers.FastTree());
-
-            // Czas treningu
-            var trainStopwatch = Stopwatch.StartNew();
-            var model = pipeline.Fit(split.TrainSet);
-            trainStopwatch.Stop();
-
-            // Ewaluacja modelu
-            var predictions = model.Transform(split.TestSet);
-            var metrics = mlContext.Regression.Evaluate(predictions);
-
-            Console.WriteLine("\n" + new string('=', 60));
-            Console.WriteLine("METRYKI MODELU REGRESYJNEGO");
-            Console.WriteLine(new string('=', 60));
-            Console.WriteLine($"R² (dopasowanie):           {metrics.RSquared:0.####}");
-            Console.WriteLine($"MAE (średni błąd):          {metrics.MeanAbsoluteError:0.####}");
-            Console.WriteLine($"RMSE (błąd średniokwadrat.): {metrics.RootMeanSquaredError:0.####}");
-            Console.WriteLine($"Czas treningu:              {trainStopwatch.ElapsedMilliseconds} ms");
-
-            // Predykcja przykładowa
-            var engine = mlContext.Model.CreatePredictionEngine<MarketData, PredictionResult>(model);
-
-            var sample = new MarketData
+            foreach (var path in files)
             {
-                Open = 170.5f,
-                High = 173.0f,
-                Low = 169.0f,
-                Close = 171.2f,
-                Volume = 65000000f,
-                SMA_5 = 172.0f,
-                SMA_10 = 170.8f,
-                SMA_20 = 168.7f,
-                Volatility_10 = 2.3f,
-                RSI_14 = 56.0f
-            };
+                var fileName = Path.GetFileNameWithoutExtension(path);
+                Console.WriteLine(new string('=', 70));
+                Console.WriteLine($"SPÓŁKA: {fileName}");
+                Console.WriteLine(new string('-', 70));
 
-            var prediction = engine.Predict(sample);
+                try
+                {
+                    var data = mlContext.Data.LoadFromTextFile<MarketData>(
+                        path: path,
+                        hasHeader: true,
+                        separatorChar: ',');
 
-            Console.WriteLine("\n" + new string('=', 60));
-            Console.WriteLine("PREDYKCJA DLA PRZYKŁADOWYCH DANYCH");
-            Console.WriteLine(new string('=', 60));
-            Console.WriteLine($"Prognozowany zwrot za 30 dni: {prediction.Score:P2}");
+                    var dataEnum = mlContext.Data.CreateEnumerable<MarketData>(data, false).ToList();
+                    if (dataEnum.Count < minTrainSize + 30)
+                    {
+                        Console.WriteLine("Za mało danych – pomijam.");
+                        continue;
+                    }
 
-            if (prediction.Score > 0.05)
-                Console.WriteLine("Sygnał: potencjalny wzrost (> +5%) – możliwa okazja inwestycyjna");
-            else if (prediction.Score < -0.05)
-                Console.WriteLine("Sygnał: możliwy spadek (< -5%) – zachowaj ostrożność");
-            else
-                Console.WriteLine("Sygnał: neutralny – brak wyraźnego trendu");
+                    Console.WriteLine($"Wiersze: {dataEnum.Count}");
+                    Console.WriteLine($"Target (zwrot 30d): min={(float)dataEnum.Min(x => x.Target):P2}, max={(float)dataEnum.Max(x => x.Target):P2}, avg={(float)dataEnum.Average(x => x.Target):P2}");
+
+                    if (mode == RunMode.CurrentPrediction)
+                    {
+                        var split = mlContext.Data.TrainTestSplit(data, 0.2);
+                        var pipeline = mlContext.Transforms.CopyColumns("Label", "Target")
+                            .Append(mlContext.Transforms.Concatenate("Features",
+                                nameof(MarketData.Open),
+                                nameof(MarketData.High),
+                                nameof(MarketData.Low),
+                                nameof(MarketData.Close),
+                                nameof(MarketData.Volume),
+                                nameof(MarketData.SMA_5),
+                                nameof(MarketData.SMA_10),
+                                nameof(MarketData.SMA_20),
+                                nameof(MarketData.Volatility_10),
+                                nameof(MarketData.RSI_14)))
+                            .Append(mlContext.Regression.Trainers.FastTree());
+
+                        var trainTimer = Stopwatch.StartNew();
+                        var model = pipeline.Fit(split.TrainSet);
+                        trainTimer.Stop();
+
+                        var predictions = model.Transform(split.TestSet);
+                        var metrics = mlContext.Regression.Evaluate(predictions);
+
+                        Console.WriteLine($"\nR²:   {(float)metrics.RSquared:0.####}");
+                        Console.WriteLine($"MAE:  {(float)metrics.MeanAbsoluteError:0.####}");
+                        Console.WriteLine($"RMSE: {(float)metrics.RootMeanSquaredError:0.####}");
+                        Console.WriteLine($"Czas treningu: {trainTimer.ElapsedMilliseconds} ms");
+
+                        var engine = mlContext.Model.CreatePredictionEngine<MarketData, PredictionResult>(model);
+                        var sample = dataEnum.Last();
+                        var prediction = engine.Predict(sample);
+
+                        var parsedDate = DateTime.TryParse(sample.Date, out var date)
+                            ? date.ToString("yyyy-MM-dd")
+                            : "INVALID_DATE";
+
+                        File.AppendAllText(predictionPath,
+                            string.Format(CultureInfo.InvariantCulture,
+                            "{0},{1},{2},{3}\n",
+                            parsedDate, fileName, prediction.Score, sample.Target));
+
+                        Console.WriteLine($"\nPrognozowany zwrot za 30 dni: {prediction.Score:P2}");
+
+                        results.Add(new ModelResult
+                        {
+                            Ticker = fileName,
+                            RSquared = (float)metrics.RSquared,
+                            MAE = (float)metrics.MeanAbsoluteError,
+                            RMSE = (float)metrics.RootMeanSquaredError,
+                            Prediction = prediction.Score,
+                            Rows = dataEnum.Count
+                        });
+                    }
+                    else if (mode == RunMode.HistoricalBacktest)
+                    {
+                        int loopEnd = Math.Min(dataEnum.Count - 30, minTrainSize + maxBacktestPoints);
+                        var pipeline = mlContext.Transforms.CopyColumns("Label", "Target")
+                            .Append(mlContext.Transforms.Concatenate("Features",
+                                nameof(MarketData.Open),
+                                nameof(MarketData.High),
+                                nameof(MarketData.Low),
+                                nameof(MarketData.Close),
+                                nameof(MarketData.Volume),
+                                nameof(MarketData.SMA_5),
+                                nameof(MarketData.SMA_10),
+                                nameof(MarketData.SMA_20),
+                                nameof(MarketData.Volatility_10),
+                                nameof(MarketData.RSI_14)))
+                            .Append(mlContext.Regression.Trainers.FastTree());
+
+                        for (int i = minTrainSize; i < loopEnd; i++)
+                        {
+                            var trainSlice = dataEnum.Take(i).ToList();
+                            var sample = dataEnum[i];
+
+                            var tempData = mlContext.Data.LoadFromEnumerable(trainSlice);
+                            var model = pipeline.Fit(tempData);
+                            var engine = mlContext.Model.CreatePredictionEngine<MarketData, PredictionResult>(model);
+                            var prediction = engine.Predict(sample);
+
+                            var parsedDate = DateTime.TryParse(sample.Date, out var date)
+                                ? date.ToString("yyyy-MM-dd")
+                                : "INVALID_DATE";
+
+                            File.AppendAllText(predictionPath,
+                                string.Format(CultureInfo.InvariantCulture,
+                                "{0},{1},{2},{3}\n",
+                                parsedDate, fileName, prediction.Score, sample.Target));
+                        }
+
+                        Console.WriteLine($"Zakończono backtest historyczny dla {fileName} (przetworzono {loopEnd - minTrainSize} dat).\n");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Błąd przetwarzania pliku {fileName}: {ex.Message}");
+                }
+            }
 
             stopwatch.Stop();
-            Console.WriteLine(new string('=', 60));
-            Console.WriteLine($"Całkowity czas wykonania programu: {stopwatch.ElapsedMilliseconds} ms");
-            Console.WriteLine(new string('=', 60));
+            Console.WriteLine(new string('=', 70));
+            Console.WriteLine($"Zakończono. Całkowity czas wykonania: {stopwatch.Elapsed.TotalSeconds:N2} s");
         }
     }
 }
