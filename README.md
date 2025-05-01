@@ -1,6 +1,7 @@
 # 🧠 WSB Investment Predictor
 
-🎓 **Master's thesis project in Finance and Accounting.**  
+🎓 **Master's thesis project in Finance and Accounting.** 🎓
+  
 **A machine learning-based web application for predicting stock returns using .NET 9, ML.NET, Blazor and DDD with Clean Architecture.**
 
 ![.NET](https://img.shields.io/badge/.NET-9.0-blueviolet)
