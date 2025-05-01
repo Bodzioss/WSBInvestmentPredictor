@@ -18,7 +18,7 @@ jobs:
     - name: 🛠️ Setup .NET 9 SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 9.0.203
+        dotnet-version: 9.0
         check-latest: true
 
     - name: 📦 Restore dependencies
