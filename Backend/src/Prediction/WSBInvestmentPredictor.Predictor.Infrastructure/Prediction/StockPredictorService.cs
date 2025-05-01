@@ -1,14 +1,13 @@
 ﻿using Microsoft.ML;
-using System;
 using WSBInvestmentPredictor.Prediction.Domain.Entities;
 using WSBInvestmentPredictor.Prediction.Domain.Interfaces;
 
-namespace WSBInvestmentPredictor.Prediction.Services.Prediction;
+namespace WSBInvestmentPredictor.Predictor.Infrastructure.Prediction;
 
 /// <summary>
 /// Service responsible for training a regression model and making predictions based on market data.
 /// </summary>
-public class StockPredictorService : IPredictor, IModelTrainer
+public class StockPredictorService : IStockPredictorService, IModelTrainer
 {
     private readonly MLContext _mlContext;
     private ITransformer? _model;

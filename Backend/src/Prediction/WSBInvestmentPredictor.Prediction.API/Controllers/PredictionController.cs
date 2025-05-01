@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using WSBInvestmentPredictor.Prediction.Application.FeatureEngeneering;
 using WSBInvestmentPredictor.Prediction.Domain.Entities;
-using WSBInvestmentPredictor.Prediction.Services.FeatureEngeneering;
-using WSBInvestmentPredictor.Prediction.Services.Prediction;
+using WSBInvestmentPredictor.Predictor.Infrastructure.Prediction;
 
 namespace WSBInvestmentPredictor.Prediction.API.Controllers;
 

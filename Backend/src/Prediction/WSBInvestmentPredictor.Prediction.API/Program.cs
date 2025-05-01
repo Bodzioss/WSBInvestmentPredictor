@@ -1,5 +1,9 @@
-using WSBInvestmentPredictor.Prediction.Services.FeatureEngeneering;
-using WSBInvestmentPredictor.Prediction.Services.Prediction;
+using MediatR;
+using WSBInvestmentPredictor.Prediction.Application.Commands;
+using WSBInvestmentPredictor.Prediction.Application.Common.Behaviors;
+using WSBInvestmentPredictor.Prediction.Application.FeatureEngeneering;
+using WSBInvestmentPredictor.Prediction.Application.Validators;
+using WSBInvestmentPredictor.Predictor.Infrastructure.Prediction;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +14,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// Rejestracja CQRS
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(TrainModelCommand).Assembly));
+
+// Rejestracja FluentValidation
+builder.Services.AddValidatorsFromAssembly(typeof(TrainModelCommandValidator).Assembly);
+
+// Rejestracja globalnego pipeline do walidacji
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 builder.Services.AddSingleton<StockPredictorService>();
 builder.Services.AddSingleton<MarketDataBuilder>();

@@ -1,6 +1,6 @@
 ﻿using WSBInvestmentPredictor.Prediction.Domain.Entities;
 
-namespace WSBInvestmentPredictor.Prediction.Services.FeatureEngeneering;
+namespace WSBInvestmentPredictor.Prediction.Application.FeatureEngeneering;
 
 public class MarketDataBuilder
 {
@@ -69,6 +69,6 @@ public class MarketDataBuilder
         }
         if (loss == 0) return 100;
         var rs = gain / loss;
-        return 100 - (100 / (1 + rs));
+        return 100 - 100 / (1 + rs);
     }
 }

@@ -7,12 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WSBInvestmentPredictor.Prediction.Services\WSBInvestmentPredictor.Prediction.Services.csproj" />
+    <ProjectReference Include="..\WSBInvestmentPredictor.Prediction.Domain\WSBInvestmentPredictor.Prediction.Domain.csproj" />
+    <ProjectReference Include="..\WSBInvestmentPredictor.Predictor.Application\WSBInvestmentPredictor.Prediction.Application.csproj" />
+    <ProjectReference Include="..\WSBInvestmentPredictor.Predictor.Infrastructure\WSBInvestmentPredictor.Prediction.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

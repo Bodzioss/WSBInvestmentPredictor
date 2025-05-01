@@ -4,9 +4,11 @@ VisualStudioVersion = 17.13.35818.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Prediction.Domain", "src\Prediction\WSBInvestmentPredictor.Prediction.Domain\WSBInvestmentPredictor.Prediction.Domain.csproj", "{452ECC78-E777-45E3-B4B8-BE7B00E01D23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Prediction.Services", "src\Prediction\WSBInvestmentPredictor.Prediction.Services\WSBInvestmentPredictor.Prediction.Services.csproj", "{44E869E1-A0C2-45EA-A52C-C64CB7BFEAEC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Prediction.API", "src\Prediction\WSBInvestmentPredictor.Prediction.API\WSBInvestmentPredictor.Prediction.API.csproj", "{ED886E9B-0759-4434-B81C-D56BBD13A728}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Prediction.Infrastructure", "src\Prediction\WSBInvestmentPredictor.Predictor.Infrastructure\WSBInvestmentPredictor.Prediction.Infrastructure.csproj", "{B7B0220F-A3FE-48B1-AD25-11A2D78EC070}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Prediction.Application", "src\Prediction\WSBInvestmentPredictor.Predictor.Application\WSBInvestmentPredictor.Prediction.Application.csproj", "{66245B5C-0F93-4C0D-B04A-74065062B4B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,14 +20,18 @@ Global
 		{452ECC78-E777-45E3-B4B8-BE7B00E01D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{452ECC78-E777-45E3-B4B8-BE7B00E01D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{452ECC78-E777-45E3-B4B8-BE7B00E01D23}.Release|Any CPU.Build.0 = Release|Any CPU
-		{44E869E1-A0C2-45EA-A52C-C64CB7BFEAEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{44E869E1-A0C2-45EA-A52C-C64CB7BFEAEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{44E869E1-A0C2-45EA-A52C-C64CB7BFEAEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{44E869E1-A0C2-45EA-A52C-C64CB7BFEAEC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED886E9B-0759-4434-B81C-D56BBD13A728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED886E9B-0759-4434-B81C-D56BBD13A728}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED886E9B-0759-4434-B81C-D56BBD13A728}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED886E9B-0759-4434-B81C-D56BBD13A728}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7B0220F-A3FE-48B1-AD25-11A2D78EC070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7B0220F-A3FE-48B1-AD25-11A2D78EC070}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7B0220F-A3FE-48B1-AD25-11A2D78EC070}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7B0220F-A3FE-48B1-AD25-11A2D78EC070}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66245B5C-0F93-4C0D-B04A-74065062B4B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66245B5C-0F93-4C0D-B04A-74065062B4B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66245B5C-0F93-4C0D-B04A-74065062B4B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66245B5C-0F93-4C0D-B04A-74065062B4B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
