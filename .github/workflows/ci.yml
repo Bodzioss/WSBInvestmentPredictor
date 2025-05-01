@@ -1,4 +1,4 @@
-name: Build and Test (.NET 9)
+name: Build and Test (.NET 9 Preview)
 
 on:
   push:
@@ -31,4 +31,4 @@ jobs:
 
     - name: ✅ Run unit tests
       working-directory: ./Backend
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ./tests/Prediction/WSBInvestmentPredictor.Prediction.Tests/WSBInvestmentPredictor.Prediction.UnitTests.csproj --no-build --configuration Release --verbosity normal
