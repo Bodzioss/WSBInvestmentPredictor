@@ -1,0 +1,36 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35818.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Prediction.Domain", "src\Prediction\WSBInvestmentPredictor.Prediction.Domain\WSBInvestmentPredictor.Prediction.Domain.csproj", "{452ECC78-E777-45E3-B4B8-BE7B00E01D23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Prediction.Services", "src\Prediction\WSBInvestmentPredictor.Prediction.Services\WSBInvestmentPredictor.Prediction.Services.csproj", "{44E869E1-A0C2-45EA-A52C-C64CB7BFEAEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Prediction.API", "src\Prediction\WSBInvestmentPredictor.Prediction.API\WSBInvestmentPredictor.Prediction.API.csproj", "{ED886E9B-0759-4434-B81C-D56BBD13A728}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{452ECC78-E777-45E3-B4B8-BE7B00E01D23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{452ECC78-E777-45E3-B4B8-BE7B00E01D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{452ECC78-E777-45E3-B4B8-BE7B00E01D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{452ECC78-E777-45E3-B4B8-BE7B00E01D23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44E869E1-A0C2-45EA-A52C-C64CB7BFEAEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44E869E1-A0C2-45EA-A52C-C64CB7BFEAEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44E869E1-A0C2-45EA-A52C-C64CB7BFEAEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44E869E1-A0C2-45EA-A52C-C64CB7BFEAEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED886E9B-0759-4434-B81C-D56BBD13A728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED886E9B-0759-4434-B81C-D56BBD13A728}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED886E9B-0759-4434-B81C-D56BBD13A728}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED886E9B-0759-4434-B81C-D56BBD13A728}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ED2868BD-5262-4A04-8899-824093D68F0B}
+	EndGlobalSection
+EndGlobal
