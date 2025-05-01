@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Test (.NET 9)
 
 on:
   push:
@@ -12,19 +12,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 🔄 Checkout code
+    - name: 🔄 Checkout repository
       uses: actions/checkout@v3
 
-    - name: 🛠️ Setup .NET
+    - name: 🛠️ Setup .NET 9 SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.100-preview.3
+        check-latest: true
 
     - name: 📦 Restore dependencies
+      working-directory: ./Backend
       run: dotnet restore
 
     - name: 🏗️ Build solution
+      working-directory: ./Backend
       run: dotnet build --no-restore --configuration Release
 
-    - name: ✅ Run tests
+    - name: ✅ Run unit tests
+      working-directory: ./Backend
       run: dotnet test --no-build --verbosity normal
