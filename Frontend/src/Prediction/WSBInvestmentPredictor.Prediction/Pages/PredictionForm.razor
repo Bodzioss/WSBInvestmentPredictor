@@ -1,0 +1,82 @@
+﻿@using WSBInvestmentPredictor.Prediction.Models
+@using WSBInvestmentPredictor.Prediction.Services
+@inject PredictionService Predictor
+
+@page "/predict"
+@inject PredictionService Predictor
+
+<h3>📈 Predict 30-Day Stock Return</h3>
+
+<EditForm Model="_input" OnValidSubmit="SendPrediction">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Date</label>
+        <InputDate @bind-Value="_input.Date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Open</label>
+        <InputNumber @bind-Value="_input.Open" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>High</label>
+        <InputNumber @bind-Value="_input.High" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Low</label>
+        <InputNumber @bind-Value="_input.Low" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Close</label>
+        <InputNumber @bind-Value="_input.Close" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Volume</label>
+        <InputNumber @bind-Value="_input.Volume" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Predict</button>
+</EditForm>
+
+@if (_result != null)
+{
+    <div class="alert alert-success mt-4">
+        📊 <strong>Predicted return (30 days):</strong> @_result.Prediction:P2
+    </div>
+}
+else if (_error != null)
+{
+    <div class="alert alert-danger mt-4">
+        ⚠️ <strong>Error:</strong> @_error
+    </div>
+}
+
+@code {
+    private MarketDataInput _input = new()
+        {
+            Date = DateTime.Today.ToString("yyyy-MM-dd")
+        };
+
+    private PredictionResultDto? _result;
+    private string? _error;
+
+    private async Task SendPrediction()
+    {
+        try
+        {
+            _result = await Predictor.PredictAsync(_input);
+            _error = null;
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            _result = null;
+        }
+    }
+}

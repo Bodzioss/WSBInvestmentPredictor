@@ -1,0 +1,10 @@
+﻿
+
+<nav class="nav flex-column">
+    @foreach (var link in NavigationRegistry.Links)
+    {
+        <NavLink href="@link.Url" class="nav-link" Match="NavLinkMatch.All">
+            @link.Label
+        </NavLink>
+    }
+</nav>
