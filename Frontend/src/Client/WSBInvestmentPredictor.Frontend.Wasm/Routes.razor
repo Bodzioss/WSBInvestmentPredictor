@@ -1,0 +1,11 @@
+﻿@using System.Reflection
+@using Microsoft.AspNetCore.Components.Routing
+@using WSBInvestmentPredictor.Frontend.Shared.Layout
+
+@Defaults.GetDefaultRouter(typeof(Program).Assembly, AdditionalAssemblies)
+
+@code {
+    public static List<Assembly> AdditionalAssemblies = [
+        typeof(WSBInvestmentPredictor.Prediction.DI).Assembly
+        ];
+}

@@ -1,0 +1,26 @@
+﻿@namespace WSBInvestmentPredictor.Frontend.Shared.Layout
+@inherits LayoutComponentBase
+
+<div class="d-flex flex-column vh-100">
+    <!-- Topbar -->
+    <header class="navbar navbar-dark bg-primary px-3">
+        <span class="navbar-brand mb-0 h1">📊 WSB Investment Predictor</span>
+        <div class="ms-auto">
+            <button class="btn btn-sm btn-light me-2">⚙️ Settings</button>
+            <button class="btn btn-sm btn-outline-light">👤 Profile</button>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <div class="d-flex flex-grow-1">
+        <!-- Sidebar -->
+        <nav class="bg-light p-3" style="width: 220px;">
+            <NavMenu />
+        </nav>
+
+        <!-- Page content -->
+        <main class="p-4 flex-grow-1 overflow-auto">
+            @Body
+        </main>
+    </div>
+</div>

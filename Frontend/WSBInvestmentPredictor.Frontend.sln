@@ -1,0 +1,50 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35818.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Prediction", "src\Prediction\WSBInvestmentPredictor.Prediction\WSBInvestmentPredictor.Prediction.csproj", "{D6270483-2402-4169-A70F-023A2DE8C8B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Frontend.Server", "src\Client\WSBInvestmentPredictor.Frontend.Server\WSBInvestmentPredictor.Frontend.Server.csproj", "{4B77DD28-FA2F-480B-9226-42330B3B3ED2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Frontend.Wasm", "src\Client\WSBInvestmentPredictor.Frontend.Wasm\WSBInvestmentPredictor.Frontend.Wasm.csproj", "{B1C30BB8-EDB6-48A8-96AC-A65D9E406429}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Technology", "Technology", "{526756BE-9FC2-429A-97BA-BB4120FAD46E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Frontend.Shared", "src\Client\WSBInvestmentPredictor.Frontend.Shared\WSBInvestmentPredictor.Frontend.Shared.csproj", "{9EFBEA90-58CB-495A-8C73-BF5D4E28E0C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6270483-2402-4169-A70F-023A2DE8C8B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6270483-2402-4169-A70F-023A2DE8C8B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6270483-2402-4169-A70F-023A2DE8C8B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6270483-2402-4169-A70F-023A2DE8C8B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B77DD28-FA2F-480B-9226-42330B3B3ED2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B77DD28-FA2F-480B-9226-42330B3B3ED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B77DD28-FA2F-480B-9226-42330B3B3ED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B77DD28-FA2F-480B-9226-42330B3B3ED2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1C30BB8-EDB6-48A8-96AC-A65D9E406429}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1C30BB8-EDB6-48A8-96AC-A65D9E406429}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1C30BB8-EDB6-48A8-96AC-A65D9E406429}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1C30BB8-EDB6-48A8-96AC-A65D9E406429}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EFBEA90-58CB-495A-8C73-BF5D4E28E0C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EFBEA90-58CB-495A-8C73-BF5D4E28E0C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EFBEA90-58CB-495A-8C73-BF5D4E28E0C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EFBEA90-58CB-495A-8C73-BF5D4E28E0C8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D6270483-2402-4169-A70F-023A2DE8C8B7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{9EFBEA90-58CB-495A-8C73-BF5D4E28E0C8} = {526756BE-9FC2-429A-97BA-BB4120FAD46E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14BC12F5-E1CF-408B-AF42-D19FF94298C9}
+	EndGlobalSection
+EndGlobal

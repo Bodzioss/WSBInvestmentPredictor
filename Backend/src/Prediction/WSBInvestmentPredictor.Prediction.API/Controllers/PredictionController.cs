@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WSBInvestmentPredictor.Prediction.Application.FeatureEngeneering;
 using WSBInvestmentPredictor.Prediction.Domain.Entities;
-using WSBInvestmentPredictor.Predictor.Infrastructure.Prediction;
+using WSBInvestmentPredictor.Prediction.Domain.Interfaces;
 
 namespace WSBInvestmentPredictor.Prediction.API.Controllers;
 
@@ -9,10 +9,10 @@ namespace WSBInvestmentPredictor.Prediction.API.Controllers;
 [Route("api/[controller]")]
 public class PredictionController : ControllerBase
 {
-    private readonly StockPredictorService _predictor;
+    private readonly IStockPredictorService _predictor;
     private readonly MarketDataBuilder _builder;
 
-    public PredictionController(StockPredictorService predictor, MarketDataBuilder builder)
+    public PredictionController(IStockPredictorService predictor, MarketDataBuilder builder)
     {
         _predictor = predictor;
         _builder = builder;
