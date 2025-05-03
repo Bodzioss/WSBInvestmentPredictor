@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using Radzen
+@using Radzen.Blazor
+@using WSBInvestmentPredictor.Frontend.Wasm
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>WSBInvestmentPredictor</title>
+    <meta charset="utf-8" />
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <HeadOutlet @rendermode="new InteractiveWebAssemblyRenderMode(false)" />
+    <RadzenTheme Theme="material"/>
+</head>
+
+<body>
+    @Defaults.WasmLoader
+    <Routes @rendermode="new InteractiveWebAssemblyRenderMode(false)" />
+    @Defaults.Scripts
+</body>
+
+</html>

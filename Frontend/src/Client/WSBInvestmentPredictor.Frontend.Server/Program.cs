@@ -1,24 +1,31 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Radzen;
+using WSBInvestmentPredictor.Frontend.Server.Components;
 using WSBInvestmentPredictor.Frontend.Wasm;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddRadzenComponents()
+    .AddRadzenCookieThemeService();
+
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-// Load Blazor UI and pass assemblies registered in WASM
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()

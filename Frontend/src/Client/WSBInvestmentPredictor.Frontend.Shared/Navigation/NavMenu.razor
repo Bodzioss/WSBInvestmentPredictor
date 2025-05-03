@@ -1,10 +1,12 @@
-﻿
+﻿@using WSBInvestmentPredictor.Frontend.Shared.Navigation
 
-<nav class="nav flex-column">
+<ul class="nav flex-column">
     @foreach (var link in NavigationRegistry.Links)
     {
-        <NavLink href="@link.Url" class="nav-link" Match="NavLinkMatch.All">
-            @link.Label
-        </NavLink>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="@link.Url" Match="NavLinkMatch.All">
+                @link.Label
+            </NavLink>
+        </li>
     }
-</nav>
+</ul>

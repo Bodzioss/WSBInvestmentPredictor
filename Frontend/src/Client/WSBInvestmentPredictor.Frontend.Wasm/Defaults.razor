@@ -1,0 +1,36 @@
+@using System.Reflection
+@using Microsoft.AspNetCore.Components.Rendering
+@using Microsoft.AspNetCore.Components.Routing
+@using WSBInvestmentPredictor.Frontend.Shared.Layout
+@code {
+    public static RenderFragment WasmLoader =@<div id="wasm-progress">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>;
+
+    public static RenderFragment Scripts =@<div>
+        <script src="_framework/blazor.webassembly.js"></script>
+    </div>
+    ;
+
+    public static RenderFragment GetDefaultRouter(Assembly appAssembly, IEnumerable<Assembly> additionalAssemblies)
+    {
+        return@<div>
+        <Router AppAssembly="appAssembly" AdditionalAssemblies="additionalAssemblies">
+            <Found Context="routeData">
+                <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+                <FocusOnNavigate RouteData="routeData" Selector="h1" />
+            </Found>
+        </Router>
+        <style>
+            #wasm-progress {
+                display: none;
+            }
+        </style>
+    </div>
+    ;
+    }
+}
