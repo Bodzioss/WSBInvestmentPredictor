@@ -1,0 +1,65 @@
+﻿@page "/predict"
+@inject HttpClient Http
+@using System.Net.Http.Json
+
+<h3>📈 Prediction</h3>
+
+<EditForm Model="@ohlcvInput" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Open</label>
+        <InputNumber class="form-control" @bind-Value="ohlcvInput.Open" />
+    </div>
+    <div class="form-group">
+        <label>High</label>
+        <InputNumber class="form-control" @bind-Value="ohlcvInput.High" />
+    </div>
+    <div class="form-group">
+        <label>Low</label>
+        <InputNumber class="form-control" @bind-Value="ohlcvInput.Low" />
+    </div>
+    <div class="form-group">
+        <label>Close</label>
+        <InputNumber class="form-control" @bind-Value="ohlcvInput.Close" />
+    </div>
+    <div class="form-group">
+        <label>Volume</label>
+        <InputNumber class="form-control" @bind-Value="ohlcvInput.Volume" />
+    </div>
+
+    <button class="btn btn-primary mt-2" type="submit">Predict</button>
+</EditForm>
+
+@if (predictionResult is not null)
+{
+    <div class="alert alert-success mt-3">
+        <strong>Prediction (30d return):</strong> @predictionResult.PredictedReturn.ToString("P2")
+    </div>
+}
+
+@code {
+    private OHLCVInput ohlcvInput = new();
+    private PredictionResult? predictionResult;
+
+    private async Task HandleValidSubmit()
+    {
+        predictionResult = await Http.PostAsJsonAsync("api/predict-from-raw", ohlcvInput)
+                                     .Result.Content.ReadFromJsonAsync<PredictionResult>();
+    }
+
+    public class OHLCVInput
+    {
+        public float Open { get; set; }
+        public float High { get; set; }
+        public float Low { get; set; }
+        public float Close { get; set; }
+        public float Volume { get; set; }
+    }
+
+    public class PredictionResult
+    {
+        public float PredictedReturn { get; set; }
+    }
+}

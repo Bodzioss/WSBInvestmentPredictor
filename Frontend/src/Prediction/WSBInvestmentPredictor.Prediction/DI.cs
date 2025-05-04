@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Reflection;
 using WSBInvestmentPredictor.Frontend.Shared.Navigation;
 
@@ -11,15 +12,10 @@ public static class DI
     /// </summary>
     public static Assembly Assembly => typeof(DI).Assembly;
 
-    // Optional: here you can later add module-wide service registration
-    public static void RegisterServices(IServiceCollection services)
+    public static void RegisterNavigation(IServiceProvider services)
     {
-        // services.AddScoped<IMyBlazorApp1Service, MyService>();
-    }
-
-    public static void RegisterNavigation()
-    {
-        NavigationRegistry.Links.Add(new NavLinkItem("📈 Prediction", "/predict"));
+        var registry = services.GetRequiredService<NavigationRegistry>();
+        registry.Links.Add(new NavLinkItem("📈 Prediction", "/predict"));
     }
 
 }

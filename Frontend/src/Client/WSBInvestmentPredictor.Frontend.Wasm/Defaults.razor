@@ -1,36 +1,47 @@
-@using System.Reflection
+﻿@using System.Reflection
 @using Microsoft.AspNetCore.Components.Rendering
 @using Microsoft.AspNetCore.Components.Routing
 @using WSBInvestmentPredictor.Frontend.Shared.Layout
+
 @code {
-    public static RenderFragment WasmLoader =@<div id="wasm-progress">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
+    public static RenderFragment Links => @<div>
+        <link rel="stylesheet" href="_content/Radzen.Blazor/css/material-base.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" media="all" />
     </div>;
 
-    public static RenderFragment Scripts =@<div>
+    public static RenderFragment WasmLoader => @<div id="wasm-progress" class="d-flex flex-column align-items-center justify-content-center" style="height: 100vh;">
+        <svg class="loading-progress" width="100" height="100">
+            <circle r="40" cx="50" cy="50" fill="none" stroke="#ccc" stroke-width="8" />
+            <circle r="40" cx="50" cy="50" fill="none" stroke="#007bff" stroke-width="8" stroke-dasharray="60" stroke-linecap="round">
+                <animateTransform attributeName="transform" type="rotate" values="0 50 50;360 50 50" dur="1s" repeatCount="indefinite" />
+            </circle>
+        </svg>
+        <div class="loading-progress-text mt-3">Loading application...</div>
+    </div>;
+
+    public static RenderFragment Scripts => @<div>
         <script src="_framework/blazor.webassembly.js"></script>
-    </div>
-    ;
+    </div>;
 
     public static RenderFragment GetDefaultRouter(Assembly appAssembly, IEnumerable<Assembly> additionalAssemblies)
     {
-        return@<div>
+        return @<div>
         <Router AppAssembly="appAssembly" AdditionalAssemblies="additionalAssemblies">
             <Found Context="routeData">
                 <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
                 <FocusOnNavigate RouteData="routeData" Selector="h1" />
             </Found>
+            <NotFound>
+                <LayoutView Layout="typeof(MainLayout)">
+                    <p class="m-3">Page not found.</p>
+                </LayoutView>
+            </NotFound>
         </Router>
         <style>
             #wasm-progress {
                 display: none;
             }
         </style>
-    </div>
-    ;
+    </div>;
     }
 }

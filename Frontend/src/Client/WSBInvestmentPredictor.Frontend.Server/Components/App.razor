@@ -12,11 +12,12 @@
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <HeadOutlet @rendermode="new InteractiveWebAssemblyRenderMode(false)" />
+    @Defaults.Links
     <RadzenTheme Theme="material"/>
 </head>
 
 <body>
-    @Defaults.WasmLoader
+@*     @Defaults.WasmLoader *@
     <Routes @rendermode="new InteractiveWebAssemblyRenderMode(false)" />
     @Defaults.Scripts
 </body>
