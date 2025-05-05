@@ -9,6 +9,17 @@ using WSBInvestmentPredictor.Predictor.Infrastructure.Prediction;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins("https://localhost:7236") 
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -31,6 +42,10 @@ builder.Services.AddScoped<IStockPredictorService, StockPredictorService>();
 builder.Services.AddSingleton<MarketDataBuilder>();
 
 var app = builder.Build();
+
+app.UseCors("AllowFrontend");
+
+app.UseAuthorization();
 
 app.UseSwagger();
 app.UseSwaggerUI();

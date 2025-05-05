@@ -2,9 +2,9 @@
 
 namespace WSBInvestmentPredictor.Frontend.Shared.Navigation;
 
-public static class NavigationRegistry
+public class NavigationRegistry
 {
-    public static List<NavLinkItem> Links { get; } = new();
+    public List<NavLinkItem> Links { get; } = new();
 }
 
-public record NavLinkItem(string Label, string Url);
+public record NavLinkItem(string Title, string Url, string? Icon = null);
