@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
 using WSBInvestmentPredictor.Frontend.Server.Components;
 using WSBInvestmentPredictor.Frontend.Shared.Navigation;
+using WSBInvestmentPredictor.Frontend.Shared.Services;
 using WSBInvestmentPredictor.Frontend.Wasm;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddRadzenComponents()
     .AddRadzenCookieThemeService();
 
 builder.Services.AddSingleton<NavigationRegistry>();
+builder.Services.AddScoped<NotificationService>();
 
 var app = builder.Build();
 
