@@ -7,4 +7,4 @@ namespace WSBInvestmentPredictor.Prediction.Application.Queries;
 /// <summary>
 /// Query to get a prediction for a given MarketData sample.
 /// </summary>
-public record GetPredictionQuery(MarketData Sample) : IRequest<PredictionResultDto>;
+public record GetPredictionQuery(MarketDataInput Sample) : IRequest<PredictionResultDto>;

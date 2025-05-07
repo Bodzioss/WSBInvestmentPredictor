@@ -21,22 +21,22 @@ public class StockPredictorService : IStockPredictorService, IModelTrainer
     /// Trains a FastTree regression model using the provided market data.
     /// </summary>
     /// <param name="data">A collection of market data records used for training.</param>
-    public void Train(IEnumerable<MarketData> data)
+    public void Train(IEnumerable<MarketDataInput> data)
     {
         var dataView = _mlContext.Data.LoadFromEnumerable(data);
 
-        var pipeline = _mlContext.Transforms.CopyColumns("Label", nameof(MarketData.Target))
+        var pipeline = _mlContext.Transforms.CopyColumns("Label", nameof(MarketDataInput.Target))
             .Append(_mlContext.Transforms.Concatenate("Features",
-                nameof(MarketData.Open),
-                nameof(MarketData.High),
-                nameof(MarketData.Low),
-                nameof(MarketData.Close),
-                nameof(MarketData.Volume),
-                nameof(MarketData.SMA_5),
-                nameof(MarketData.SMA_10),
-                nameof(MarketData.SMA_20),
-                nameof(MarketData.Volatility_10),
-                nameof(MarketData.RSI_14)))
+                nameof(MarketDataInput.Open),
+                nameof(MarketDataInput.High),
+                nameof(MarketDataInput.Low),
+                nameof(MarketDataInput.Close),
+                nameof(MarketDataInput.Volume),
+                nameof(MarketDataInput.SMA_5),
+                nameof(MarketDataInput.SMA_10),
+                nameof(MarketDataInput.SMA_20),
+                nameof(MarketDataInput.Volatility_10),
+                nameof(MarketDataInput.RSI_14)))
             .Append(_mlContext.Regression.Trainers.FastTree());
 
         _model = pipeline.Fit(dataView);
@@ -47,12 +47,12 @@ public class StockPredictorService : IStockPredictorService, IModelTrainer
     /// </summary>
     /// <param name="input">A single market data sample for which to make a prediction.</param>
     /// <returns>Predicted return as a float score.</returns>
-    public float Predict(MarketData input)
+    public float Predict(MarketDataInput input)
     {
         if (_model == null)
             throw new InvalidOperationException("Model has not been trained. Call Train() first.");
 
-        var engine = _mlContext.Model.CreatePredictionEngine<MarketData, PredictionResult>(_model);
+        var engine = _mlContext.Model.CreatePredictionEngine<MarketDataInput, PredictionResult>(_model);
         var result = engine.Predict(input);
 
         return result.Score;

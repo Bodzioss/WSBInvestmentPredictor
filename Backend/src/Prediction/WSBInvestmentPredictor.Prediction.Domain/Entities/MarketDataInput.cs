@@ -16,7 +16,7 @@
 /// <param name="Volatility_10">10-day price volatility indicator.</param>
 /// <param name="RSI_14">14-day Relative Strength Index.</param>
 /// <param name="Target">Future return after 30 days, used as the label for prediction.</param>
-public record MarketData(
+public record MarketDataInput(
     string Date,
     float Open,
     float High,

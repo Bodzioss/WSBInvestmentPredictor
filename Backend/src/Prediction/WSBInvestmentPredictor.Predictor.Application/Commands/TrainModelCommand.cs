@@ -6,4 +6,4 @@ namespace WSBInvestmentPredictor.Prediction.Application.Commands;
 /// <summary>
 /// Command to train the prediction model on historical data.
 /// </summary>
-public record TrainModelCommand(List<MarketData> Data) : IRequest;
+public record TrainModelCommand(List<MarketDataInput> Data) : IRequest;

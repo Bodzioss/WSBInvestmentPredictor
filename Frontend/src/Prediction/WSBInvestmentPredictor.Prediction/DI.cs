@@ -16,6 +16,7 @@ public static class DI
     {
         var registry = services.GetRequiredService<NavigationRegistry>();
         registry.Links.Add(new NavLinkItem("📈 Prediction", "/predict"));
+        registry.Links.Add(new NavLinkItem("⚡ Quick Predict", "/quick-predict"));
     }
 
 }

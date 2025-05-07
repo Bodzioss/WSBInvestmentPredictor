@@ -32,24 +32,24 @@ public class MarketDataBuilder
         return this;
     }
 
-    public MarketData Build()
+    public MarketDataInput Build()
     {
-        return new MarketData(
-            _date, 
-            _open, 
-            _high, 
-            _low, 
-            _close, 
+        return new MarketDataInput(
+            _date,
+            _open,
+            _high,
+            _low,
+            _close,
             _volume,
-            _sma5, 
-            _sma10, 
-            _sma20, 
-            _volatility10, 
-            _rsi14, 
+            _sma5,
+            _sma10,
+            _sma20,
+            _volatility10,
+            _rsi14,
             _target);
     }
 
-    public List<MarketData> BuildMany(int count)
+    public List<MarketDataInput> BuildMany(int count)
     {
         return Enumerable.Range(1, count).Select(i =>
             WithDate($"2025-04-{i:D2}").WithTarget(0.01f * i).Build()

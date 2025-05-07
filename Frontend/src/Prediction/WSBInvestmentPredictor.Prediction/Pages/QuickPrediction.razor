@@ -1,0 +1,23 @@
+﻿@page "/quick-predict"
+
+<h3>⚡️ Szybka predykcja spółki</h3>
+
+<div class="input-group mb-3" style="max-width: 400px;">
+    <InputText class="form-control" @bind-Value="symbol" placeholder="Wprowadź symbol np. AAPL" />
+    <button class="btn btn-primary" @onclick="PredictAsync">Oblicz predykcję</button>
+</div>
+
+@if (isLoading)
+{
+    <p><em>Ładowanie danych i generowanie predykcji...</em></p>
+}
+else if (error != null)
+{
+    <div class="alert alert-danger">@error</div>
+}
+else if (prediction.HasValue)
+{
+    <div class="alert alert-success">
+        <strong>Predykcja 30-dniowego zwrotu:</strong> @prediction.Value.ToString("P2")
+    </div>
+}

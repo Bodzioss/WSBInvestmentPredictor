@@ -9,9 +9,9 @@ public class MarketDataBuilder
     /// </summary>
     /// <param name="rawData">Lista podstawowych danych (z API lub CSV)</param>
     /// <returns>Lista MarketData gotowa do treningu/predykcji</returns>
-    public List<MarketData> Build(List<RawMarketData> rawData)
+    public List<MarketDataInput> Build(List<RawMarketData> rawData)
     {
-        var results = new List<MarketData>();
+        var results = new List<MarketDataInput>();
         for (int i = 20; i < rawData.Count - 30; i++) // zapewniamy okna SMA i target
         {
             var window5 = rawData.Skip(i - 5).Take(5).Select(x => x.Close);
@@ -31,7 +31,7 @@ public class MarketDataBuilder
             var target = (rawData[i + 30].Close - rawData[i].Close) / rawData[i].Close;
 
             var current = rawData[i];
-            results.Add(new MarketData(
+            results.Add(new MarketDataInput(
                 current.Date,
                 current.Open,
                 current.High,
@@ -65,7 +65,6 @@ public class MarketDataBuilder
             var delta = data[i].Close - data[i - 1].Close;
             if (delta > 0) gain += delta;
             else loss -= delta; // loss jest dodatni
-
         }
         if (loss == 0) return 100;
         var rs = gain / loss;

@@ -5,6 +5,7 @@ using WSBInvestmentPredictor.Prediction.Application.Common.Behaviors;
 using WSBInvestmentPredictor.Prediction.Application.FeatureEngeneering;
 using WSBInvestmentPredictor.Prediction.Application.Validators;
 using WSBInvestmentPredictor.Prediction.Domain.Interfaces;
+using WSBInvestmentPredictor.Prediction.MarketData;
 using WSBInvestmentPredictor.Predictor.Infrastructure.Prediction;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("https://localhost:7236") 
+            .WithOrigins("https://localhost:7236")
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
@@ -40,6 +41,7 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBeh
 
 builder.Services.AddScoped<IStockPredictorService, StockPredictorService>();
 builder.Services.AddSingleton<MarketDataBuilder>();
+builder.Services.AddHttpClient<IPolygonClient, PolygonClient>();
 
 var app = builder.Build();
 
