@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
+﻿using Microsoft.AspNetCore.Components;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
 
 namespace WSBInvestmentPredictor.Prediction.Pages;
 

@@ -17,7 +17,7 @@ public class MarketDataController : ControllerBase
     [HttpGet("{symbol}")]
     public async Task<IActionResult> Get(string symbol, DateTime? from = null, DateTime? to = null)
     {
-        from ??= DateTime.UtcNow.AddDays(-30);
+        from ??= DateTime.UtcNow.AddDays(-360);
         to ??= DateTime.UtcNow;
 
         try
