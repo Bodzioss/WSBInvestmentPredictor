@@ -4,6 +4,7 @@ namespace WSBInvestmentPredictor.Prediction.Domain.Interfaces;
 
 public interface IStockPredictorService
 {
-    void Train(IEnumerable<MarketData> data);
-    float Predict(MarketData input);
+    void Train(IEnumerable<MarketDataInput> data);
+
+    float Predict(MarketDataInput input);
 }

@@ -17,8 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Prediction\WSBInvestmentPredictor.Prediction.Domain\WSBInvestmentPredictor.Prediction.Domain.csproj" />
-    <ProjectReference Include="..\..\..\src\Prediction\WSBInvestmentPredictor.Predictor.Application\WSBInvestmentPredictor.Prediction.Application.csproj" />
-    <ProjectReference Include="..\..\..\src\Prediction\WSBInvestmentPredictor.Predictor.Infrastructure\WSBInvestmentPredictor.Prediction.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\src\Prediction\WSBInvestmentPredictor.Prediction.Application\WSBInvestmentPredictor.Prediction.Application.csproj" />
+    <ProjectReference Include="..\..\..\src\Prediction\WSBInvestmentPredictor.Prediction.Infrastructure\WSBInvestmentPredictor.Prediction.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -14,9 +14,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WSBInvestmentPredictor.Prediction.Application\WSBInvestmentPredictor.Prediction.Application.csproj" />
     <ProjectReference Include="..\WSBInvestmentPredictor.Prediction.Domain\WSBInvestmentPredictor.Prediction.Domain.csproj" />
-    <ProjectReference Include="..\WSBInvestmentPredictor.Predictor.Application\WSBInvestmentPredictor.Prediction.Application.csproj" />
-    <ProjectReference Include="..\WSBInvestmentPredictor.Predictor.Infrastructure\WSBInvestmentPredictor.Prediction.Infrastructure.csproj" />
+    <ProjectReference Include="..\WSBInvestmentPredictor.Prediction.Application\WSBInvestmentPredictor.Prediction.Application.csproj" />
+    <ProjectReference Include="..\WSBInvestmentPredictor.Prediction.Infrastructure\WSBInvestmentPredictor.Prediction.Infrastructure.csproj" />
   </ItemGroup>
+
+<ItemGroup>
+  <Content Include="Resources\sp500.csv">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </Content>
+</ItemGroup>
 
 </Project>

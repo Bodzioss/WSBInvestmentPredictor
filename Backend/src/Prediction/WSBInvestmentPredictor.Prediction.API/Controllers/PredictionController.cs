@@ -24,7 +24,7 @@ public class PredictionController : ControllerBase
     /// <param name="data">A market data sample (most recent day).</param>
     /// <returns>Predicted return score.</returns>
     [HttpPost]
-    public IActionResult Predict([FromBody] MarketData data)
+    public IActionResult Predict([FromBody] MarketDataInput data)
     {
         try
         {
@@ -42,7 +42,7 @@ public class PredictionController : ControllerBase
     /// </summary>
     /// <param name="trainingData">List of historical market data.</param>
     [HttpPost("train")]
-    public IActionResult Train([FromBody] List<MarketData> trainingData)
+    public IActionResult Train([FromBody] List<MarketDataInput> trainingData)
     {
         try
         {

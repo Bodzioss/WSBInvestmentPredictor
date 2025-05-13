@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Technology", "Technology", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Frontend.Shared", "src\Client\WSBInvestmentPredictor.Frontend.Shared\WSBInvestmentPredictor.Frontend.Shared.csproj", "{9EFBEA90-58CB-495A-8C73-BF5D4E28E0C8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Technology", "..\Shared\src\Technology\WSBInvestmentPredictor.Technology\WSBInvestmentPredictor.Technology.csproj", "{1CC8B147-A257-25C1-D70D-C0CB3BE3DB3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBInvestmentPredictor.Prediction.Shared", "..\Shared\src\WSBInvestmentPredictor.Prediction.Shared\WSBInvestmentPredictor.Prediction.Shared.csproj", "{D98E0258-99F8-9D59-BA1E-50D85BCC8BAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +40,14 @@ Global
 		{9EFBEA90-58CB-495A-8C73-BF5D4E28E0C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EFBEA90-58CB-495A-8C73-BF5D4E28E0C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EFBEA90-58CB-495A-8C73-BF5D4E28E0C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CC8B147-A257-25C1-D70D-C0CB3BE3DB3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CC8B147-A257-25C1-D70D-C0CB3BE3DB3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CC8B147-A257-25C1-D70D-C0CB3BE3DB3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CC8B147-A257-25C1-D70D-C0CB3BE3DB3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D98E0258-99F8-9D59-BA1E-50D85BCC8BAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D98E0258-99F8-9D59-BA1E-50D85BCC8BAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D98E0258-99F8-9D59-BA1E-50D85BCC8BAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D98E0258-99F8-9D59-BA1E-50D85BCC8BAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,6 +55,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D6270483-2402-4169-A70F-023A2DE8C8B7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{9EFBEA90-58CB-495A-8C73-BF5D4E28E0C8} = {526756BE-9FC2-429A-97BA-BB4120FAD46E}
+		{1CC8B147-A257-25C1-D70D-C0CB3BE3DB3D} = {526756BE-9FC2-429A-97BA-BB4120FAD46E}
+		{D98E0258-99F8-9D59-BA1E-50D85BCC8BAA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {14BC12F5-E1CF-408B-AF42-D19FF94298C9}

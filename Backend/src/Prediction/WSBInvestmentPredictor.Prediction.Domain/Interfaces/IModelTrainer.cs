@@ -11,5 +11,5 @@ public interface IModelTrainer
     /// Trains the model using the specified historical market data.
     /// </summary>
     /// <param name="data">Enumerable set of market data used for training.</param>
-    void Train(IEnumerable<MarketData> data);
+    void Train(IEnumerable<MarketDataInput> data);
 }

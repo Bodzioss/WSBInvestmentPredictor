@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\src\Technology\WSBInvestmentPredictor.Technology\WSBInvestmentPredictor.Technology.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\src\WSBInvestmentPredictor.Prediction.Shared\WSBInvestmentPredictor.Prediction.Shared.csproj" />
     <ProjectReference Include="..\..\Client\WSBInvestmentPredictor.Frontend.Shared\WSBInvestmentPredictor.Frontend.Shared.csproj" />
   </ItemGroup>
 
