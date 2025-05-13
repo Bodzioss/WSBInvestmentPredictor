@@ -1,12 +1,13 @@
 using FluentValidation;
 using MediatR;
-using WSBInvestmentPredictor.Prediction.Application.Commands;
+using WSBInvestmentPredictor.Prediction.Application;
 using WSBInvestmentPredictor.Prediction.Application.Common.Behaviors;
 using WSBInvestmentPredictor.Prediction.Application.FeatureEngeneering;
 using WSBInvestmentPredictor.Prediction.Application.Validators;
 using WSBInvestmentPredictor.Prediction.Domain.Interfaces;
+using WSBInvestmentPredictor.Prediction.Infrastructure.MarketData;
+using WSBInvestmentPredictor.Prediction.Infrastructure.Prediction;
 using WSBInvestmentPredictor.Prediction.MarketData;
-using WSBInvestmentPredictor.Predictor.Infrastructure.Prediction;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,8 +31,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
 
 // Rejestracja CQRS
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(TrainModelCommand).Assembly));
+builder.Services.AddPredictionApplication();
 
 // Rejestracja FluentValidation
 builder.Services.AddValidatorsFromAssembly(typeof(TrainModelCommandValidator).Assembly);
@@ -40,6 +40,7 @@ builder.Services.AddValidatorsFromAssembly(typeof(TrainModelCommandValidator).As
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 builder.Services.AddScoped<IStockPredictorService, StockPredictorService>();
+builder.Services.AddSingleton<ISp500TickerProvider, Sp500CsvTickerProvider>();
 builder.Services.AddSingleton<MarketDataBuilder>();
 builder.Services.AddHttpClient<IPolygonClient, PolygonClient>();
 

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WSBInvestmentPredictor.Prediction.Domain\WSBInvestmentPredictor.Prediction.Domain.csproj" />
+    <ProjectReference Include="..\WSBInvestmentPredictor.Prediction.InternalShared\WSBInvestmentPredictor.Prediction.InternalShared.csproj" />
   </ItemGroup>
 
 </Project>

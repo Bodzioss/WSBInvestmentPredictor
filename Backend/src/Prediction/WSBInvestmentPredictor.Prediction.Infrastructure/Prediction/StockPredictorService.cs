@@ -2,7 +2,7 @@
 using WSBInvestmentPredictor.Prediction.Domain.Entities;
 using WSBInvestmentPredictor.Prediction.Domain.Interfaces;
 
-namespace WSBInvestmentPredictor.Predictor.Infrastructure.Prediction;
+namespace WSBInvestmentPredictor.Prediction.Infrastructure.Prediction;
 
 /// <summary>
 /// Service responsible for training a regression model and making predictions based on market data.

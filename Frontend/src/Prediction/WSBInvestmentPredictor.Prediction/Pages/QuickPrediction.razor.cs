@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using System.Linq;
+using WSBInvestmentPredictor.Prediction.Models;
 
 namespace WSBInvestmentPredictor.Prediction.Pages;
 
@@ -11,10 +13,42 @@ public partial class QuickPrediction : ComponentBase
 {
     [Inject] protected HttpClient Http { get; set; } = default!;
 
-    protected string symbol = "AAPL";
+    protected List<CompanyTicker> availableTickers = [];
+    protected string symbol = string.Empty;
+    protected List<int> dayOptions = [30, 60, 100, 150];
+    protected int selectedDays = 100;
+    protected string searchTerm = string.Empty;
+
+    protected IEnumerable<CompanyTicker> FilteredTickers =>
+        availableTickers
+            .Where(t => string.IsNullOrEmpty(searchTerm) ||
+                        t.Ticker.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                        t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+
+
     protected bool isLoading = false;
     protected string error;
     protected float? prediction;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            availableTickers = await Http.GetFromJsonAsync<List<CompanyTicker>>("/api/marketdata/tickers")
+                                ?? [];
+
+            symbol = availableTickers.FirstOrDefault()?.Ticker ?? "AAPL";
+        }
+        catch (Exception ex)
+        {
+            error = $"Nie udało się pobrać listy tickerów: {ex.Message}";
+            availableTickers =
+        [
+            new() { Ticker = "AAPL", Name = "Apple Inc." }
+        ];
+            symbol = "AAPL";
+        }
+    }
 
     protected async Task PredictAsync()
     {
@@ -22,13 +56,18 @@ public partial class QuickPrediction : ComponentBase
         error = null;
         prediction = null;
 
+        var to = DateTime.UtcNow.Date;
+        var from = to.AddDays(-selectedDays);
+
         try
         {
-            var rawData = await Http.GetFromJsonAsync<List<RawMarketData>>($"/api/MarketData/{symbol}");
+            var rawData = await Http.GetFromJsonAsync<List<RawMarketData>>(
+                $"/api/marketdata/{symbol}?from={from:yyyy-MM-dd}&to={to:yyyy-MM-dd}"
+            );
 
             if (rawData == null || rawData.Count < 1)
             {
-                error = "Brak danych historycznych dla symbolu.";
+                error = "Brak danych historycznych dla wybranego symbolu.";
                 return;
             }
 
