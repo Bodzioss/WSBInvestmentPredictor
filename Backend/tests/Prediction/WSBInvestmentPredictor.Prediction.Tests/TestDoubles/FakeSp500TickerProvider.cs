@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using WSBInvestmentPredictor.Prediction.Infrastructure.MarketData;
-using WSBInvestmentPredictor.Prediction.InternalShared.ValueObjects;
+﻿using WSBInvestmentPredictor.Prediction.Infrastructure.MarketData;
+using WSBInvestmentPredictor.Prediction.Shared.Dto;
 
 namespace WSBInvestmentPredictor.Prediction.UnitTests.TestDoubles;
 

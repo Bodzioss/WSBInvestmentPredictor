@@ -1,5 +1,6 @@
 ﻿using WSBInvestmentPredictor.Prediction.Application.Queries;
-using WSBInvestmentPredictor.Prediction.InternalShared.ValueObjects;
+using WSBInvestmentPredictor.Prediction.Shared.Dto;
+using WSBInvestmentPredictor.Prediction.Shared.Queries;
 using WSBInvestmentPredictor.Prediction.UnitTests.Builders;
 using WSBInvestmentPredictor.Prediction.UnitTests.TestDoubles;
 using Xunit;

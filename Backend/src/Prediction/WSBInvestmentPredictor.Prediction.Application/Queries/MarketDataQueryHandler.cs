@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using WSBInvestmentPredictor.Prediction.Infrastructure.MarketData;
-using WSBInvestmentPredictor.Prediction.InternalShared.ValueObjects;
+using WSBInvestmentPredictor.Prediction.Shared.Dto;
+using WSBInvestmentPredictor.Prediction.Shared.Queries;
 
 namespace WSBInvestmentPredictor.Prediction.Application.Queries;
 

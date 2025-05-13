@@ -2,7 +2,7 @@
 using WSBInvestmentPredictor.Prediction.Application.Dto;
 using WSBInvestmentPredictor.Prediction.Domain.Entities;
 
-namespace WSBInvestmentPredictor.Prediction.Application.Queries;
+namespace WSBInvestmentPredictor.Prediction.Shared.Queries;
 
 /// <summary>
 /// Query to get a prediction for a given MarketData sample.

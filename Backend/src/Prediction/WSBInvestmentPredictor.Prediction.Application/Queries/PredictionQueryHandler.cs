@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using WSBInvestmentPredictor.Prediction.Application.Dto;
 using WSBInvestmentPredictor.Prediction.Domain.Interfaces;
+using WSBInvestmentPredictor.Prediction.Shared.Queries;
 
 namespace WSBInvestmentPredictor.Prediction.Application.Queries;
 

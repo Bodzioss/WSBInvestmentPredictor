@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
-using System.Net.Http;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using System.Linq;
 using WSBInvestmentPredictor.Prediction.Models;
+using WSBInvestmentPredictor.Prediction.Shared.Queries;
 using WSBInvestmentPredictor.Technology.Cqrs;
-using WSBInvestmentPredictor.Prediction.Application.Queries;
 
 namespace WSBInvestmentPredictor.Prediction.Pages;
 
@@ -27,7 +27,6 @@ public partial class QuickPrediction : ComponentBase
                         t.Ticker.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
                         t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
 
-
     protected bool isLoading = false;
     protected string error;
     protected float? prediction;
@@ -40,7 +39,7 @@ public partial class QuickPrediction : ComponentBase
         {
             availableTickers = await Cqrs.Handle<GetSp500TickersQuery, List<CompanyTicker>>(new())
                                 ?? [];
-             
+
             symbol = availableTickers.FirstOrDefault()?.Ticker ?? "AAPL";
         }
         catch (Exception ex)

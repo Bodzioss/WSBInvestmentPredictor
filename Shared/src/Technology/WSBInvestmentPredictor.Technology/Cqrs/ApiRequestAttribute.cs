@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WSBInvestmentPredictor.Technology.Cqrs;
+﻿namespace WSBInvestmentPredictor.Technology.Cqrs;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class ApiRequestAttribute : Attribute

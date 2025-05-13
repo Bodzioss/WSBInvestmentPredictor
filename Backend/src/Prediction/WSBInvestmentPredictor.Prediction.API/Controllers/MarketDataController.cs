@@ -1,11 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.Net.Http;
-using WSBInvestmentPredictor.Prediction.Application.Queries;
 using WSBInvestmentPredictor.Prediction.Infrastructure.MarketData;
-using WSBInvestmentPredictor.Prediction.Infrastructure.MarketData.Dto;
 using WSBInvestmentPredictor.Prediction.MarketData;
+using WSBInvestmentPredictor.Prediction.Shared.Queries;
 
 namespace WSBInvestmentPredictor.Prediction.API.Controllers;
 
@@ -14,18 +11,11 @@ namespace WSBInvestmentPredictor.Prediction.API.Controllers;
 public class MarketDataController : ControllerBase
 {
     private readonly IPolygonClient _polygon;
-    private readonly IConfiguration _configuration;
-    private readonly HttpClient _httpClient;
-    private readonly ISp500TickerProvider _tickerProvider;
     private readonly IMediator _mediator;
 
-
-    public MarketDataController(IPolygonClient polygon, IConfiguration configuration, IHttpClientFactory factory, ISp500TickerProvider tickerProvider, IMediator mediator)
+    public MarketDataController(IPolygonClient polygon, IMediator mediator)
     {
         _polygon = polygon;
-        _configuration = configuration;
-        _httpClient = factory.CreateClient();
-        _tickerProvider = tickerProvider;
         _mediator = mediator;
     }
 
@@ -55,5 +45,4 @@ public class MarketDataController : ControllerBase
         var result = await _mediator.Send(new GetSp500TickersQuery());
         return Ok(result);
     }
-
 }

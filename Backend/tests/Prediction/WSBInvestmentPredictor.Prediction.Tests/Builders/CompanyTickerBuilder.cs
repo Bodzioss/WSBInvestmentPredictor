@@ -1,4 +1,4 @@
-﻿using WSBInvestmentPredictor.Prediction.InternalShared.ValueObjects;
+﻿using WSBInvestmentPredictor.Prediction.Shared.Dto;
 
 namespace WSBInvestmentPredictor.Prediction.UnitTests.Builders;
 

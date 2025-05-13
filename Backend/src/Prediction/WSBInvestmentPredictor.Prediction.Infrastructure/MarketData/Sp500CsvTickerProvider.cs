@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using WSBInvestmentPredictor.Prediction.InternalShared.ValueObjects;
+using WSBInvestmentPredictor.Prediction.Shared.Dto;
 
 namespace WSBInvestmentPredictor.Prediction.Infrastructure.MarketData;
 
@@ -16,7 +16,7 @@ public class Sp500CsvTickerProvider : ISp500TickerProvider
 
     public IEnumerable<CompanyTicker> GetAll() => _tickers.Value;
 
-    private List<CompanyTicker  > LoadTickers()
+    private List<CompanyTicker> LoadTickers()
     {
         if (!File.Exists(_csvPath))
             throw new FileNotFoundException("Nie znaleziono pliku sp500.csv w katalogu Resources.", _csvPath);
@@ -32,7 +32,7 @@ public class Sp500CsvTickerProvider : ISp500TickerProvider
             var parts = line.Split(';');
             if (parts.Length >= 2)
             {
-                result.Add(new CompanyTicker(parts[0].Trim(),parts[1].Trim()));
+                result.Add(new CompanyTicker(parts[0].Trim(), parts[1].Trim()));
             }
         }
 
