@@ -6,6 +6,8 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Linq;
 using WSBInvestmentPredictor.Prediction.Models;
+using WSBInvestmentPredictor.Technology.Cqrs;
+using WSBInvestmentPredictor.Prediction.Application.Queries;
 
 namespace WSBInvestmentPredictor.Prediction.Pages;
 
@@ -30,22 +32,23 @@ public partial class QuickPrediction : ComponentBase
     protected string error;
     protected float? prediction;
 
+    [Inject] protected ICqrsRequestService Cqrs { get; set; } = default!;
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            availableTickers = await Http.GetFromJsonAsync<List<CompanyTicker>>("/api/marketdata/tickers")
+            availableTickers = await Cqrs.Handle<GetSp500TickersQuery, List<CompanyTicker>>(new())
                                 ?? [];
-
+             
             symbol = availableTickers.FirstOrDefault()?.Ticker ?? "AAPL";
         }
         catch (Exception ex)
         {
             error = $"Nie udało się pobrać listy tickerów: {ex.Message}";
-            availableTickers =
-        [
-            new() { Ticker = "AAPL", Name = "Apple Inc." }
-        ];
+            availableTickers = [
+                new() { Ticker = "AAPL", Name = "Apple Inc." }
+            ];
             symbol = "AAPL";
         }
     }

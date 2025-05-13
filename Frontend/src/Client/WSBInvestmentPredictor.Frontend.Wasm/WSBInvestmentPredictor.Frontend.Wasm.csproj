@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\src\Technology\WSBInvestmentPredictor.Technology\WSBInvestmentPredictor.Technology.csproj" />
     <ProjectReference Include="..\..\Prediction\WSBInvestmentPredictor.Prediction\WSBInvestmentPredictor.Prediction.csproj" />
   </ItemGroup>
 

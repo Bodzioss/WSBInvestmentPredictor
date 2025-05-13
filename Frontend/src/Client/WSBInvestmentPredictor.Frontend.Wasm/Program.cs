@@ -4,6 +4,8 @@ using System.Reflection;
 using WSBInvestmentPredictor.Frontend.Shared.Navigation;
 using WSBInvestmentPredictor.Frontend.Shared.Services;
 using WSBInvestmentPredictor.Frontend.Wasm;
+using WSBInvestmentPredictor.Frontend.Wasm.Services.Cqrs;
+using WSBInvestmentPredictor.Technology.Cqrs;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -15,7 +17,7 @@ builder.Services.AddScoped(sp => new HttpClient
 builder.Services.AddRadzenComponents();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<ApiService>();
-
+builder.Services.AddScoped<ICqrsRequestService, HttpCqrsRequestService>();
 var nav = new NavigationRegistry();
 WSBInvestmentPredictor.Prediction.DI.RegisterNavigation(nav);
 builder.Services.AddSingleton(nav);
