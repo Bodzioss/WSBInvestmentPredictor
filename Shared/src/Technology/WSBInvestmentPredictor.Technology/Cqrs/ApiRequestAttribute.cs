@@ -9,6 +9,6 @@ public class ApiRequestAttribute : Attribute
     public ApiRequestAttribute(string endpoint, string httpMethod = "POST")
     {
         Endpoint = endpoint;
-        HttpMethod = httpMethod.ToUpper();
+        HttpMethod = httpMethod.ToUpperInvariant();
     }
 }

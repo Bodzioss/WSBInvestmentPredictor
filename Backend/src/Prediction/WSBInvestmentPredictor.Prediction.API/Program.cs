@@ -1,5 +1,6 @@
 using FluentValidation;
 using MediatR;
+using WSBInvestmentPredictor.Prediction.API;
 using WSBInvestmentPredictor.Prediction.Application;
 using WSBInvestmentPredictor.Prediction.Application.Common.Behaviors;
 using WSBInvestmentPredictor.Prediction.Application.FeatureEngeneering;
@@ -8,6 +9,8 @@ using WSBInvestmentPredictor.Prediction.Domain.Interfaces;
 using WSBInvestmentPredictor.Prediction.Infrastructure.MarketData;
 using WSBInvestmentPredictor.Prediction.Infrastructure.Prediction;
 using WSBInvestmentPredictor.Prediction.MarketData;
+using WSBInvestmentPredictor.Prediction.Shared.Queries;
+using WSBInvestmentPredictor.Technology.Cqrs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +19,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("https://localhost:7236")
-            .AllowAnyMethod()
-            .AllowAnyHeader();
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
@@ -43,10 +46,10 @@ builder.Services.AddScoped<IStockPredictorService, StockPredictorService>();
 builder.Services.AddSingleton<ISp500TickerProvider, Sp500CsvTickerProvider>();
 builder.Services.AddSingleton<MarketDataBuilder>();
 builder.Services.AddHttpClient<IPolygonClient, PolygonClient>();
+builder.Services.AddScoped<IPredictionEngine, PredictionEngine>();
 
 var app = builder.Build();
 
-app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 
@@ -59,10 +62,25 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseRouting();
+
+app.UseCors("AllowFrontend");
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapCqrsEndpoints(typeof(RunBacktestQuery).Assembly, "AllowFrontend");
+
+app.Use(async (context, next) =>
+{
+    await next();
+
+    Console.WriteLine("--- RESPONSE HEADERS ---");
+    foreach (var h in context.Response.Headers)
+        Console.WriteLine($"{h.Key}: {h.Value}");
+});
 
 app.Run();

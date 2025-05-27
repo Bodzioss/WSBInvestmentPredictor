@@ -7,4 +7,5 @@
 public class PredictionResult
 {
     public float Score { get; set; }
+    public float ChangePercentage { get; set; }
 }

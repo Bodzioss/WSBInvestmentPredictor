@@ -1,0 +1,45 @@
+﻿@page "/backtest"
+@using System.Net.Http.Json
+@using Radzen
+@using WSBInvestmentPredictor.Prediction.Models
+
+@inherits BacktestDashboardBase
+
+<PageTitle>Backtest</PageTitle>
+
+<h3>Backtest Dashboard</h3>
+
+<RadzenDropDown TValue="string"
+                Data="@Tickers"
+                TextProperty="Name"
+                ValueProperty="Ticker"
+                @bind-Value="SelectedTicker"
+                Placeholder="Wybierz spółkę"
+                Style="width: 300px;" />
+
+<RadzenDropDown TValue="int"
+                Data="@AvailableYears"
+                @bind-Value="SelectedYear"
+                Placeholder="Wybierz rok"
+                Style="width: 150px;" />
+
+<RadzenButton Text="Uruchom backtest"
+              Click="@RunBacktest"
+              Disabled="@(!CanRun)"
+              Style="margin-top: 10px;" />
+
+@if (Result is not null)
+{
+    <h4>Statystyki</h4>
+    <ul>
+        <li><b>Accuracy:</b> @($"{Result.Accuracy:P2}")</li>
+        <li><b>MSE:</b> @($"{Result.MeanSquaredError:F4}")</li>
+    </ul>
+
+    <h4>Wykres Predykcji vs Faktyczna zmiana</h4>
+
+    <RadzenChart Style="height: 400px;">
+        <RadzenLineSeries Data="@Result.Points" CategoryProperty="Date" ValueProperty="PredictedChange" Title="Predykcja" />
+        <RadzenLineSeries Data="@Result.Points" CategoryProperty="Date" ValueProperty="ActualChange" Title="Rzeczywistość" />
+    </RadzenChart>
+}

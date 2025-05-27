@@ -77,8 +77,8 @@ public partial class QuickPrediction : ComponentBase
 
             if (response.IsSuccessStatusCode)
             {
-                var json = await response.Content.ReadFromJsonAsync<PredictionResponse>();
-                prediction = json?.prediction;
+                var json = await response.Content.ReadFromJsonAsync<PredictionResultDto>();
+                prediction = json?.Prediction;
             }
             else
             {
@@ -92,20 +92,5 @@ public partial class QuickPrediction : ComponentBase
         }
 
         isLoading = false;
-    }
-
-    public class RawMarketData
-    {
-        public string Date { get; set; } = string.Empty;
-        public float Open { get; set; }
-        public float High { get; set; }
-        public float Low { get; set; }
-        public float Close { get; set; }
-        public float Volume { get; set; }
-    }
-
-    public class PredictionResponse
-    {
-        public float prediction { get; set; }
     }
 }
