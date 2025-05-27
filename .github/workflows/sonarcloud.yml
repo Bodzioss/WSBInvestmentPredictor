@@ -2,10 +2,9 @@ name: SonarCloud
 
 on:
   push:
-    branches:
-      - main
+    branches: [ '**' ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [ '**' ]
 
 jobs:
   build:
@@ -18,21 +17,24 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: 9.0
 
       - name: Restore dependencies
-        run: dotnet restore
+        working-directory: ./Backend
+        run: dotnet restore WSBInvestmentPredictor.Backend.sln
 
       - name: Build
-        run: dotnet build --no-restore
+        working-directory: ./Backend
+        run: dotnet build WSBInvestmentPredictor.Backend.sln --no-restore
 
       - name: Run tests
-        run: dotnet test --no-build --verbosity normal
+        working-directory: ./Backend
+        run: dotnet test ./tests/Prediction/WSBInvestmentPredictor.Prediction.Tests/WSBInvestmentPredictor.Prediction.UnitTests.csproj --no-build --verbosity normal
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
-          projectBaseDir: .
+          projectBaseDir: ./Backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_PROJECT_KEY: Bodzioss_WSBInvestmentPredictor
