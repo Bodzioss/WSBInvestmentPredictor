@@ -8,34 +8,47 @@ on:
 
 jobs:
   build:
-    name: Build and analyze
+    name: Build, Test and Analyze
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0
+          dotnet-version: '9.0.x'
+
+      - name: Install dotnet-sonarscanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Install dotnet-coverage
+        run: dotnet tool install --global dotnet-coverage
+
+      - name: Add tool path to environment
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Restore dependencies
         working-directory: ./Backend
-        run: dotnet restore WSBInvestmentPredictor.Backend.sln
+        run: dotnet restore
 
-      - name: Build
+      - name: Begin SonarCloud analysis
         working-directory: ./Backend
-        run: dotnet build WSBInvestmentPredictor.Backend.sln --no-restore
+        run: |
+          dotnet sonarscanner begin /k:"Bodzioss_WSBInvestmentPredictor" \
+            /o:"bodzioss" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
 
-      - name: Run tests
+      - name: Build solution
         working-directory: ./Backend
-        run: dotnet test ./tests/Prediction/WSBInvestmentPredictor.Prediction.Tests/WSBInvestmentPredictor.Prediction.UnitTests.csproj --no-build --verbosity normal
+        run: dotnet build --no-restore --configuration Release
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          projectBaseDir: ./Backend
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: Bodzioss_WSBInvestmentPredictor
-          SONAR_ORGANIZATION: bodzioss
+      - name: Run tests with dotnet-coverage
+        working-directory: ./Backend
+        run: dotnet-coverage collect "dotnet test --no-build --configuration Release" -f xml -o "coverage.xml"
+
+      - name: End SonarCloud analysis
+        working-directory: ./Backend
+        run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
