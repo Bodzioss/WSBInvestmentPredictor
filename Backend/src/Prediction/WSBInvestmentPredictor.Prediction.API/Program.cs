@@ -10,7 +10,7 @@ using WSBInvestmentPredictor.Prediction.Infrastructure.MarketData;
 using WSBInvestmentPredictor.Prediction.Infrastructure.Prediction;
 using WSBInvestmentPredictor.Prediction.MarketData;
 using WSBInvestmentPredictor.Prediction.Shared.Queries;
-using WSBInvestmentPredictor.Technology.Cqrs;
+using WSBInvestmentPredictor.Technology.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .AllowAnyOrigin()
+            .WithOrigins("https://localhost:7236")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -44,12 +44,11 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBeh
 
 builder.Services.AddScoped<IStockPredictorService, StockPredictorService>();
 builder.Services.AddSingleton<ISp500TickerProvider, Sp500CsvTickerProvider>();
-builder.Services.AddSingleton<MarketDataBuilder>();
+builder.Services.AddSingleton<MarketDataPredictionBuilder>();
 builder.Services.AddHttpClient<IPolygonClient, PolygonClient>();
 builder.Services.AddScoped<IPredictionEngine, PredictionEngine>();
 
 var app = builder.Build();
-
 
 app.UseAuthorization();
 
@@ -71,6 +70,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseErrorHandling();
 
 app.MapCqrsEndpoints(typeof(RunBacktestQuery).Assembly, "AllowFrontend");
 

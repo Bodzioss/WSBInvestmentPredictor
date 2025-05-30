@@ -19,8 +19,15 @@ public class GetSp500TickersHandlerTests
         new CompanyTickerBuilder().WithTicker("MSFT").WithName("Microsoft").Build()
     };
 
+        var mockData = new List<RawMarketData>
+{
+    new(DateTime.UtcNow.AddDays(-1).ToString(), 100, 110, 90, 105, 150_000),
+    new(DateTime.UtcNow.ToString(), 106, 112, 101, 108, 120_000)
+};
+
+        var fakePolygon = new FakePolygonClient(mockData);
         var provider = new FakeSp500TickerProvider(tickers);
-        var handler = new MarketDataQueryHandler(provider);
+        var handler = new MarketDataQueryHandler(provider, fakePolygon);
 
         // Act
         var result = await handler.Handle(new GetSp500TickersQuery(), CancellationToken.None);
@@ -34,9 +41,16 @@ public class GetSp500TickersHandlerTests
     [Fact]
     public async Task Returns_empty_list_when_no_data()
     {
+        var mockData = new List<RawMarketData>
+{
+    new(DateTime.UtcNow.AddDays(-1).ToString(), 100, 110, 90, 105, 150_000),
+    new(DateTime.UtcNow.ToString(), 106, 112, 101, 108, 120_000)
+};
+
+        var fakePolygon = new FakePolygonClient(mockData);
         // Arrange
         var provider = new FakeSp500TickerProvider([]);
-        var handler = new MarketDataQueryHandler(provider);
+        var handler = new MarketDataQueryHandler(provider, fakePolygon);
 
         // Act
         var result = await handler.Handle(new GetSp500TickersQuery(), CancellationToken.None);

@@ -1,5 +1,6 @@
 ﻿using WSBInvestmentPredictor.Prediction.Domain.Entities;
 using WSBInvestmentPredictor.Prediction.Domain.Interfaces;
+using WSBInvestmentPredictor.Prediction.Shared.Dto;
 
 namespace WSBInvestmentPredictor.Prediction.UnitTests.TestDoubles;
 

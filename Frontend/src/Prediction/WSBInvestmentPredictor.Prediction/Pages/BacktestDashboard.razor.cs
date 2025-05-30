@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
-using WSBInvestmentPredictor.Prediction.Shared.Dto;
-using WSBInvestmentPredictor.Technology.Cqrs;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using WSBInvestmentPredictor.Prediction.Shared.Dto;
 using WSBInvestmentPredictor.Prediction.Shared.Queries;
+using WSBInvestmentPredictor.Technology.Cqrs;
 
 namespace WSBInvestmentPredictor.Prediction.Pages;
 
