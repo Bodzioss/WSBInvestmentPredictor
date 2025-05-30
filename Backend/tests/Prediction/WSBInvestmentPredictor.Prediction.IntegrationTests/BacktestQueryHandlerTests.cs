@@ -7,11 +7,11 @@ using Xunit;
 
 namespace WSBInvestmentPredictor.Prediction.IntegrationTests;
 
-public class BacktestQueryHandlerTests : IClassFixture<WebApplicationFactory<Program>>
+public class BacktestQueryHandlerTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly HttpClient _client;
 
-    public BacktestQueryHandlerTests(WebApplicationFactory<Program> factory)
+    public BacktestQueryHandlerTests(CustomWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
     }
@@ -23,11 +23,10 @@ public class BacktestQueryHandlerTests : IClassFixture<WebApplicationFactory<Pro
         var response = await _client.PostAsJsonAsync("/api/backtest", query);
 
         var content = await response.Content.ReadAsStringAsync();
-
-        Assert.True(response.IsSuccessStatusCode, $"Status: {(int)response.StatusCode}\nContent: {content}");
+        Assert.True(response.IsSuccessStatusCode, $"Status: {(int)response.StatusCode}\n{content}");
 
         var result = await response.Content.ReadFromJsonAsync<BacktestResultDto>();
         Assert.NotNull(result);
-        Assert.True(result.Points.Count >= 0);
+        Assert.True(result.Points.Count > 0);
     }
 }
