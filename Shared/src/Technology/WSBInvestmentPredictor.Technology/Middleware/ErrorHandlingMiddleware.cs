@@ -28,18 +28,21 @@ public class ErrorHandlingMiddleware
     {
         context.Response.ContentType = "application/json";
 
-        var response = exception switch
+        var (statusCode, message) = exception switch
         {
-            _ => new
-            {
-                error = "Wystąpił nieoczekiwany błąd serwera.",
-                status = StatusCodes.Status500InternalServerError
-            }
+            ArgumentException argEx => (StatusCodes.Status400BadRequest, argEx.Message),
+            InvalidOperationException invOpEx => (StatusCodes.Status400BadRequest, invOpEx.Message),
+            _ => (StatusCodes.Status500InternalServerError, "Wystąpił nieoczekiwany błąd serwera.")
         };
 
-        context.Response.StatusCode = response.status;
-        var json = JsonSerializer.Serialize(new { response.error });
+        context.Response.StatusCode = statusCode;
 
-        return context.Response.WriteAsync(json);
+        var errorPayload = JsonSerializer.Serialize(new
+        {
+            error = message,
+            status = statusCode
+        });
+
+        return context.Response.WriteAsync(errorPayload);
     }
 }

@@ -24,9 +24,11 @@ public class ErrorHandlingMiddlewareTests
         // Assert
         stream.Seek(0, SeekOrigin.Begin);
         var body = await new StreamReader(stream).ReadToEndAsync();
-        var json = JsonSerializer.Deserialize<Dictionary<string, string>>(body);
+
+        var json = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(body);
 
         Assert.Equal(StatusCodes.Status500InternalServerError, context.Response.StatusCode);
-        Assert.Equal("Wystąpił nieoczekiwany błąd serwera.", json["error"]);
+        Assert.Equal("Wystąpił nieoczekiwany błąd serwera.", json["error"].GetString());
+        Assert.Equal(500, json["status"].GetInt32());
     }
 }
