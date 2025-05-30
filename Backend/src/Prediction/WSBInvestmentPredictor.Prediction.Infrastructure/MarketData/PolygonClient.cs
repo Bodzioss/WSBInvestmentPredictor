@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
+using WSBInvestmentPredictor.Prediction.Infrastructure.MarketData.Dto;
 using WSBInvestmentPredictor.Prediction.Shared.Dto;
 
 namespace WSBInvestmentPredictor.Prediction.MarketData;
