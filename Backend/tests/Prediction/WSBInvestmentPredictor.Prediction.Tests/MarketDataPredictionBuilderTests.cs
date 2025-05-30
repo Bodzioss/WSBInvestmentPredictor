@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using WSBInvestmentPredictor.Prediction.Application.FeatureEngeneering;
+using WSBInvestmentPredictor.Prediction.Infrastructure;
 using WSBInvestmentPredictor.Prediction.Shared.Dto;
 using Xunit;
 
