@@ -51,14 +51,14 @@ public class MarketDataPredictionBuilder
         return results;
     }
 
-    private double StdDev(IEnumerable<double> values)
+    private static double StdDev(IEnumerable<double> values)
     {
         var arr = values.ToArray();
         var avg = arr.Average();
         return Math.Sqrt(arr.Sum(v => Math.Pow(v - avg, 2)) / arr.Length);
     }
 
-    private double CalculateRSI(List<RawMarketData> data)
+    private static double CalculateRSI(List<RawMarketData> data)
     {
         double gain = 0, loss = 0;
         for (int i = 1; i < data.Count; i++)

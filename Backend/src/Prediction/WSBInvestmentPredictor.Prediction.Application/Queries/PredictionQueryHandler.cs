@@ -6,7 +6,7 @@ using WSBInvestmentPredictor.Prediction.Shared.Queries;
 
 namespace WSBInvestmentPredictor.Prediction.Application.Queries;
 
-public class PredictionQueryHandler 
+public class PredictionQueryHandler
     : IRequestHandler<GetPredictionQuery, PredictionResultDto>,
       IRequestHandler<PredictFromRawQuery, PredictionResultDto>
 {
