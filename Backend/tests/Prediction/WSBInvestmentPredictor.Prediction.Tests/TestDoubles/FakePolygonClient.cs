@@ -1,5 +1,5 @@
-﻿using WSBInvestmentPredictor.Prediction.Domain.Entities;
-using WSBInvestmentPredictor.Prediction.MarketData;
+﻿using WSBInvestmentPredictor.Prediction.MarketData;
+using WSBInvestmentPredictor.Prediction.Shared.Dto;
 
 namespace WSBInvestmentPredictor.Prediction.UnitTests.TestDoubles;
 

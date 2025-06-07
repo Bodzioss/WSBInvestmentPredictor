@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using WSBInvestmentPredictor.Prediction.Models;
+using WSBInvestmentPredictor.Prediction.Shared.Dto;
 using WSBInvestmentPredictor.Prediction.Shared.Queries;
 using WSBInvestmentPredictor.Technology.Cqrs;
 
@@ -46,7 +46,7 @@ public partial class QuickPrediction : ComponentBase
         {
             error = $"Nie udało się pobrać listy tickerów: {ex.Message}";
             availableTickers = [
-                new() { Ticker = "AAPL", Name = "Apple Inc." }
+                new( "AAPL", "Apple Inc.")
             ];
             symbol = "AAPL";
         }
@@ -63,8 +63,8 @@ public partial class QuickPrediction : ComponentBase
 
         try
         {
-            var rawData = await Http.GetFromJsonAsync<List<RawMarketData>>(
-                $"/api/marketdata/{symbol}?from={from:yyyy-MM-dd}&to={to:yyyy-MM-dd}"
+            var rawData = await Cqrs.Handle<GetRawMarketDataQuery, List<RawMarketData>>(
+                new GetRawMarketDataQuery(symbol, from, to)
             );
 
             if (rawData == null || rawData.Count < 1)
@@ -73,18 +73,11 @@ public partial class QuickPrediction : ComponentBase
                 return;
             }
 
-            var response = await Http.PostAsJsonAsync("/api/Prediction/predict-from-raw", rawData);
+            var result = await Cqrs.Handle<PredictFromRawQuery, PredictionResultDto>(
+                new PredictFromRawQuery(rawData)
+            );
 
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadFromJsonAsync<PredictionResultDto>();
-                prediction = json?.Prediction;
-            }
-            else
-            {
-                var msg = await response.Content.ReadAsStringAsync();
-                error = $"Błąd API: {msg}";
-            }
+            prediction = result?.Prediction;
         }
         catch (Exception ex)
         {

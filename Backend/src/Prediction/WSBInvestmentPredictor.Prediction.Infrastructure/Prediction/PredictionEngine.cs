@@ -1,7 +1,9 @@
 ﻿using WSBInvestmentPredictor.Prediction.Domain.Entities;
 using WSBInvestmentPredictor.Prediction.Domain.Interfaces;
+using WSBInvestmentPredictor.Prediction.Shared.Dto;
 
 namespace WSBInvestmentPredictor.Prediction.Infrastructure.Prediction;
+
 public class PredictionEngine : IPredictionEngine
 {
     public Task<PredictionResult> PredictAsync(List<RawMarketData> history)

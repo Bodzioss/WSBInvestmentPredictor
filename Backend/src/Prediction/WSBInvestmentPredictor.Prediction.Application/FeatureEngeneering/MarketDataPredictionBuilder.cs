@@ -1,8 +1,9 @@
 ﻿using WSBInvestmentPredictor.Prediction.Domain.Entities;
+using WSBInvestmentPredictor.Prediction.Shared.Dto;
 
 namespace WSBInvestmentPredictor.Prediction.Application.FeatureEngeneering;
 
-public class MarketDataBuilder
+public class MarketDataPredictionBuilder
 {
     /// <summary>
     /// Przetwarza podstawowe dane OHLCV i zwraca listę gotowych rekordów MarketData z obliczonymi cechami.

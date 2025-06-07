@@ -7,18 +7,24 @@ public static class EndpointExtensions
 {
     public static string ApplyParams(this string endpoint, object request)
     {
-        var matches = Regex.Matches(endpoint, @"{([^}]+)}");
+        var matches = Regex.Matches(
+            endpoint,
+            @"{([^}]+)}",
+            RegexOptions.None,
+            TimeSpan.FromMilliseconds(200));
 
         foreach (Match match in matches)
         {
             var paramName = match.Groups[1].Value;
-            var prop = request.GetType().GetProperty(paramName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            var prop = request.GetType().GetProperty(
+                paramName,
+                BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
 
-            if (prop is null)
-                throw new InvalidOperationException($"Brak właściwości '{paramName}' w {request.GetType().Name}.");
+            if (prop == null)
+                continue;
 
-            var value = prop.GetValue(request)?.ToString() ?? "";
-            endpoint = endpoint.Replace($"{{{paramName}}}", Uri.EscapeDataString(value));
+            var value = prop.GetValue(request)?.ToString();
+            endpoint = endpoint.Replace(match.Value, Uri.EscapeDataString(value ?? string.Empty));
         }
 
         return endpoint;

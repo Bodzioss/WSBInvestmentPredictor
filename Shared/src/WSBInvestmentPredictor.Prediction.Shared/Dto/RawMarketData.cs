@@ -1,4 +1,4 @@
-﻿namespace WSBInvestmentPredictor.Prediction.Domain.Entities;
+﻿namespace WSBInvestmentPredictor.Prediction.Shared.Dto;
 /// <summary>
 /// Basic OHLCV data used as input before feature engineering.
 /// </summary>

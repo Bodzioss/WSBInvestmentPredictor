@@ -88,9 +88,33 @@ public static class CqrsEndpointMapper
     {
         return await mediator.Send(request);
     }
+
     private static Delegate WrapHandler<TRequest, TResult>(Func<TRequest, IMediator, Task<TResult>> handler)
         where TRequest : IRequest<TResult>
     {
+        var props = typeof(TRequest).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        // GET z pustym requestem
+        if (props.Length == 0)
+        {
+            return async ([FromServices] IMediator mediator) =>
+            {
+                var request = Activator.CreateInstance<TRequest>(); // zamiast new TRequest()
+                return await handler(request, mediator);
+            };
+        }
+
+        // GET z parametrami (z query string)
+        if (HttpMethods.IsGet(typeof(TRequest)
+            .GetCustomAttribute<ApiRequestAttribute>()?.HttpMethod))
+        {
+            return async ([FromQuery] TRequest request, [FromServices] IMediator mediator) =>
+            {
+                return await handler(request, mediator);
+            };
+        }
+
+        // domyślnie FromBody (POST, PUT, DELETE)
         return async ([FromBody] TRequest request, [FromServices] IMediator mediator) =>
         {
             return await handler(request, mediator);
