@@ -1,4 +1,6 @@
-﻿public class PolygonCandleResponseDto
+﻿namespace WSBInvestmentPredictor.Prediction.Infrastructure.MarketData.Dto;
+
+public class PolygonCandleResponseDto
 {
     public string ticker { get; set; } = string.Empty;
     public List<PolygonBar> results { get; set; } = new();
