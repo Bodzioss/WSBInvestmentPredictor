@@ -3,7 +3,7 @@
 namespace WSBInvestmentPredictor.Prediction.Models;
 
 /// <summary>
-/// Represents raw market data input from the user, used for prediction.
+/// Represents raw market data input from the user, used for Prediction.
 /// This matches the minimal fields required by the backend API.
 /// </summary>
 public class MarketDataInput

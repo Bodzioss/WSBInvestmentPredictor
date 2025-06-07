@@ -14,5 +14,6 @@ public static class DI
     {
         registry.Links.Add(new NavLinkItem("📈 Prediction", "/predict"));
         registry.Links.Add(new NavLinkItem("⚡ Quick Predict", "/quick-predict"));
+        registry.Links.Add(new NavLinkItem("⚡ Backtesting", "/backtest"));
     }
 }
