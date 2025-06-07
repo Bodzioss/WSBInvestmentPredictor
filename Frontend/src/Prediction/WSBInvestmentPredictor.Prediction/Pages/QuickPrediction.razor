@@ -1,0 +1,61 @@
+﻿@page "/quick-predict"
+
+<h3>⚡️ Szybka predykcja spółki</h3>
+
+@if (availableTickers.Count == 0)
+{
+    <p><em>Ładowanie listy tickerów...</em></p>
+}
+else
+{
+    <div class="mb-3">
+        <label for="search">Wyszukaj spółkę:</label>
+        <InputText class="form-control" @bind-Value="searchTerm" placeholder="np. Apple, MSFT, Tesla..." />
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="symbol">Wybierz spółkę:</label>
+            <InputSelect class="form-select" @bind-Value="symbol">
+                @foreach (var t in FilteredTickers)
+                {
+                    <option value="@t.Ticker">@t.Ticker - @t.Name</option>
+                }
+            </InputSelect>
+
+            @if (!FilteredTickers.Any())
+            {
+                <div class="text-muted mt-1">Brak pasujących spółek.</div>
+            }
+        </div>
+
+        <div class="col-md-3">
+            <label for="days">Liczba dni:</label>
+            <InputSelect class="form-select" @bind-Value="selectedDays">
+                @foreach (var d in dayOptions)
+                {
+                    <option value="@d">@d dni</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end">
+            <button class="btn btn-primary w-100" @onclick="PredictAsync">Oblicz predykcję</button>
+        </div>
+    </div>
+
+    @if (isLoading)
+    {
+        <p><em>Ładowanie danych i generowanie predykcji...</em></p>
+    }
+    else if (error != null)
+    {
+        <div class="alert alert-danger">@error</div>
+    }
+    else if (prediction.HasValue)
+    {
+        <div class="alert alert-success">
+            <strong>Predykcja 30-dniowego zwrotu:</strong> @prediction.Value.ToString("P2")
+        </div>
+    }
+}

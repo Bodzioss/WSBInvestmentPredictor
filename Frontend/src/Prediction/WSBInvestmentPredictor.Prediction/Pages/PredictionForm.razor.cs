@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Radzen;
 using System.Collections.Generic;
-using System.Net.Http;
-using System;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
-using WSBInvestmentPredictor.Prediction.Models;
 using WSBInvestmentPredictor.Frontend.Shared.Services;
+using WSBInvestmentPredictor.Prediction.Models;
 
 namespace WSBInvestmentPredictor.Prediction.Pages;
 

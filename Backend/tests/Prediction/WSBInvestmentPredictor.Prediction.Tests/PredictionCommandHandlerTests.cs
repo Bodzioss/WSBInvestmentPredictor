@@ -1,7 +1,7 @@
-﻿using Xunit;
+﻿using WSBInvestmentPredictor.Prediction.Application.Commands;
 using WSBInvestmentPredictor.Prediction.UnitTests.Builders;
-using WSBInvestmentPredictor.Prediction.Application.Commands;
 using WSBInvestmentPredictor.Prediction.UnitTests.TestDoubles;
+using Xunit;
 
 namespace WSBInvestmentPredictor.Prediction.UnitTests;
 

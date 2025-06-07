@@ -8,16 +8,16 @@ namespace WSBInvestmentPredictor.Prediction.UnitTests.TestDoubles;
 /// </summary>
 public class TestStockPredictorService : IStockPredictorService
 {
-    public IEnumerable<MarketData>? TrainedData { get; private set; }
+    public IEnumerable<MarketDataInput>? TrainedData { get; private set; }
     public bool WasTrained => TrainedData != null;
     public float PredictionToReturn { get; set; } = 0.0f;
 
-    public void Train(IEnumerable<MarketData> data)
+    public void Train(IEnumerable<MarketDataInput> data)
     {
         TrainedData = data;
     }
 
-    public float Predict(MarketData input)
+    public float Predict(MarketDataInput input)
     {
         return PredictionToReturn;
     }
