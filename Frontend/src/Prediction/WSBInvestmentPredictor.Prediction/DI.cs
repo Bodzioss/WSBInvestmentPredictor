@@ -12,8 +12,8 @@ public static class DI
 
     public static void RegisterNavigation(NavigationRegistry registry)
     {
-        registry.Links.Add(new NavLinkItem("📈 Prediction", "/predict"));
-        registry.Links.Add(new NavLinkItem("⚡ Quick Predict", "/quick-predict"));
-        registry.Links.Add(new NavLinkItem("⚡ Backtesting", "/backtest"));
+        registry.Links.Add(new NavLinkItem("Predykcja", "/predict", "bi bi-graph-up"));
+        registry.Links.Add(new NavLinkItem("Szybka predykcja", "/quick-predict", "bi bi-lightning-charge"));
+        registry.Links.Add(new NavLinkItem("Backtest", "/backtest", "bi bi-arrow-repeat"));
     }
 }

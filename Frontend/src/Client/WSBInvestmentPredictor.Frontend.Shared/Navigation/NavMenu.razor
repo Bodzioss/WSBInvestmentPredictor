@@ -1,14 +1,42 @@
 ﻿@using WSBInvestmentPredictor.Frontend.Shared.Navigation
 @inject NavigationRegistry NavigationRegistry
 
-
-<ul class="nav flex-column">
+<ul class="nav flex-column nav-modern">
     @foreach (var link in NavigationRegistry.Links)
     {
-        <li class="nav-item">
-            <NavLink class="nav-link" href="@link.Url" Match="NavLinkMatch.All">
-                @link.Title
+        <li class="nav-item mb-2">
+            <NavLink class="nav-link d-flex align-items-center gap-2" href="@link.Url" Match="NavLinkMatch.All" activeClass="active">
+                @if (!string.IsNullOrEmpty(link.Icon))
+                {
+                    <i class="@link.Icon" style="font-size: 1.3rem;"></i>
+                }
+                <span>@link.Title</span>
             </NavLink>
         </li>
     }
 </ul>
+
+<style>
+.nav-modern {
+    background: linear-gradient(180deg, #f8fafc 0%, #e9ecef 100%);
+    border-radius: 18px;
+    padding: 18px 10px 18px 10px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.04);
+}
+.nav-modern .nav-link {
+    color: #222;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+    font-weight: 500;
+    padding: 10px 14px;
+}
+.nav-modern .nav-link.active, .nav-modern .nav-link:hover {
+    background: #007bff22;
+    color: #007bff;
+}
+.nav-modern i {
+    color: #007bff;
+    min-width: 24px;
+    text-align: center;
+}
+</style>

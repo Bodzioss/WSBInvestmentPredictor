@@ -1,5 +1,5 @@
-﻿using WSBInvestmentPredictor.Prediction.Application.FeatureEngeneering;
-using WSBInvestmentPredictor.Prediction.Application.Queries;
+﻿using WSBInvestmentPredictor.Prediction.Application.Queries;
+using WSBInvestmentPredictor.Prediction.Infrastructure;
 using WSBInvestmentPredictor.Prediction.Shared.Queries;
 using WSBInvestmentPredictor.Prediction.UnitTests.Builders;
 using WSBInvestmentPredictor.Prediction.UnitTests.TestDoubles;
