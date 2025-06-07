@@ -1,7 +1,7 @@
 ﻿using WSBInvestmentPredictor.Prediction.Domain.Entities;
 using WSBInvestmentPredictor.Prediction.Shared.Dto;
 
-namespace WSBInvestmentPredictor.Prediction.Application.FeatureEngeneering;
+namespace WSBInvestmentPredictor.Prediction.Infrastructure;
 
 public class MarketDataPredictionBuilder
 {
@@ -13,7 +13,14 @@ public class MarketDataPredictionBuilder
     public List<MarketDataInput> Build(List<RawMarketData> rawData)
     {
         var results = new List<MarketDataInput>();
-        for (int i = 20; i < rawData.Count - 30; i++) // zapewniamy okna SMA i target
+
+        // Minimalny indeks, od którego można obliczyć wszystkie wskaźniki (okno 20 dni i RSI 14 dni)
+        int startIndex = 20;
+
+        // Maksymalny indeks, aby mieć 30 dni na target do przodu
+        int endIndex = rawData.Count - 31; // -31 bo i+30 musi być < Count
+
+        for (int i = startIndex; i <= endIndex; i++)
         {
             var window5 = rawData.Skip(i - 5).Take(5).Select(x => x.Close);
             var window10 = rawData.Skip(i - 10).Take(10).Select(x => x.Close);
