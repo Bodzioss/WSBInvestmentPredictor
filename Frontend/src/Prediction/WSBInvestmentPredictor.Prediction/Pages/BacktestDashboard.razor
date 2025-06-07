@@ -1,57 +1,139 @@
 ﻿@page "/backtest"
 @using Radzen
 @using WSBInvestmentPredictor.Prediction.Models
+@using WSBInvestmentPredictor.Prediction.Shared.Dto;
 
 @inherits BacktestDashboardBase
 
 <PageTitle>Backtest</PageTitle>
 
-<h3>Backtest Dashboard</h3>
+<h3 class="text-center mb-4">Backtest Dashboard</h3>
 
-@if (!string.IsNullOrEmpty(ErrorMessage))
-{
-    <RadzenNotification Style="margin-bottom: 20px;">
-        @ErrorMessage
-    </RadzenNotification>
-}
+<div class="d-flex justify-content-center gap-3 mb-3">
+    <RadzenDropDown TValue="string"
+                    Data="@Tickers"
+                    TextProperty="Name"
+                    ValueProperty="Ticker"
+                    @bind-Value="SelectedTicker"
+                    Placeholder="Wybierz spółkę"
+                    AllowFiltering="true"
+                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                    Style="min-width: 300px;" />
 
-<RadzenDropDown TValue="string"
-                Data="@Tickers"
-                TextProperty="Name"
-                ValueProperty="Ticker"
-                @bind-Value="SelectedTicker"
-                Placeholder="Wybierz spółkę"
-                Style="width: 300px;" />
+    <RadzenDropDown TValue="int"
+                    Data="@AvailableYears"
+                    @bind-Value="SelectedYear"
+                    Placeholder="Wybierz rok"
+                    Style="width: 150px;" />
+</div>
 
-<RadzenDropDown TValue="int"
-                Data="@AvailableYears"
-                @bind-Value="SelectedYear"
-                Placeholder="Wybierz rok"
-                Style="width: 150px;" />
-
-<RadzenButton Text="Uruchom backtest"
-              Click="@RunBacktest"
-              Disabled="@(!CanRun)"
-              Style="margin-top: 10px;"
-              Loading="@IsLoading" />
+<div class="d-flex justify-content-center mb-4">
+    <RadzenButton Text="Uruchom backtest"
+                  Click="@RunBacktest"
+                  Disabled="@(!CanRun)"
+                  Loading="@IsLoading" />
+</div>
 
 @if (IsLoading)
 {
-    <RadzenBusyIndicator Style="margin-top: 10px;" />
+    <div class="text-center mb-3">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Ładowanie...</span>
+        </div>
+        <p class="mt-2">Trwa wykonywanie backtestu...</p>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="text-center mb-3 text-danger">@ErrorMessage</div>
 }
 
 @if (Result is not null)
 {
-    <h4>Statystyki</h4>
-    <ul>
-        <li><b>Accuracy:</b> @($"{Result.Accuracy:P2}")</li>
-        <li><b>MSE:</b> @($"{Result.MeanSquaredError:F4}")</li>
-    </ul>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Dokładność</h5>
+                    <h3 class="text-primary">@(Result.Accuracy.ToString("P2"))</h3>
+                    <p class="text-muted">Procent trafnych kierunków</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Błąd średniokwadratowy</h5>
+                    <h3 class="text-primary">@(Result.MeanSquaredError.ToString("P4"))</h3>
+                    <p class="text-muted">MSE</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Liczba predykcji</h5>
+                    <h3 class="text-primary">@Result.Points.Count</h3>
+                    <p class="text-muted">Ilość wykonanych testów</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Średni błąd</h5>
+                    <h3 class="text-primary">@(Result.Points.Average(p => Math.Abs(p.PredictedChange - p.ActualChange)).ToString("P2"))</h3>
+                    <p class="text-muted">Średnia wartość bezwzględna błędu</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <h4>Wykres Predykcji vs Faktyczna zmiana</h4>
+    <div style="display: flex; gap: 20px; justify-content: center; align-items: flex-start;">
+        <div style="flex: 1; min-width: 0;">
+            <h4>Wykres liniowy: PredictedChange i ActualChange w czasie</h4>
+            <RadzenChart Style="height: 400px; width: 100%;">
+                <RadzenDateTimeAxis Property="Date" Title="Data" />
+                <RadzenValueAxis Title="Zmiana (%)" LabelFormat="{0:P2}" Min="-0.4" Max="0.4" />
 
-    <RadzenChart Style="height: 400px;">
-        <RadzenLineSeries Data="@Result.Points" CategoryProperty="Date" ValueProperty="PredictedChange" Title="Predykcja" />
-        <RadzenLineSeries Data="@Result.Points" CategoryProperty="Date" ValueProperty="ActualChange" Title="Rzeczywistość" />
-    </RadzenChart>
+                <RadzenLineSeries Data="@Result.Points"
+                                  Title="PredictedChange"
+                                  ValueProperty="PredictedChange"
+                                  CategoryProperty="Date" />
+
+                <RadzenLineSeries Data="@Result.Points"
+                                  Title="ActualChange"
+                                  ValueProperty="ActualChange"
+                                  CategoryProperty="Date" />
+            </RadzenChart>
+        </div>
+
+        <div style="flex: 1; min-width: 0;">
+            <h4>Histogram Błędów</h4>
+            <RadzenChart Style="height: 400px; width: 100%;">
+                <RadzenBarSeries Data="@GetErrorHistogram()" CategoryProperty="Range" ValueProperty="Count" Title="Histogram błędów" />
+                <RadzenCategoryAxis Title="Zakres błędu" />
+                <RadzenValueAxis Title="Ilość" />
+            </RadzenChart>
+        </div>
+    </div>
+    
+    <h4>Wyniki Backtestu (Tabela)</h4>
+    <div class="d-flex justify-content-end mb-2">
+        <RadzenButton Text="Eksportuj do CSV" Click="@ExportToCsv" Icon="file_download" />
+    </div>
+    <RadzenDataGrid Data="@Result.Points" TItem="BacktestPoint" Pageable="true" PageSize="10" Style="margin-top: 20px;">
+        <Columns>
+            <RadzenDataGridColumn TItem="BacktestPoint" Property="Date" Title="Data" FormatString="{0:yyyy-MM-dd}" />
+            <RadzenDataGridColumn TItem="BacktestPoint" Property="PredictedChange" Title="Predykcja (%)" FormatString="{0:P2}" />
+            <RadzenDataGridColumn TItem="BacktestPoint" Property="ActualChange" Title="Rzeczywistość (%)" FormatString="{0:P2}" />
+            <RadzenDataGridColumn TItem="BacktestPoint" Title="Błąd (%)">
+                <Template Context="point">
+                    @((point.PredictedChange - point.ActualChange).ToString("P2"))
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
 }
+
