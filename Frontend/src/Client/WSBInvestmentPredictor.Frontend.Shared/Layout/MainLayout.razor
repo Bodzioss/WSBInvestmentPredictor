@@ -1,5 +1,9 @@
 ﻿@namespace WSBInvestmentPredictor.Frontend.Shared.Layout
 @inherits LayoutComponentBase
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+@using WSBInvestmentPredictor.Frontend.Shared.Shared
+@inject IStringLocalizer<SharedResource> Loc 
 
 @code {
     private bool sidebarVisible = true;
@@ -11,10 +15,13 @@
 <div class="d-flex flex-column vh-100">
     <!-- Navbar -->
     <header class="navbar navbar-expand bg-primary navbar-dark px-3">
-        <button class="btn btn-sm btn-outline-light me-2" @onclick="() => sidebarVisible = !sidebarVisible" title="Pokaż/ukryj menu">
+        <button class="btn btn-sm btn-outline-light me-2" @onclick="() => sidebarVisible = !sidebarVisible" title="@Loc["ToggleMenu"]">
             <span class="navbar-toggler-icon"></span>
         </button>
         <span class="navbar-brand">📊 WSB Investment Predictor</span>
+        <div class="ms-auto d-flex align-items-center">
+            <LanguageSelector />
+        </div>
     </header>
 
     <!-- Content -->

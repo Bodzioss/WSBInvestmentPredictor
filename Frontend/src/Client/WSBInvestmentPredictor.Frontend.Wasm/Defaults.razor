@@ -24,6 +24,7 @@
     public static RenderFragment Scripts => @<div>
         <script src="_framework/blazor.webassembly.js"></script>
         <script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </div>;
 
     public static RenderFragment GetDefaultRouter(Assembly appAssembly, IEnumerable<Assembly> additionalAssemblies)
@@ -36,7 +37,50 @@
             </Found>
             <NotFound>
                 <LayoutView Layout="typeof(MainLayout)">
-                    <p class="m-3">Page not found.</p>
+                    <div class="container mt-5">
+                        <div class="row">
+                            <div class="col-12 text-center mb-4">
+                                <h1 class="display-4">WSB Investment Predictor</h1>
+                                <p class="lead">Inteligentne narzędzie do analizy i przewidywania trendów inwestycyjnych</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="bi bi-graph-up"></i> Analiza Trendów</h5>
+                                        <p class="card-text">Zaawansowana analiza trendów rynkowych i społecznościowych dla lepszych decyzji inwestycyjnych.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="bi bi-robot"></i> AI-Powered</h5>
+                                        <p class="card-text">Wykorzystanie sztucznej inteligencji do przewidywania potencjalnych ruchów na rynku.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="bi bi-shield-check"></i> Wiarygodne Dane</h5>
+                                        <p class="card-text">Bazujemy na wiarygodnych źródłach danych i zaawansowanych algorytmach analitycznych.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12 text-center">
+                                <h3>Jak zacząć?</h3>
+                                <p class="lead">Wybierz interesującą Cię opcję z menu nawigacyjnego, aby rozpocząć analizę.</p>
+                            </div>
+                        </div>
+                    </div>
                 </LayoutView>
             </NotFound>
         </Router>

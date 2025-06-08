@@ -1,7 +1,51 @@
 ﻿@page "/"
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+@inject IStringLocalizer<SharedResource> Loc
 
-<PageTitle>Home</PageTitle>
+<PageTitle>@Loc["AppTitle"]</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h1 class="display-4">@Loc["AppTitle"]</h1>
+            <p class="lead">@Loc["AppDescription"]</p>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-graph-up"></i> @Loc["TrendAnalysis"]</h5>
+                    <p class="card-text">@Loc["TrendAnalysisDescription"]</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-robot"></i> @Loc["AIPowered"]</h5>
+                    <p class="card-text">@Loc["AIPoweredDescription"]</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-shield-check"></i> @Loc["ReliableData"]</h5>
+                    <p class="card-text">@Loc["ReliableDataDescription"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-Welcome to your new app.
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <h3>@Loc["HowToStart"]</h3>
+            <p class="lead">@Loc["HowToStartDescription"]</p>
+        </div>
+    </div>
+</div>

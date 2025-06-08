@@ -1,13 +1,17 @@
 ﻿@page "/backtest"
 @using Radzen
+@using Radzen.Blazor
 @using WSBInvestmentPredictor.Prediction.Models
 @using WSBInvestmentPredictor.Prediction.Shared.Dto;
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+@inject IStringLocalizer<SharedResource> Loc
 
 @inherits BacktestDashboardBase
 
-<PageTitle>Backtest</PageTitle>
+<PageTitle>@Loc["BacktestTitle"]</PageTitle>
 
-<h3 class="text-center mb-4">Backtest Dashboard</h3>
+<h3 class="text-center mb-4">@Loc["BacktestTitle"]</h3>
 
 <div class="d-flex justify-content-center gap-3 mb-3">
     <RadzenDropDown TValue="string"
@@ -15,7 +19,7 @@
                     TextProperty="Name"
                     ValueProperty="Ticker"
                     @bind-Value="SelectedTicker"
-                    Placeholder="Wybierz spółkę"
+                    Placeholder="@Loc["SelectCompany"]"
                     AllowFiltering="true"
                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                     Style="min-width: 300px;" />
@@ -23,12 +27,12 @@
     <RadzenDropDown TValue="int"
                     Data="@AvailableYears"
                     @bind-Value="SelectedYear"
-                    Placeholder="Wybierz rok"
+                    Placeholder="@Loc["SelectYear"]"
                     Style="width: 150px;" />
 </div>
 
 <div class="d-flex justify-content-center mb-4">
-    <RadzenButton Text="Uruchom backtest"
+    <RadzenButton Text="@Loc["RunBacktest"]"
                   Click="@RunBacktest"
                   Disabled="@(!CanRun)"
                   Loading="@IsLoading" />
@@ -38,9 +42,9 @@
 {
     <div class="text-center mb-3">
         <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-            <span class="visually-hidden">Ładowanie...</span>
+            <span class="visually-hidden">@Loc["Loading"]</span>
         </div>
-        <p class="mt-2">Trwa wykonywanie backtestu...</p>
+        <p class="mt-2">@Loc["RunningBacktest"]</p>
     </div>
 }
 
@@ -55,36 +59,36 @@
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Dokładność</h5>
+                    <h5 class="card-title">@Loc["Accuracy"]</h5>
                     <h3 class="text-primary">@(Result.Accuracy.ToString("P2"))</h3>
-                    <p class="text-muted">Procent trafnych kierunków</p>
+                    <p class="text-muted">@Loc["AccuracyDescription"]</p>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Błąd średniokwadratowy</h5>
+                    <h5 class="card-title">@Loc["MeanSquaredError"]</h5>
                     <h3 class="text-primary">@(Result.MeanSquaredError.ToString("P4"))</h3>
-                    <p class="text-muted">MSE</p>
+                    <p class="text-muted">@Loc["MeanSquaredErrorDescription"]</p>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Liczba predykcji</h5>
+                    <h5 class="card-title">@Loc["NumberOfPredictions"]</h5>
                     <h3 class="text-primary">@Result.Points.Count</h3>
-                    <p class="text-muted">Ilość wykonanych testów</p>
+                    <p class="text-muted">@Loc["NumberOfPredictionsDescription"]</p>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Średni błąd</h5>
+                    <h5 class="card-title">@Loc["AverageError"]</h5>
                     <h3 class="text-primary">@(Result.Points.Average(p => Math.Abs(p.PredictedChange - p.ActualChange)).ToString("P2"))</h3>
-                    <p class="text-muted">Średnia wartość bezwzględna błędu</p>
+                    <p class="text-muted">@Loc["AverageErrorDescription"]</p>
                 </div>
             </div>
         </div>
@@ -92,43 +96,43 @@
 
     <div style="display: flex; gap: 20px; justify-content: center; align-items: flex-start;">
         <div style="flex: 1; min-width: 0;">
-            <h4>Wykres liniowy: PredictedChange i ActualChange w czasie</h4>
+            <h4>@Loc["LineChartTitle"]</h4>
             <RadzenChart Style="height: 400px; width: 100%;">
-                <RadzenDateTimeAxis Property="Date" Title="Data" />
-                <RadzenValueAxis Title="Zmiana (%)" LabelFormat="{0:P2}" Min="-0.4" Max="0.4" />
+                <RadzenDateTimeAxis Property="Date" Title="@Loc["Date"]" />
+                <RadzenValueAxis Title="@Loc["Prediction"]" LabelFormat="{0:P2}" Min="-0.4" Max="0.4" />
 
                 <RadzenLineSeries Data="@Result.Points"
-                                  Title="PredictedChange"
+                                  Title="@Loc["Prediction"]"
                                   ValueProperty="PredictedChange"
                                   CategoryProperty="Date" />
 
                 <RadzenLineSeries Data="@Result.Points"
-                                  Title="ActualChange"
+                                  Title="@Loc["Actual"]"
                                   ValueProperty="ActualChange"
                                   CategoryProperty="Date" />
             </RadzenChart>
         </div>
 
         <div style="flex: 1; min-width: 0;">
-            <h4>Histogram Błędów</h4>
+            <h4>@Loc["ErrorHistogramTitle"]</h4>
             <RadzenChart Style="height: 400px; width: 100%;">
-                <RadzenBarSeries Data="@GetErrorHistogram()" CategoryProperty="Range" ValueProperty="Count" Title="Histogram błędów" />
-                <RadzenCategoryAxis Title="Zakres błędu" />
-                <RadzenValueAxis Title="Ilość" />
+                <RadzenBarSeries Data="@GetErrorHistogram()" CategoryProperty="Range" ValueProperty="Count" Title="@Loc["ErrorHistogramTitle"]" />
+                <RadzenCategoryAxis Title="@Loc["ErrorRange"]" />
+                <RadzenValueAxis Title="@Loc["Count"]" />
             </RadzenChart>
         </div>
     </div>
     
-    <h4>Wyniki Backtestu (Tabela)</h4>
+    <h4>@Loc["BacktestResults"]</h4>
     <div class="d-flex justify-content-end mb-2">
-        <RadzenButton Text="Eksportuj do CSV" Click="@ExportToCsv" Icon="file_download" />
+        <RadzenButton Text="@Loc["ExportToCsv"]" Click="@ExportToCsv" Icon="file_download" />
     </div>
     <RadzenDataGrid Data="@Result.Points" TItem="BacktestPoint" Pageable="true" PageSize="10" Style="margin-top: 20px;">
         <Columns>
-            <RadzenDataGridColumn TItem="BacktestPoint" Property="Date" Title="Data" FormatString="{0:yyyy-MM-dd}" />
-            <RadzenDataGridColumn TItem="BacktestPoint" Property="PredictedChange" Title="Predykcja (%)" FormatString="{0:P2}" />
-            <RadzenDataGridColumn TItem="BacktestPoint" Property="ActualChange" Title="Rzeczywistość (%)" FormatString="{0:P2}" />
-            <RadzenDataGridColumn TItem="BacktestPoint" Title="Błąd (%)">
+            <RadzenDataGridColumn TItem="BacktestPoint" Property="Date" Title="@Loc["Date"]" FormatString="{0:yyyy-MM-dd}" />
+            <RadzenDataGridColumn TItem="BacktestPoint" Property="PredictedChange" Title="@Loc["Prediction"]" FormatString="{0:P2}" />
+            <RadzenDataGridColumn TItem="BacktestPoint" Property="ActualChange" Title="@Loc["Actual"]" FormatString="{0:P2}" />
+            <RadzenDataGridColumn TItem="BacktestPoint" Title="@Loc["Error"]">
                 <Template Context="point">
                     @((point.PredictedChange - point.ActualChange).ToString("P2"))
                 </Template>

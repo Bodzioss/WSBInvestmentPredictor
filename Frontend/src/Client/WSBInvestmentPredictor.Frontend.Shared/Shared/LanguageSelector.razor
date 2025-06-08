@@ -1,0 +1,76 @@
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@using WSBInvestmentPredictor.Frontend.Shared
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<div class="dropdown">
+    <button class="btn btn-light dropdown-toggle px-3 py-1 fw-bold shadow-sm" type="button" id="languageDropdown"
+            data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 1.5rem;">
+        <i class="bi bi-translate me-1"></i>@CurrentCulture.NativeName
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="languageDropdown">
+        @foreach (var culture in SupportedCultures)
+        {
+            <li>
+                <button class="dropdown-item @(culture.Name == CurrentCulture.Name ? "active" : "")"
+                        @onclick="() => OnLanguageChanged(culture.Name)">
+                    @culture.NativeName
+                </button>
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    private CultureInfo CurrentCulture => CultureInfo.CurrentCulture;
+
+    private static readonly CultureInfo[] SupportedCultures = new[]
+    {
+        new CultureInfo("en"),
+        new CultureInfo("pl")
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Try to get the saved culture from localStorage
+        var savedCulture = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "culture");
+        if (!string.IsNullOrEmpty(savedCulture))
+        {
+            var cultureInfo = new CultureInfo(savedCulture);
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+            CultureInfo.CurrentCulture = cultureInfo;
+            CultureInfo.CurrentUICulture = cultureInfo;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnLanguageChanged(string culture)
+    {
+        try
+        {
+            // Set the culture
+            var cultureInfo = new CultureInfo(culture);
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+            CultureInfo.CurrentCulture = cultureInfo;
+            CultureInfo.CurrentUICulture = cultureInfo;
+
+            // Save to localStorage
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "culture", culture);
+            
+            // Force UI update
+            StateHasChanged();
+
+            // Reload the page to ensure all components are updated
+            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        }
+        catch (Exception ex)
+        {
+            // In case of error, reload the page
+            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        }
+    }
+} 

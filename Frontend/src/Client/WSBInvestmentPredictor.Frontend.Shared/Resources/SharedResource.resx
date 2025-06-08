@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>WSB Investment Predictor</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Intelligent tool for analyzing and predicting investment trends</value>
+  </data>
+  <data name="TrendAnalysis" xml:space="preserve">
+    <value>Trend Analysis</value>
+  </data>
+  <data name="TrendAnalysisDescription" xml:space="preserve">
+    <value>Advanced analysis of market and social trends for better investment decisions.</value>
+  </data>
+  <data name="AIPowered" xml:space="preserve">
+    <value>AI-Powered</value>
+  </data>
+  <data name="AIPoweredDescription" xml:space="preserve">
+    <value>Utilizing artificial intelligence to predict potential market movements.</value>
+  </data>
+  <data name="ReliableData" xml:space="preserve">
+    <value>Reliable Data</value>
+  </data>
+  <data name="ReliableDataDescription" xml:space="preserve">
+    <value>Based on reliable data sources and advanced analytical algorithms.</value>
+  </data>
+  <data name="HowToStart" xml:space="preserve">
+    <value>How to Start?</value>
+  </data>
+  <data name="HowToStartDescription" xml:space="preserve">
+    <value>Select an option from the navigation menu to begin your analysis.</value>
+  </data>
+  <data name="BacktestTitle" xml:space="preserve">
+    <value>Backtest Dashboard</value>
+  </data>
+  <data name="SelectCompany" xml:space="preserve">
+    <value>Select company</value>
+  </data>
+  <data name="SelectYear" xml:space="preserve">
+    <value>Select year</value>
+  </data>
+  <data name="RunBacktest" xml:space="preserve">
+    <value>Run backtest</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="RunningBacktest" xml:space="preserve">
+    <value>Running backtest...</value>
+  </data>
+  <data name="Accuracy" xml:space="preserve">
+    <value>Accuracy</value>
+  </data>
+  <data name="AccuracyDescription" xml:space="preserve">
+    <value>Percentage of correct directions</value>
+  </data>
+  <data name="MeanSquaredError" xml:space="preserve">
+    <value>Mean Squared Error</value>
+  </data>
+  <data name="MeanSquaredErrorDescription" xml:space="preserve">
+    <value>MSE</value>
+  </data>
+  <data name="NumberOfPredictions" xml:space="preserve">
+    <value>Number of predictions</value>
+  </data>
+  <data name="NumberOfPredictionsDescription" xml:space="preserve">
+    <value>Number of tests performed</value>
+  </data>
+  <data name="AverageError" xml:space="preserve">
+    <value>Average error</value>
+  </data>
+  <data name="AverageErrorDescription" xml:space="preserve">
+    <value>Mean absolute error value</value>
+  </data>
+  <data name="LineChartTitle" xml:space="preserve">
+    <value>Line chart: PredictedChange and ActualChange over time</value>
+  </data>
+  <data name="ErrorHistogramTitle" xml:space="preserve">
+    <value>Error Histogram</value>
+  </data>
+  <data name="BacktestResults" xml:space="preserve">
+    <value>Backtest Results (Table)</value>
+  </data>
+  <data name="ExportToCsv" xml:space="preserve">
+    <value>Export to CSV</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Prediction" xml:space="preserve">
+    <value>Prediction (%)</value>
+  </data>
+  <data name="Actual" xml:space="preserve">
+    <value>Actual (%)</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error (%)</value>
+  </data>
+  <data name="ErrorRange" xml:space="preserve">
+    <value>Error range</value>
+  </data>
+  <data name="Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="NoDataToExport" xml:space="preserve">
+    <value>No data to export</value>
+  </data>
+  <data name="ErrorLoadingTickers" xml:space="preserve">
+    <value>Error loading tickers: {0}</value>
+  </data>
+  <data name="ErrorRunningBacktest" xml:space="preserve">
+    <value>Error running backtest: {0}</value>
+  </data>
+  <data name="ErrorExporting" xml:space="preserve">
+    <value>Error exporting: {0}</value>
+  </data>
+</root> 

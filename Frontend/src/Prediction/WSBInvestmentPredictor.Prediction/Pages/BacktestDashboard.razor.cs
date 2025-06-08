@@ -1,22 +1,25 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
 using Radzen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using WSBInvestmentPredictor.Frontend.Shared;
 using WSBInvestmentPredictor.Prediction.Shared.Dto;
 using WSBInvestmentPredictor.Prediction.Shared.Queries;
 using WSBInvestmentPredictor.Technology.Cqrs;
-using System.Text;
-using Microsoft.JSInterop;
 
 namespace WSBInvestmentPredictor.Prediction.Pages;
 
 public class BacktestDashboardBase : ComponentBase
 {
     [Inject] protected ICqrsRequestService Cqrs { get; set; } = default!;
-    [Inject] NotificationService NotificationService { get; set; } = default!;
-    [Inject] IJSRuntime JSRuntime { get; set; } = default!;
+    [Inject] private NotificationService NotificationService { get; set; } = default!;
+    [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
+    [Inject] private IStringLocalizer<SharedResource> Loc { get; set; } = default!;
 
     protected List<CompanyTicker> Tickers { get; set; } = new();
     protected string SelectedTicker { get; set; } = string.Empty;
@@ -37,7 +40,7 @@ public class BacktestDashboardBase : ComponentBase
         }
         catch (Exception ex)
         {
-            ErrorMessage = $"Błąd podczas pobierania tickerów: {ex.Message}";
+            ErrorMessage = string.Format(Loc["ErrorLoadingTickers"], ex.Message);
         }
     }
 
@@ -57,7 +60,7 @@ public class BacktestDashboardBase : ComponentBase
         }
         catch (Exception ex)
         {
-            ShowError($"Błąd podczas uruchamiania backtestu: {ex.Message}");
+            ShowError(string.Format(Loc["ErrorRunningBacktest"], ex.Message));
         }
         finally
         {
@@ -66,7 +69,7 @@ public class BacktestDashboardBase : ComponentBase
         }
     }
 
-    void ShowError(string message)
+    private void ShowError(string message)
     {
         NotificationService.Notify(new NotificationMessage
         {
@@ -125,7 +128,7 @@ public class BacktestDashboardBase : ComponentBase
     {
         if (Result?.Points == null || !Result.Points.Any())
         {
-            ShowError("Brak danych do eksportu");
+            ShowError(Loc["NoDataToExport"]);
             return;
         }
 
@@ -155,7 +158,7 @@ public class BacktestDashboardBase : ComponentBase
         }
         catch (Exception ex)
         {
-            ShowError($"Błąd podczas eksportu: {ex.Message}");
+            ShowError(string.Format(Loc["ErrorExporting"], ex.Message));
         }
     }
 
