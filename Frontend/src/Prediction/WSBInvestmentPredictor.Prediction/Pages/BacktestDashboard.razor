@@ -22,12 +22,14 @@
                     Placeholder="@Loc["SelectCompany"]"
                     AllowFiltering="true"
                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                    Class="w-100"
                     Style="min-width: 300px;" />
 
     <RadzenDropDown TValue="int"
                     Data="@AvailableYears"
                     @bind-Value="SelectedYear"
                     Placeholder="@Loc["SelectYear"]"
+                    Class="w-100"
                     Style="width: 150px;" />
 </div>
 
@@ -35,7 +37,8 @@
     <RadzenButton Text="@Loc["RunBacktest"]"
                   Click="@RunBacktest"
                   Disabled="@(!CanRun)"
-                  Loading="@IsLoading" />
+                  Loading="@IsLoading"
+                  ButtonStyle="ButtonStyle.Primary" />
 </div>
 
 @if (IsLoading)
@@ -57,37 +60,37 @@
 {
     <div class="row mb-4">
         <div class="col-md-3">
-            <div class="card">
+            <div class="card" style="background-color: var(--rz-surface-card); color: var(--rz-text-color);">
                 <div class="card-body text-center">
                     <h5 class="card-title">@Loc["Accuracy"]</h5>
-                    <h3 class="text-primary">@(Result.Accuracy.ToString("P2"))</h3>
+                    <h3 style="color: var(--rz-primary);">@(Result.Accuracy.ToString("P2"))</h3>
                     <p class="text-muted">@Loc["AccuracyDescription"]</p>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card">
+            <div class="card" style="background-color: var(--rz-surface-card); color: var(--rz-text-color);">
                 <div class="card-body text-center">
                     <h5 class="card-title">@Loc["MeanSquaredError"]</h5>
-                    <h3 class="text-primary">@(Result.MeanSquaredError.ToString("P4"))</h3>
+                    <h3 style="color: var(--rz-primary);">@(Result.MeanSquaredError.ToString("P4"))</h3>
                     <p class="text-muted">@Loc["MeanSquaredErrorDescription"]</p>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card">
+            <div class="card" style="background-color: var(--rz-surface-card); color: var(--rz-text-color);">
                 <div class="card-body text-center">
                     <h5 class="card-title">@Loc["NumberOfPredictions"]</h5>
-                    <h3 class="text-primary">@Result.Points.Count</h3>
+                    <h3 style="color: var(--rz-primary);">@Result.Points.Count</h3>
                     <p class="text-muted">@Loc["NumberOfPredictionsDescription"]</p>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card">
+            <div class="card" style="background-color: var(--rz-surface-card); color: var(--rz-text-color);">
                 <div class="card-body text-center">
                     <h5 class="card-title">@Loc["AverageError"]</h5>
-                    <h3 class="text-primary">@(Result.Points.Average(p => Math.Abs(p.PredictedChange - p.ActualChange)).ToString("P2"))</h3>
+                    <h3 style="color: var(--rz-primary);">@(Result.Points.Average(p => Math.Abs(p.PredictedChange - p.ActualChange)).ToString("P2"))</h3>
                     <p class="text-muted">@Loc["AverageErrorDescription"]</p>
                 </div>
             </div>
@@ -97,7 +100,7 @@
     <div style="display: flex; gap: 20px; justify-content: center; align-items: flex-start;">
         <div style="flex: 1; min-width: 0;">
             <h4>@Loc["LineChartTitle"]</h4>
-            <RadzenChart Style="height: 400px; width: 100%;">
+            <RadzenChart Style="height: 400px; width: 100%;" Class="rz-shadow-1">
                 <RadzenDateTimeAxis Property="Date" Title="@Loc["Date"]" />
                 <RadzenValueAxis Title="@Loc["Prediction"]" LabelFormat="{0:P2}" Min="-0.4" Max="0.4" />
 
@@ -115,7 +118,7 @@
 
         <div style="flex: 1; min-width: 0;">
             <h4>@Loc["ErrorHistogramTitle"]</h4>
-            <RadzenChart Style="height: 400px; width: 100%;">
+            <RadzenChart Style="height: 400px; width: 100%;" Class="rz-shadow-1">
                 <RadzenBarSeries Data="@GetErrorHistogram()" CategoryProperty="Range" ValueProperty="Count" Title="@Loc["ErrorHistogramTitle"]" />
                 <RadzenCategoryAxis Title="@Loc["ErrorRange"]" />
                 <RadzenValueAxis Title="@Loc["Count"]" />
@@ -125,9 +128,9 @@
     
     <h4>@Loc["BacktestResults"]</h4>
     <div class="d-flex justify-content-end mb-2">
-        <RadzenButton Text="@Loc["ExportToCsv"]" Click="@ExportToCsv" Icon="file_download" />
+        <RadzenButton Text="@Loc["ExportToCsv"]" Click="@ExportToCsv" Icon="file_download" ButtonStyle="ButtonStyle.Secondary" />
     </div>
-    <RadzenDataGrid Data="@Result.Points" TItem="BacktestPoint" Pageable="true" PageSize="10" Style="margin-top: 20px;">
+    <RadzenDataGrid Data="@Result.Points" TItem="BacktestPoint" Pageable="true" PageSize="10" Style="margin-top: 20px;" Class="rz-shadow-1">
         <Columns>
             <RadzenDataGridColumn TItem="BacktestPoint" Property="Date" Title="@Loc["Date"]" FormatString="{0:yyyy-MM-dd}" />
             <RadzenDataGridColumn TItem="BacktestPoint" Property="PredictedChange" Title="@Loc["Prediction"]" FormatString="{0:P2}" />

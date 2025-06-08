@@ -231,4 +231,16 @@
   <data name="ErrorExporting" xml:space="preserve">
     <value>Błąd podczas eksportu: {0}</value>
   </data>
+  <data name="ThemeMaterial" xml:space="preserve">
+    <value>Material</value>
+  </data>
+  <data name="ThemeStandard" xml:space="preserve">
+    <value>Standardowy</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Ciemny</value>
+  </data>
+  <data name="ThemeHumanistic" xml:space="preserve">
+    <value>Humanistyczny</value>
+  </data>
 </root> 

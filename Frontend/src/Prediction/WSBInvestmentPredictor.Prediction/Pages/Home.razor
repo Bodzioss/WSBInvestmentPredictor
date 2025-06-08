@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Microsoft.Extensions.Localization
 @using WSBInvestmentPredictor.Frontend.Shared
+@using Radzen.Blazor
 @inject IStringLocalizer<SharedResource> Loc
 
 <PageTitle>@Loc["AppTitle"]</PageTitle>
@@ -15,30 +16,33 @@
     
     <div class="row mt-4">
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-graph-up"></i> @Loc["TrendAnalysis"]</h5>
-                    <p class="card-text">@Loc["TrendAnalysisDescription"]</p>
+            <RadzenCard Class="h-100 rz-shadow-1">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-graph-up" style="font-size: 1.5rem; color: var(--rz-primary);"></i>
+                    <h5 class="card-title mb-0 ms-2">@Loc["TrendAnalysis"]</h5>
                 </div>
-            </div>
+                <p class="card-text">@Loc["TrendAnalysisDescription"]</p>
+            </RadzenCard>
         </div>
         
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-robot"></i> @Loc["AIPowered"]</h5>
-                    <p class="card-text">@Loc["AIPoweredDescription"]</p>
+            <RadzenCard Class="h-100 rz-shadow-1">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-robot" style="font-size: 1.5rem; color: var(--rz-primary);"></i>
+                    <h5 class="card-title mb-0 ms-2">@Loc["AIPowered"]</h5>
                 </div>
-            </div>
+                <p class="card-text">@Loc["AIPoweredDescription"]</p>
+            </RadzenCard>
         </div>
         
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-shield-check"></i> @Loc["ReliableData"]</h5>
-                    <p class="card-text">@Loc["ReliableDataDescription"]</p>
+            <RadzenCard Class="h-100 rz-shadow-1">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-shield-check" style="font-size: 1.5rem; color: var(--rz-primary);"></i>
+                    <h5 class="card-title mb-0 ms-2">@Loc["ReliableData"]</h5>
                 </div>
-            </div>
+                <p class="card-text">@Loc["ReliableDataDescription"]</p>
+            </RadzenCard>
         </div>
     </div>
 

@@ -19,7 +19,8 @@ builder.Services.AddScoped(sp => new HttpClient
     BaseAddress = new Uri("https://localhost:7214")
 });
 
-builder.Services.AddRadzenComponents();
+builder.Services.AddRadzenComponents()
+    .AddRadzenCookieThemeService();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<ApiService>();
 builder.Services.AddScoped<ICqrsRequestService, HttpCqrsRequestService>();

@@ -147,4 +147,16 @@
   <data name="HowToStartDescription" xml:space="preserve">
     <value>Select an option from the navigation menu to begin your analysis.</value>
   </data>
+  <data name="ThemeMaterial" xml:space="preserve">
+    <value>Material</value>
+  </data>
+  <data name="ThemeStandard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="ThemeHumanistic" xml:space="preserve">
+    <value>Humanistic</value>
+  </data>
 </root> 

@@ -4,39 +4,79 @@
 @using WSBInvestmentPredictor.Frontend.Shared
 @using WSBInvestmentPredictor.Frontend.Shared.Shared
 @inject IStringLocalizer<SharedResource> Loc 
+@inject ThemeService ThemeService
 
 @code {
     private bool sidebarVisible = true;
     private string SidebarStyle => sidebarVisible ? "width: 220px; transition: width 0.2s;" : "width: 0; overflow: hidden; transition: width 0.2s; padding: 0; border: none;";
-    private string MainContentStyle => sidebarVisible ? "margin-left: 0; transition: margin 0.2s;" : "margin-left: 0; transition: margin 0.2s;";
+    private string MainContentStyle => "";
+
+    private List<string> themes = new()
+    {
+        "material",
+        "dark"
+    };
+    private string currentTheme = "material";
+    private string ThemeIcon => currentTheme == "dark" ? "light_mode" : "dark_mode";
+
+    // Computed style for Topbar
+    private string TopbarComputedStyle => $"height: 60px; background-color: {TopbarBackgroundColor}; z-index: 1000;";
+    private string TopbarBackgroundColor => currentTheme == "material" ? "#ff9800" : "var(--rz-base)"; // Orange for light theme, Radzen var for dark
+
+    // Computed style for Sidebar
+    private string SidebarComputedStyle => $"{SidebarStyle} background-color: {SidebarBackgroundColor}; border-right: 1px solid var(--rz-border-color);";
+    private string SidebarBackgroundColor => currentTheme == "material" ? "white" : "var(--rz-base)"; // White for light theme, Radzen var for dark
+
+    protected override void OnInitialized()
+    {
+        currentTheme = ThemeService.Theme;
+        if (!themes.Contains(currentTheme))
+        {
+            currentTheme = "material"; // Default to a light theme if current is not dark/material
+        }
+    }
+
+    private void ToggleTheme()
+    {
+        currentTheme = (currentTheme == "dark") ? "material" : "dark";
+        ThemeService.SetTheme(currentTheme);
+    }
+
+    private record ThemeOption(string Value, string LocalizationKey);
+
+    private string GetThemeDisplayName(object theme)
+    {
+        return Loc[((ThemeOption)theme).LocalizationKey];
+    }
 }
 
 <RadzenNotification />
 <div class="d-flex flex-column vh-100">
-    <!-- Navbar -->
-    <header class="navbar navbar-expand bg-primary navbar-dark px-3">
-        <button class="btn btn-sm btn-outline-light me-2" @onclick="() => sidebarVisible = !sidebarVisible" title="@Loc["ToggleMenu"]">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <span class="navbar-brand">📊 WSB Investment Predictor</span>
-        <div class="ms-auto d-flex align-items-center">
+    <!-- Topbar -->
+    <RadzenHeader Class="rz-shadow-1 d-flex align-items-center px-3 rz-fixed-header border-bottom" Style="@TopbarComputedStyle">
+        <RadzenButton Icon="menu" Click="@(() => sidebarVisible = !sidebarVisible)" ButtonStyle="ButtonStyle.Secondary" Class="me-2" Style="background-color: transparent; border: none;" />
+        <span class="navbar-brand fw-bold" style="color: var(--rz-text-color);">📊 WSB Investment Predictor</span>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <RadzenButton Icon="@ThemeIcon" Click="@ToggleTheme" ButtonStyle="ButtonStyle.Secondary" Class="me-2" Style="background-color: transparent; border: none;" />
             <LanguageSelector />
         </div>
-    </header>
+    </RadzenHeader>
 
-    <!-- Content -->
-    <div class="d-flex flex-grow-1">
+    <!-- Main content area with sidebar -->
+    <div class="d-flex flex-grow-1" style="margin-top: 60px; height: calc(100vh - 60px);">
         <!-- Sidebar -->
-        <aside class="bg-light p-3 border-end" style="@SidebarStyle">
+        <aside class="rz-sidebar rz-shadow-1" Style="@SidebarComputedStyle">
             @if (sidebarVisible)
             {
                 <NavMenu />
             }
         </aside>
 
-        <!-- Main page content -->
-        <main class="p-4 flex-grow-1 overflow-auto" style="@MainContentStyle">
-            @Body
+        <!-- Main content -->
+        <main class="flex-grow-1 overflow-auto p-4" style="@MainContentStyle">
+            <div class="container mx-auto h-100">
+                @Body
+            </div>
         </main>
     </div>
 </div>

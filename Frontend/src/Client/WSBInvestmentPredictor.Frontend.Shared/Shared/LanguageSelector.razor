@@ -6,9 +6,9 @@
 @inject IJSRuntime JSRuntime
 
 <div class="dropdown">
-    <button class="btn btn-light dropdown-toggle px-3 py-1 fw-bold shadow-sm" type="button" id="languageDropdown"
+    <button class="btn dropdown-toggle px-3 py-1 fw-bold shadow-sm" type="button" id="languageDropdown"
             data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 1.5rem;">
-        <i class="bi bi-translate me-1"></i>@CurrentCulture.NativeName
+        <img src="/images/flags/@(CurrentCulture.Name.ToLowerInvariant()).svg" alt="@CurrentCulture.NativeName Flag" class="me-2" style="width: 20px; height: 15px; border: 1px solid #ccc;" />@CurrentCulture.NativeName
     </button>
     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="languageDropdown">
         @foreach (var culture in SupportedCultures)
@@ -16,7 +16,7 @@
             <li>
                 <button class="dropdown-item @(culture.Name == CurrentCulture.Name ? "active" : "")"
                         @onclick="() => OnLanguageChanged(culture.Name)">
-                    @culture.NativeName
+                    <img src="/images/flags/@(culture.Name.ToLowerInvariant()).svg" alt="@culture.NativeName Flag" class="me-2" style="width: 20px; height: 15px; border: 1px solid #ccc;" />@culture.NativeName
                 </button>
             </li>
         }

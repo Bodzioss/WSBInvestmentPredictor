@@ -2,6 +2,7 @@
 @using Radzen
 @using Radzen.Blazor
 @using WSBInvestmentPredictor.Frontend.Wasm
+@inject ThemeService ThemeService
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <HeadOutlet @rendermode="new InteractiveWebAssemblyRenderMode(false)" />
     @Defaults.Links
-    <RadzenTheme Theme="material" @rendermode="RenderMode.InteractiveAuto" />
+    <RadzenTheme Theme="@ThemeService.Theme" @rendermode="RenderMode.InteractiveWebAssembly" />
 </head>
 
 <body>
