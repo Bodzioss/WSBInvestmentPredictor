@@ -14,9 +14,14 @@ using WSBInvestmentPredictor.Technology.Cqrs;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
+// Configure backend URL based on environment
+var backendUrl = builder.HostEnvironment.IsDevelopment() 
+    ? "https://localhost:7214"
+    : "https://wsbinvestmentpredictor-gvgxemaubagncrb0.polandcentral-01.azurewebsites.net";
+
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("https://localhost:7214")
+    BaseAddress = new Uri(backendUrl)
 });
 
 builder.Services.AddRadzenComponents()

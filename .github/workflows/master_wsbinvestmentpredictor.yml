@@ -1,0 +1,106 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App - WSBInvestmentPredictor
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: read #This is required for actions/checkout
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+
+      - name: Build frontend (Blazor WebAssembly)
+        working-directory: ./Frontend
+        run: dotnet build WSBInvestmentPredictor.Frontend.sln --configuration Release
+
+      - name: Build backend
+        working-directory: ./Backend
+        run: dotnet build WSBInvestmentPredictor.Backend.sln --configuration Release
+
+      - name: dotnet publish
+        working-directory: ./Backend/src/Prediction/WSBInvestmentPredictor.Prediction.API
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
+
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+      
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_09A956C448BA4B8E91D2B3AF621BF7A1 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_43C90E6D5E5F4EFB840822E1DA8F8973 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E8074F79546E482080399620DE7F2F64 }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'WSBInvestmentPredictor'
+          slot-name: 'Production'
+          package: .
+
+      - name: Debug - Show WebApp URL
+        run: |
+          Write-Host "Deployed WebApp URL: ${{ steps.deploy-to-webapp.outputs.webapp-url }}"
+
+      - name: Wait for API to be ready
+        run: |
+          $maxAttempts = 30
+          $attempt = 0
+          $success = $false
+          
+          while (-not $success -and $attempt -lt $maxAttempts) {
+              $attempt++
+              Write-Host "Attempt $attempt of $maxAttempts to check API status..."
+              
+              try {
+                  $response = Invoke-WebRequest -Uri "${{ steps.deploy-to-webapp.outputs.webapp-url }}/api/status" -Method GET -TimeoutSec 5
+                  if ($response.StatusCode -eq 200) {
+                      $success = $true
+                      Write-Host "API is responding successfully!"
+                      $response.Content | ConvertFrom-Json | Format-List
+                  }
+              }
+              catch {
+                  Write-Host "API not ready yet, waiting 10 seconds..."
+                  Start-Sleep -Seconds 10
+              }
+          }
+          
+          if (-not $success) {
+              Write-Error "API failed to respond after $maxAttempts attempts"
+              exit 1
+          }

@@ -19,7 +19,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("https://localhost:7236")
+            .WithOrigins(
+                "https://localhost:7236",
+                "https://wsbinvestmentpredictor-frontend-g6gegxf5gdhnbpe8.polandcentral-01.azurewebsites.net",
+                "https://wsbinvestmentpredictor.azurewebsites.net"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -50,15 +54,25 @@ builder.Services.AddScoped<IPredictionEngine, PredictionEngine>();
 
 var app = builder.Build();
 
-app.UseAuthorization();
-
-app.UseSwagger();
-app.UseSwaggerUI();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "WSB Investment Predictor API V1");
+        c.RoutePrefix = "swagger";
+    });
+    
+    // Production specific middleware
+    app.UseExceptionHandler("/error");
+    app.UseHsts();
 }
 
 app.UseRouting();
