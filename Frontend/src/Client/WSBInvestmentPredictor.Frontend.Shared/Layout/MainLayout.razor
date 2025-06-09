@@ -9,7 +9,7 @@
 @code {
     private bool sidebarVisible = true;
     private string SidebarStyle => sidebarVisible ? "width: 220px; transition: width 0.2s;" : "width: 0; overflow: hidden; transition: width 0.2s; padding: 0; border: none;";
-    private string MainContentStyle => "";
+    private string MainContentStyle => sidebarVisible ? "margin-left: 220px; transition: margin-left 0.2s;" : "margin-left: 0; transition: margin-left 0.2s;";
 
     private List<string> themes = new()
     {
@@ -24,7 +24,7 @@
     private string TopbarBackgroundColor => currentTheme == "material" ? "#ff9800" : "var(--rz-base)"; // Orange for light theme, Radzen var for dark
 
     // Computed style for Sidebar
-    private string SidebarComputedStyle => $"{SidebarStyle} background-color: {SidebarBackgroundColor}; border-right: 1px solid var(--rz-border-color);";
+    private string SidebarComputedStyle => $"{SidebarStyle} background-color: {SidebarBackgroundColor}; border-right: 1px solid var(--rz-border-color); position: fixed; top: 60px; bottom: 0; left: 0;";
     private string SidebarBackgroundColor => currentTheme == "material" ? "white" : "var(--rz-base)"; // White for light theme, Radzen var for dark
 
     protected override void OnInitialized()
@@ -74,7 +74,7 @@
 
         <!-- Main content -->
         <main class="flex-grow-1 overflow-auto p-4" style="@MainContentStyle">
-            <div class="container mx-auto h-100">
+            <div class="container-fluid h-100">
                 @Body
             </div>
         </main>
