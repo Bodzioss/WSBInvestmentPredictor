@@ -18,5 +18,4 @@ public class AlternatingPredictionEngine : IPredictionEngine
         float prediction = _flip ? 0.1f : -0.1f;
         return Task.FromResult(new PredictionResult { ChangePercentage = prediction });
     }
-
 }

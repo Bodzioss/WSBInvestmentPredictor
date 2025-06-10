@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net.Http.Json;
-using WSBInvestmentPredictor.Prediction.Application.Dto;
+﻿using System.Net.Http.Json;
 using WSBInvestmentPredictor.Prediction.Shared.Dto;
 using WSBInvestmentPredictor.Prediction.Shared.Queries;
 using Xunit;

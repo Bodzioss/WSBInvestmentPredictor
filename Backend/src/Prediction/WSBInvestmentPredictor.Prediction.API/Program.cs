@@ -69,7 +69,7 @@ else
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "WSB Investment Predictor API V1");
         c.RoutePrefix = "swagger";
     });
-    
+
     // Production specific middleware
     app.UseExceptionHandler("/error");
     app.UseHsts();
@@ -100,4 +100,5 @@ app.Use(async (context, next) =>
 
 app.Run();
 
-public partial class Program { }
+public partial class Program
+{ }

@@ -14,4 +14,4 @@ public class ApiStatusQueryHandler : IRequestHandler<GetApiStatusQuery, ApiStatu
             Timestamp: DateTime.UtcNow
         ));
     }
-} 
+}

@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WSBInvestmentPredictor.Prediction.Domain.Entities;
+﻿using WSBInvestmentPredictor.Prediction.Domain.Entities;
 using WSBInvestmentPredictor.Prediction.Domain.Interfaces;
-using WSBInvestmentPredictor.Prediction.Infrastructure;
-using WSBInvestmentPredictor.Prediction.Infrastructure.Prediction;
 using WSBInvestmentPredictor.Prediction.Shared.Dto;
+
+namespace WSBInvestmentPredictor.Prediction.Infrastructure.Prediction;
 
 public class PredictionEngine : IPredictionEngine
 {

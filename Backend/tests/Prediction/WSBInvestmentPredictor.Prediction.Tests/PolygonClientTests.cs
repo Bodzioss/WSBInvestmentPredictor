@@ -1,11 +1,11 @@
-﻿using System.Net;
-using System.Text.Json;
+﻿using Microsoft.Extensions.Configuration;
 using Moq;
 using Moq.Protected;
-using WSBInvestmentPredictor.Prediction.MarketData;
-using Microsoft.Extensions.Configuration;
-using Xunit;
+using System.Net;
+using System.Text.Json;
 using WSBInvestmentPredictor.Prediction.Infrastructure.MarketData.Dto;
+using WSBInvestmentPredictor.Prediction.MarketData;
+using Xunit;
 
 namespace WSBInvestmentPredictor.Prediction.UnitTests;
 

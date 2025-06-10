@@ -4,4 +4,4 @@ public record ApiStatusDto(
     string Status,
     string Version,
     DateTime Timestamp
-); 
+);

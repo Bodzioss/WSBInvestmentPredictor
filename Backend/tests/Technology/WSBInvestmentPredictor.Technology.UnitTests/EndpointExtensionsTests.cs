@@ -1,5 +1,5 @@
-﻿using Xunit;
-using WSBInvestmentPredictor.Technology.Cqrs;
+﻿using WSBInvestmentPredictor.Technology.Cqrs;
+using Xunit;
 
 namespace WSBInvestmentPredictor.Technology.UnitTests;
 
