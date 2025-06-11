@@ -47,6 +47,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 
 var nav = new NavigationRegistry();
 WSBInvestmentPredictor.Prediction.DI.RegisterNavigation(nav);
+WSBInvestmentPredictor.Expenses.DI.RegisterNavigation(nav);
 builder.Services.AddSingleton(nav);
 
 foreach (var assembly in Routes.AdditionalAssemblies)

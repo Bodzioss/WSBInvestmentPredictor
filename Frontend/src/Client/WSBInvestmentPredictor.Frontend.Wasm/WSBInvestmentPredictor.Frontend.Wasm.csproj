@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Shared\src\Technology\WSBInvestmentPredictor.Technology\WSBInvestmentPredictor.Technology.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\src\WSBInvestmentPredictor.Expenses.Shared\WSBInvestmentPredictor.Expenses.Shared.csproj" />
+    <ProjectReference Include="..\..\Expenses\WSBInvestmentPredictor.Expenses\WSBInvestmentPredictor.Expenses.csproj" />
     <ProjectReference Include="..\..\Prediction\WSBInvestmentPredictor.Prediction\WSBInvestmentPredictor.Prediction.csproj" />
     <ProjectReference Include="..\WSBInvestmentPredictor.Frontend.Shared\WSBInvestmentPredictor.Frontend.Shared.csproj" />
   </ItemGroup>

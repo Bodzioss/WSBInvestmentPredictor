@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using WSBInvestmentPredictor.Frontend.Shared.Navigation;
 
 namespace WSBInvestmentPredictor.Prediction;
@@ -12,8 +13,14 @@ public static class DI
 
     public static void RegisterNavigation(NavigationRegistry registry)
     {
-        registry.Links.Add(new NavLinkItem("Predykcja", "/predict", "bi bi-graph-up"));
-        registry.Links.Add(new NavLinkItem("Szybka predykcja", "/quick-predict", "bi bi-lightning-charge"));
-        registry.Links.Add(new NavLinkItem("Backtest", "/backtest", "bi bi-arrow-repeat"));
+        registry.Links.Add(new NavLinkGroup("Predykcje", "bi bi-graph-up")
+        {
+            Items = new List<NavLinkItem>
+            {
+                new NavLinkItem("Szybka predykcja", "/quick-predict", "bi bi-lightning-charge"),
+                new NavLinkItem("Zaawansowana predykcja", "/predict", "bi bi-sliders"),
+                new NavLinkItem("Backtest", "/backtest", "bi bi-arrow-repeat")
+            }
+        });
     }
 }
