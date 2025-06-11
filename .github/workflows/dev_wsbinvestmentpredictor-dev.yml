@@ -23,10 +23,16 @@ jobs:
         with:
           dotnet-version: '9.x'
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      - name: Build frontend (Blazor WebAssembly)
+        working-directory: ./Frontend
+        run: dotnet build WSBInvestmentPredictor.Frontend.sln --configuration Release
+
+      - name: Build backend
+        working-directory: ./Backend
+        run: dotnet build WSBInvestmentPredictor.Backend.sln --configuration Release
 
       - name: dotnet publish
+        working-directory: ./Backend/src/Prediction/WSBInvestmentPredictor.Prediction.API
         run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
