@@ -1,7 +1,99 @@
 ﻿@page "/expenses"
+@using Microsoft.AspNetCore.Components.Forms
+@using WSBInvestmentPredictor.Expenses.Models
+@using WSBInvestmentPredictor.Expenses.Services
+@inject IBankTransactionService BankTransactionService
+@inject NotificationService NotificationService
 
 <PageTitle>Expenses</PageTitle>
 
-<h1>Expenses Management</h1>
+<div class="container">
+    <h1 class="mb-4">Expenses Management</h1>
 
-Welcome to the expenses management section.
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Import Bank Transactions</h5>
+            <p class="card-text">Upload your bank statement CSV file to import transactions.</p>
+            
+            <InputFile OnChange="OnFileSelected" class="form-control mb-3" accept=".csv" />
+            
+            @if (isLoading)
+            {
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (transactions?.Any() == true)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Imported Transactions</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Counterparty</th>
+                                <th>Amount</th>
+                                <th>Currency</th>
+                                <th>Account</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in transactions)
+                            {
+                                <tr>
+                                    <td>@transaction.TransactionDate.ToShortDateString()</td>
+                                    <td>@transaction.Title</td>
+                                    <td>@transaction.Counterparty</td>
+                                    <td>@transaction.Amount.ToString("N2")</td>
+                                    <td>@transaction.Currency</td>
+                                    <td>@transaction.Account</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<BankTransaction>? transactions;
+    private bool isLoading;
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            isLoading = true;
+            var file = e.File;
+            
+            if (file == null)
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Error", "No file selected");
+                return;
+            }
+
+            using var stream = file.OpenReadStream();
+            transactions = await BankTransactionService.ProcessCsvFile(stream);
+            
+            NotificationService.Notify(NotificationSeverity.Success, "Success", 
+                $"Successfully imported {transactions.Count} transactions");
+        }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Error", 
+                $"Error processing file: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

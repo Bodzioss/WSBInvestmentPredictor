@@ -5,6 +5,7 @@ using Microsoft.JSInterop;
 using Radzen;
 using System.Globalization;
 using System.Reflection;
+using WSBInvestmentPredictor.Expenses;
 using WSBInvestmentPredictor.Frontend.Shared;
 using WSBInvestmentPredictor.Frontend.Shared.Navigation;
 using WSBInvestmentPredictor.Frontend.Shared.Services;
@@ -30,6 +31,9 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<ApiService>();
 builder.Services.AddScoped<ICqrsRequestService, HttpCqrsRequestService>();
 builder.Services.AddFrontendSharedServices();
+
+// Register Expenses services
+WSBInvestmentPredictor.Expenses.DI.RegisterServices(builder.Services);
 
 // Configure localization options
 var supportedCultures = new[]

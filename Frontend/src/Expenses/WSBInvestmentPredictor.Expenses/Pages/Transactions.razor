@@ -1,0 +1,285 @@
+@page "/transactions"
+@using System.Globalization
+@using WSBInvestmentPredictor.Expenses.Models
+@using WSBInvestmentPredictor.Expenses.Services
+@inject ITransactionStore TransactionStore
+@inject NotificationService NotificationService
+
+<PageTitle>Transactions</PageTitle>
+
+<h1>Bank Transactions</h1>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else if (error != null)
+{
+    <div class="alert alert-danger">
+        @error
+    </div>
+}
+else
+{
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <select class="form-select" @bind="selectedYear" @bind:after="OnYearChanged">
+                <option value="0">All Years</option>
+                @if (years != null)
+                {
+                    @foreach (var year in years)
+                    {
+                        <option value="@year">@year</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" @bind="selectedMonth" @bind:after="OnMonthChanged" disabled="@(selectedYear == 0)">
+                <option value="0">All Months</option>
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <option value="@i">@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" @bind="selectedAccount" @bind:after="OnAccountChanged">
+                <option value="">All Accounts</option>
+                @if (filteredAccounts != null)
+                {
+                    @foreach (var account in filteredAccounts)
+                    {
+                        <option value="@account">@account</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" @bind="selectedCounterparty" @bind:after="OnCounterpartyChanged">
+                <option value="">All Counterparties</option>
+                @if (filteredCounterparties != null)
+                {
+                    @foreach (var counterparty in filteredCounterparties)
+                    {
+                        <option value="@counterparty">@counterparty</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+    @if (selectedYear > 0)
+    {
+        <div class="alert alert-info">
+            Total for @(selectedMonth > 0 ? $"{CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(selectedMonth)} {selectedYear}" : $"Year {selectedYear}"): 
+            @totalAmount.ToString("N2") PLN
+        </div>
+    }
+
+    @if (transactions == null || !transactions.Any())
+    {
+        <div class="alert alert-warning">
+            No transactions found. Please import some transactions first.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Transaction Date</th>
+                        <th>Booking Date</th>
+                        <th>Counterparty</th>
+                        <th>Title</th>
+                        <th>Amount</th>
+                        <th>Currency</th>
+                        <th>Account</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in transactions)
+                    {
+                        <tr>
+                            <td>@transaction.TransactionDate.ToShortDateString()</td>
+                            <td>@(transaction.BookingDate?.ToShortDateString() ?? "-")</td>
+                            <td>@transaction.Counterparty</td>
+                            <td>@transaction.Title</td>
+                            <td>@transaction.Amount.ToString("N2")</td>
+                            <td>@transaction.Currency</td>
+                            <td>@transaction.Account</td>
+                            <td>@(transaction.BalanceAfterTransaction?.ToString("N2") ?? "-") @transaction.BalanceCurrency</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+
+@code {
+    private IEnumerable<BankTransaction>? transactions;
+    private IEnumerable<int>? years;
+    private IEnumerable<string>? allAccounts;
+    private IEnumerable<string>? allCounterparties;
+    private IEnumerable<string>? filteredAccounts;
+    private IEnumerable<string>? filteredCounterparties;
+    private int selectedYear;
+    private int selectedMonth;
+    private string selectedAccount = "";
+    private string selectedCounterparty = "";
+    private decimal totalAmount;
+    private bool isLoading;
+    private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            isLoading = true;
+            error = null;
+
+            years = await TransactionStore.GetAllYears();
+            allAccounts = await TransactionStore.GetAllAccounts();
+            allCounterparties = await TransactionStore.GetAllCounterparties();
+            await UpdateFilters();
+            await LoadTransactions();
+
+            // Debug info
+            Console.WriteLine($"Years: {string.Join(", ", years ?? Array.Empty<int>())}");
+            Console.WriteLine($"All Accounts: {string.Join(", ", allAccounts ?? Array.Empty<string>())}");
+            Console.WriteLine($"All Counterparties: {string.Join(", ", allCounterparties ?? Array.Empty<string>())}");
+            Console.WriteLine($"Filtered Accounts: {string.Join(", ", filteredAccounts ?? Array.Empty<string>())}");
+            Console.WriteLine($"Filtered Counterparties: {string.Join(", ", filteredCounterparties ?? Array.Empty<string>())}");
+            Console.WriteLine($"Transactions count: {transactions?.Count() ?? 0}");
+        }
+        catch (Exception ex)
+        {
+            error = $"Error loading data: {ex.Message}";
+            NotificationService.Notify(NotificationSeverity.Error, "Error", error);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task UpdateFilters()
+    {
+        // Get transactions based on year and month
+        var filteredTransactions = selectedYear > 0
+            ? selectedMonth > 0
+                ? await TransactionStore.GetTransactionsByYearAndMonth(selectedYear, selectedMonth)
+                : await TransactionStore.GetTransactionsByYear(selectedYear)
+            : await TransactionStore.GetAllTransactions();
+
+        // Update account filter
+        filteredAccounts = filteredTransactions
+            .Select(t => t.Account)
+            .Where(a => !string.IsNullOrEmpty(a))
+            .Distinct()
+            .OrderBy(a => a);
+
+        // Update counterparty filter
+        filteredCounterparties = filteredTransactions
+            .Select(t => t.Counterparty)
+            .Where(c => !string.IsNullOrEmpty(c))
+            .Distinct()
+            .OrderBy(c => c);
+
+        // Reset selections if they're no longer valid
+        if (!filteredAccounts.Contains(selectedAccount))
+        {
+            selectedAccount = "";
+        }
+        if (!filteredCounterparties.Contains(selectedCounterparty))
+        {
+            selectedCounterparty = "";
+        }
+    }
+
+    private async Task LoadTransactions()
+    {
+        try
+        {
+            if (selectedYear > 0)
+            {
+                if (selectedMonth > 0)
+                {
+                    transactions = await TransactionStore.GetTransactionsByYearAndMonth(selectedYear, selectedMonth);
+                    totalAmount = await TransactionStore.GetTotalAmountByYearAndMonth(selectedYear, selectedMonth);
+                }
+                else
+                {
+                    transactions = await TransactionStore.GetTransactionsByYear(selectedYear);
+                    totalAmount = await TransactionStore.GetTotalAmountByYear(selectedYear);
+                }
+            }
+            else
+            {
+                transactions = await TransactionStore.GetAllTransactions();
+                totalAmount = 0;
+            }
+
+            if (!string.IsNullOrEmpty(selectedAccount))
+            {
+                transactions = transactions.Where(t => t.Account == selectedAccount);
+            }
+
+            if (!string.IsNullOrEmpty(selectedCounterparty))
+            {
+                transactions = transactions.Where(t => t.Counterparty == selectedCounterparty);
+            }
+
+            // Debug info
+            Console.WriteLine($"Loaded {transactions?.Count() ?? 0} transactions");
+            if (transactions?.Any() == true)
+            {
+                var first = transactions.First();
+                Console.WriteLine($"First transaction: Date={first.TransactionDate}, Amount={first.Amount}, Account={first.Account}");
+            }
+        }
+        catch (Exception ex)
+        {
+            error = $"Error loading transactions: {ex.Message}";
+            NotificationService.Notify(NotificationSeverity.Error, "Error", error);
+        }
+    }
+
+    private async Task OnYearChanged()
+    {
+        if (selectedYear == 0)
+        {
+            selectedMonth = 0;
+        }
+        await UpdateFilters();
+        await LoadTransactions();
+    }
+
+    private async Task OnMonthChanged()
+    {
+        await UpdateFilters();
+        await LoadTransactions();
+    }
+
+    private async Task OnAccountChanged()
+    {
+        await LoadTransactions();
+    }
+
+    private async Task OnCounterpartyChanged()
+    {
+        await LoadTransactions();
+    }
+} 

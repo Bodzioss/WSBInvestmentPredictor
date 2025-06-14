@@ -12,6 +12,7 @@
       <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.3.0" />
       <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.2" />
       <PackageReference Include="Radzen.Blazor" Version="6.6.4" />
+      <PackageReference Include="CsvHelper" Version="30.0.1" />
   </ItemGroup>
 
   <ItemGroup>
