@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -13,11 +13,17 @@
       <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.2" />
       <PackageReference Include="Radzen.Blazor" Version="6.6.4" />
       <PackageReference Include="CsvHelper" Version="30.0.1" />
+      <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Shared\src\Technology\WSBInvestmentPredictor.Technology\WSBInvestmentPredictor.Technology.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\src\WSBInvestmentPredictor.Expenses.Shared\WSBInvestmentPredictor.Expenses.Shared.csproj" />
     <ProjectReference Include="..\..\Client\WSBInvestmentPredictor.Frontend.Shared\WSBInvestmentPredictor.Frontend.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

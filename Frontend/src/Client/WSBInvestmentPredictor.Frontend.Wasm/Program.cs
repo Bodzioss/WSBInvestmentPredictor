@@ -5,13 +5,13 @@ using Microsoft.JSInterop;
 using Radzen;
 using System.Globalization;
 using System.Reflection;
-using WSBInvestmentPredictor.Expenses;
 using WSBInvestmentPredictor.Frontend.Shared;
 using WSBInvestmentPredictor.Frontend.Shared.Navigation;
 using WSBInvestmentPredictor.Frontend.Shared.Services;
 using WSBInvestmentPredictor.Frontend.Wasm;
-using WSBInvestmentPredictor.Frontend.Wasm.Services.Cqrs;
 using WSBInvestmentPredictor.Technology.Cqrs;
+using WSBInvestmentPredictor.Expenses;
+using WSBInvestmentPredictor.Frontend.Wasm.Services.Cqrs;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -32,8 +32,8 @@ builder.Services.AddScoped<ApiService>();
 builder.Services.AddScoped<ICqrsRequestService, HttpCqrsRequestService>();
 builder.Services.AddFrontendSharedServices();
 
-// Register Expenses services
-WSBInvestmentPredictor.Expenses.DI.RegisterServices(builder.Services);
+// Add Expenses services
+builder.Services.AddExpensesServices();
 
 // Configure localization options
 var supportedCultures = new[]

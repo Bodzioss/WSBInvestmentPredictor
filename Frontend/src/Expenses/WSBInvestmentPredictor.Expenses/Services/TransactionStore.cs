@@ -1,110 +1,98 @@
-using WSBInvestmentPredictor.Expenses.Models;
+using WSBInvestmentPredictor.Expenses.Shared.Models;
+using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Commands;
+using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Queries;
+using WSBInvestmentPredictor.Technology.Cqrs;
 
 namespace WSBInvestmentPredictor.Expenses.Services;
 
 public class TransactionStore : ITransactionStore
 {
-    private readonly List<BankTransaction> _transactions = new();
+    private readonly ICqrsRequestService _cqrsRequestService;
 
-    public Task AddTransactions(IEnumerable<BankTransaction> transactions)
+    public TransactionStore(ICqrsRequestService cqrsRequestService)
     {
-        _transactions.AddRange(transactions);
-        return Task.CompletedTask;
+        _cqrsRequestService = cqrsRequestService;
     }
 
-    public Task<IEnumerable<BankTransaction>> GetAllTransactions()
+    public async Task AddTransactions(IEnumerable<BankTransaction> transactions)
     {
-        return Task.FromResult(_transactions.AsEnumerable());
+        var command = new AddTransactions(transactions);
+        await _cqrsRequestService.Handle(command);
     }
 
-    public Task<IEnumerable<BankTransaction>> GetTransactionsByYear(int year)
+    public async Task<IEnumerable<BankTransaction>> GetAllTransactions()
     {
-        var result = _transactions
-            .Where(t => t.TransactionDate.Year == year)
-            .OrderByDescending(t => t.TransactionDate)
-            .ToList()
-            .AsEnumerable();
-        return Task.FromResult(result);
+        var query = new GetTransactions();
+        var result = await _cqrsRequestService.Handle<GetTransactions, GetTransactionsResponse>(query);
+        return result.Transactions;
     }
 
-    public Task<IEnumerable<BankTransaction>> GetTransactionsByYearAndMonth(int year, int month)
+    public async Task<IEnumerable<BankTransaction>> GetTransactionsByYear(int year)
     {
-        var result = _transactions
-            .Where(t => t.TransactionDate.Year == year && t.TransactionDate.Month == month)
-            .OrderByDescending(t => t.TransactionDate)
-            .ToList()
-            .AsEnumerable();
-        return Task.FromResult(result);
+        var query = new GetTransactions(Year: year);
+        var result = await _cqrsRequestService.Handle<GetTransactions, GetTransactionsResponse>(query);
+        return result.Transactions;
     }
 
-    public Task<IEnumerable<BankTransaction>> GetTransactionsByAccount(string account)
+    public async Task<IEnumerable<BankTransaction>> GetTransactionsByYearAndMonth(int year, int month)
     {
-        var result = _transactions
-            .Where(t => t.Account == account)
-            .OrderByDescending(t => t.TransactionDate)
-            .ToList()
-            .AsEnumerable();
-        return Task.FromResult(result);
+        var query = new GetTransactions(Year: year, Month: month);
+        var result = await _cqrsRequestService.Handle<GetTransactions, GetTransactionsResponse>(query);
+        return result.Transactions;
     }
 
-    public Task<IEnumerable<BankTransaction>> GetTransactionsByCounterparty(string counterparty)
+    public async Task<IEnumerable<BankTransaction>> GetTransactionsByAccount(string account)
     {
-        var result = _transactions
-            .Where(t => t.Counterparty == counterparty)
-            .OrderByDescending(t => t.TransactionDate)
-            .ToList()
-            .AsEnumerable();
-        return Task.FromResult(result);
+        var query = new GetTransactions(Account: account);
+        var result = await _cqrsRequestService.Handle<GetTransactions, GetTransactionsResponse>(query);
+        return result.Transactions;
     }
 
-    public Task<IEnumerable<string>> GetAllAccounts()
+    public async Task<IEnumerable<BankTransaction>> GetTransactionsByCounterparty(string counterparty)
     {
-        var result = _transactions
+        var query = new GetTransactions(Counterparty: counterparty);
+        var result = await _cqrsRequestService.Handle<GetTransactions, GetTransactionsResponse>(query);
+        return result.Transactions;
+    }
+
+    public async Task<IEnumerable<string>> GetAllAccounts()
+    {
+        var transactions = await GetAllTransactions();
+        return transactions
             .Select(t => t.Account)
             .Where(a => !string.IsNullOrEmpty(a))
             .Distinct()
-            .OrderBy(a => a)
-            .ToList()
-            .AsEnumerable();
-        return Task.FromResult(result);
+            .OrderBy(a => a);
     }
 
-    public Task<IEnumerable<string>> GetAllCounterparties()
+    public async Task<IEnumerable<string>> GetAllCounterparties()
     {
-        var result = _transactions
+        var transactions = await GetAllTransactions();
+        return transactions
             .Select(t => t.Counterparty)
             .Where(c => !string.IsNullOrEmpty(c))
             .Distinct()
-            .OrderBy(c => c)
-            .ToList()
-            .AsEnumerable();
-        return Task.FromResult(result);
+            .OrderBy(c => c);
     }
 
-    public Task<IEnumerable<int>> GetAllYears()
+    public async Task<IEnumerable<int>> GetAllYears()
     {
-        var result = _transactions
+        var transactions = await GetAllTransactions();
+        return transactions
             .Select(t => t.TransactionDate.Year)
             .Distinct()
-            .OrderByDescending(y => y)
-            .ToList()
-            .AsEnumerable();
-        return Task.FromResult(result);
+            .OrderByDescending(y => y);
     }
 
-    public Task<decimal> GetTotalAmountByYear(int year)
+    public async Task<decimal> GetTotalAmountByYear(int year)
     {
-        var result = _transactions
-            .Where(t => t.TransactionDate.Year == year)
-            .Sum(t => t.Amount);
-        return Task.FromResult(result);
+        var transactions = await GetTransactionsByYear(year);
+        return transactions.Sum(t => t.Amount);
     }
 
-    public Task<decimal> GetTotalAmountByYearAndMonth(int year, int month)
+    public async Task<decimal> GetTotalAmountByYearAndMonth(int year, int month)
     {
-        var result = _transactions
-            .Where(t => t.TransactionDate.Year == year && t.TransactionDate.Month == month)
-            .Sum(t => t.Amount);
-        return Task.FromResult(result);
+        var transactions = await GetTransactionsByYearAndMonth(year, month);
+        return transactions.Sum(t => t.Amount);
     }
 } 

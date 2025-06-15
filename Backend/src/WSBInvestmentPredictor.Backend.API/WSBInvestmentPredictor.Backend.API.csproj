@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\src\Technology\WSBInvestmentPredictor.Technology\WSBInvestmentPredictor.Technology.csproj" />
+    <ProjectReference Include="..\Expenses\WSBInvestmentPredictor.Expenses.Infrastructure\WSBInvestmentPredictor.Expenses.Infrastructure.csproj" />
+    <ProjectReference Include="..\Expenses\WSBInvestmentPredictor.Expenses.InternalShared\WSBInvestmentPredictor.Expenses.InternalShared.csproj" />
+    <ProjectReference Include="..\Prediction\WSBInvestmentPredictor.Prediction.InternalShared\WSBInvestmentPredictor.Prediction.InternalShared.csproj" />
+  </ItemGroup>
+
+</Project>

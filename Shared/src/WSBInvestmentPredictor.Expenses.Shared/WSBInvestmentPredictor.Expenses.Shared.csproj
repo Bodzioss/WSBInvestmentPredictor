@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Technology\WSBInvestmentPredictor.Technology\WSBInvestmentPredictor.Technology.csproj" />
+  </ItemGroup>
+
 </Project>

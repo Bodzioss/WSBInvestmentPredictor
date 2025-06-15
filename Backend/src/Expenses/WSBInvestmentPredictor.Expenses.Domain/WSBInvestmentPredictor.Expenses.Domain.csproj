@@ -6,4 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="CsvHelper" Version="33.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\Shared\src\WSBInvestmentPredictor.Expenses.Shared\WSBInvestmentPredictor.Expenses.Shared.csproj" />
+    </ItemGroup>
+
 </Project>

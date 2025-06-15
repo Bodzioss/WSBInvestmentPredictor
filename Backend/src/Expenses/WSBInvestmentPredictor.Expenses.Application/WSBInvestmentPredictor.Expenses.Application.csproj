@@ -6,4 +6,13 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="12.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\Shared\src\WSBInvestmentPredictor.Expenses.Shared\WSBInvestmentPredictor.Expenses.Shared.csproj" />
+      <ProjectReference Include="..\WSBInvestmentPredictor.Expenses.Domain\WSBInvestmentPredictor.Expenses.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -2,8 +2,8 @@ using System.Globalization;
 using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
-using WSBInvestmentPredictor.Expenses.Models;
 using WSBInvestmentPredictor.Expenses.Services.Converters;
+using WSBInvestmentPredictor.Expenses.Shared.Models;
 
 namespace WSBInvestmentPredictor.Expenses.Services;
 

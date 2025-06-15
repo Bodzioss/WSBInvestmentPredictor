@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using WSBInvestmentPredictor.Expenses.Services;
 using WSBInvestmentPredictor.Frontend.Shared.Navigation;
+using WSBInvestmentPredictor.Technology.Cqrs;
 
 namespace WSBInvestmentPredictor.Expenses;
 
@@ -28,9 +29,10 @@ public static class DI
         });
     }
 
-    public static void RegisterServices(IServiceCollection services)
+    public static IServiceCollection AddExpensesServices(this IServiceCollection services)
     {
         services.AddScoped<IBankTransactionService, BankTransactionService>();
-        services.AddSingleton<ITransactionStore, TransactionStore>();
+        services.AddScoped<ITransactionStore, TransactionStore>();
+        return services;
     }
 }

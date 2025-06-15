@@ -1,4 +1,4 @@
-using WSBInvestmentPredictor.Expenses.Models;
+using WSBInvestmentPredictor.Expenses.Shared.Models;
 
 namespace WSBInvestmentPredictor.Expenses.Services;
 

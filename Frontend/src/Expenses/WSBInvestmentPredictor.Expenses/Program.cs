@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
-using System;
 using System.Globalization;
-using System.Net.Http;
-using System.Threading.Tasks;
+using System.Text;
 using WSBInvestmentPredictor.Frontend.Shared;
+using WSBInvestmentPredictor.Expenses.Services;
+using WSBInvestmentPredictor.Technology.Cqrs;
+using Radzen;
 
 namespace WSBInvestmentPredictor.Expenses
 {
@@ -16,14 +17,26 @@ namespace WSBInvestmentPredictor.Expenses
     {
         public static async Task Main(string[] args)
         {
+            // Register encoding provider for Windows-1250
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("#app");
+            builder.RootComponents.Add<WSBInvestmentPredictor.Expenses.App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             // Add shared services including localization
             builder.Services.AddFrontendSharedServices();
+            
+            // Add Radzen services
+            builder.Services.AddRadzenComponents()
+                .AddRadzenCookieThemeService();
+            builder.Services.AddScoped<NotificationService>();
+
+            // Add application services
+            builder.Services.AddScoped<IBankTransactionService, BankTransactionService>();
+            builder.Services.AddScoped<ITransactionStore, TransactionStore>();
 
             // Configure localization options
             var supportedCultures = new[]

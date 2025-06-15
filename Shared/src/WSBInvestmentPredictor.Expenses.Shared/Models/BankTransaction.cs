@@ -1,6 +1,6 @@
 using System;
 
-namespace WSBInvestmentPredictor.Expenses.Models;
+namespace WSBInvestmentPredictor.Expenses.Shared.Models;
 
 public class BankTransaction
 {
