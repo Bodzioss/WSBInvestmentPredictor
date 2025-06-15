@@ -9,16 +9,16 @@ namespace WSBInvestmentPredictor.Expenses.Pages;
 public partial class ImportTransactions
 {
     [Inject]
-    public required IBankTransactionService BankTransactionService { get; set; }
+    public IBankTransactionService BankTransactionService { get; set; }
 
     [Inject]
-    public required ITransactionStore TransactionStore { get; set; }
+    public ITransactionStore TransactionStore { get; set; }
 
     [Inject]
-    public required NavigationManager NavigationManager { get; set; }
+    public NavigationManager NavigationManager { get; set; }
 
     [Inject]
-    public required NotificationService NotificationService { get; set; }
+    public NotificationService NotificationService { get; set; }
 
     private List<BankTransaction>? transactions;
     private bool isLoading;
@@ -42,7 +42,7 @@ public partial class ImportTransactions
 
             using var stream = file.OpenReadStream();
             transactions = await BankTransactionService.ProcessCsvFile(stream);
-            
+
             Console.WriteLine($"Loaded {transactions.Count} transactions from file");
             if (transactions.Any())
             {
@@ -91,4 +91,4 @@ public partial class ImportTransactions
     {
         NavigationManager.NavigateTo("/transactions");
     }
-} 
+}

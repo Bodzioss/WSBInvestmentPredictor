@@ -1,8 +1,7 @@
-﻿using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using WSBInvestmentPredictor.Expenses.Services;
 using WSBInvestmentPredictor.Frontend.Shared.Navigation;
-using WSBInvestmentPredictor.Technology.Cqrs;
 
 namespace WSBInvestmentPredictor.Expenses;
 

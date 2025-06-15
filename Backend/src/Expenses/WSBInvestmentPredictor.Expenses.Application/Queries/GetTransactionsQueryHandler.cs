@@ -25,4 +25,4 @@ public class GetTransactionsHandler : IRequestHandler<GetTransactions, GetTransa
 
         return new GetTransactionsResponse(transactions, totalAmount);
     }
-} 
+}

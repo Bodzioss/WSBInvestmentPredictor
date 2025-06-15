@@ -1,5 +1,3 @@
-using System;
-
 namespace WSBInvestmentPredictor.Expenses.Shared.Models;
 
 public class BankTransaction
@@ -21,4 +19,4 @@ public class BankTransaction
     public string? Account { get; set; }
     public decimal? BalanceAfterTransaction { get; set; }
     public string? BalanceCurrency { get; set; }
-} 
+}

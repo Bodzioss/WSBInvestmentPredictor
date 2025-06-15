@@ -6,4 +6,4 @@ public record NavLinkGroup(string Title, string Url, string? Icon = null) : NavL
 {
     public List<NavLinkItem> Items { get; init; } = new();
     public bool IsExpanded { get; set; }
-} 
+}

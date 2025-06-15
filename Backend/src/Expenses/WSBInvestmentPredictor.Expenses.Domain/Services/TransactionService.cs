@@ -50,7 +50,7 @@ public class TransactionService : ITransactionService
         using var csv = new CsvReader(reader, config);
 
         var transactions = new List<BankTransaction>();
-        
+
         // Skip the header rows
         for (int i = 0; i < 15; i++)
         {
@@ -85,4 +85,4 @@ public class TransactionService : ITransactionService
 
         return transactions;
     }
-} 
+}

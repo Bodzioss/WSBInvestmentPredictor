@@ -1,7 +1,7 @@
-using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
+using System.Globalization;
 
 namespace WSBInvestmentPredictor.Expenses.Services.Converters;
 
@@ -23,4 +23,4 @@ public class UniversalDateTimeConverter : DateTimeConverter
         // If all parsing attempts fail, throw an exception
         throw new FormatException($"Could not parse '{text}' as DateTime using either Polish or English format.");
     }
-} 
+}

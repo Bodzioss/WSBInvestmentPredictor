@@ -5,18 +5,18 @@ using Microsoft.JSInterop;
 using Radzen;
 using System.Globalization;
 using System.Reflection;
+using WSBInvestmentPredictor.Expenses;
 using WSBInvestmentPredictor.Frontend.Shared;
 using WSBInvestmentPredictor.Frontend.Shared.Navigation;
 using WSBInvestmentPredictor.Frontend.Shared.Services;
 using WSBInvestmentPredictor.Frontend.Wasm;
-using WSBInvestmentPredictor.Technology.Cqrs;
-using WSBInvestmentPredictor.Expenses;
 using WSBInvestmentPredictor.Frontend.Wasm.Services.Cqrs;
+using WSBInvestmentPredictor.Technology.Cqrs;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 // Configure backend URL based on environment
-var backendUrl = builder.HostEnvironment.IsDevelopment() 
+var backendUrl = builder.HostEnvironment.IsDevelopment()
     ? "https://localhost:7214"
     : "https://wsbinvestmentpredictor-gvgxemaubagncrb0.polandcentral-01.azurewebsites.net";
 

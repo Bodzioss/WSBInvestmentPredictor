@@ -1,6 +1,6 @@
-using WSBInvestmentPredictor.Expenses.Shared.Models;
 using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Commands;
 using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Queries;
+using WSBInvestmentPredictor.Expenses.Shared.Models;
 using WSBInvestmentPredictor.Technology.Cqrs;
 
 namespace WSBInvestmentPredictor.Expenses.Services;
@@ -95,4 +95,4 @@ public class TransactionStore : ITransactionStore
         var transactions = await GetTransactionsByYearAndMonth(year, month);
         return transactions.Sum(t => t.Amount);
     }
-} 
+}

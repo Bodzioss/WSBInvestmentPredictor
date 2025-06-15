@@ -1,7 +1,7 @@
-using System.Globalization;
-using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
+using System.Globalization;
+using System.Text;
 using WSBInvestmentPredictor.Expenses.Services.Converters;
 using WSBInvestmentPredictor.Expenses.Shared.Models;
 
@@ -35,7 +35,7 @@ public class BankTransactionService : IBankTransactionService
         csv.Context.TypeConverterCache.AddConverter<decimal?>(new UniversalDecimalConverter());
 
         var transactions = new List<BankTransaction>();
-        
+
         // Skip the header rows (first 15 lines in the example)
         for (int i = 0; i < 15; i++)
         {
@@ -86,4 +86,4 @@ public class BankTransactionService : IBankTransactionService
 
         return transactions;
     }
-} 
+}

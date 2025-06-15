@@ -1,7 +1,7 @@
-using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
+using System.Globalization;
 
 namespace WSBInvestmentPredictor.Expenses.Services.Converters;
 
@@ -31,4 +31,4 @@ public class UniversalDecimalConverter : DecimalConverter
         // If all parsing attempts fail, throw an exception
         throw new FormatException($"Could not parse '{text}' as decimal using either Polish or English format.");
     }
-} 
+}

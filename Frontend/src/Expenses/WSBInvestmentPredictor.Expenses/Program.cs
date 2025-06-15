@@ -4,12 +4,11 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
+using Radzen;
 using System.Globalization;
 using System.Text;
-using WSBInvestmentPredictor.Frontend.Shared;
 using WSBInvestmentPredictor.Expenses.Services;
-using WSBInvestmentPredictor.Technology.Cqrs;
-using Radzen;
+using WSBInvestmentPredictor.Frontend.Shared;
 
 namespace WSBInvestmentPredictor.Expenses
 {
@@ -28,7 +27,7 @@ namespace WSBInvestmentPredictor.Expenses
 
             // Add shared services including localization
             builder.Services.AddFrontendSharedServices();
-            
+
             // Add Radzen services
             builder.Services.AddRadzenComponents()
                 .AddRadzenCookieThemeService();

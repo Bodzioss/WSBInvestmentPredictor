@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Components;
-using WSBInvestmentPredictor.Expenses.Shared.Models;
-using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Queries;
-using WSBInvestmentPredictor.Technology.Cqrs;
 using Radzen;
+using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Queries;
+using WSBInvestmentPredictor.Expenses.Shared.Models;
+using WSBInvestmentPredictor.Technology.Cqrs;
 
 namespace WSBInvestmentPredictor.Expenses.Pages;
 
@@ -105,4 +105,4 @@ public partial class Transactions : ComponentBase
     {
         await LoadData();
     }
-} 
+}

@@ -97,4 +97,4 @@ public static class CqrsEndpointMapper
             return await handler(request, mediator);
         };
     }
-} 
+}
