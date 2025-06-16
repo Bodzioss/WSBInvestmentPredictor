@@ -20,5 +20,12 @@
     <ProjectReference Include="..\Expenses\WSBInvestmentPredictor.Expenses.InternalShared\WSBInvestmentPredictor.Expenses.InternalShared.csproj" />
     <ProjectReference Include="..\Prediction\WSBInvestmentPredictor.Prediction.InternalShared\WSBInvestmentPredictor.Prediction.InternalShared.csproj" />
   </ItemGroup>
+    
+  <ItemGroup>
+    <None Update="Resources\sp500.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
 
 </Project>

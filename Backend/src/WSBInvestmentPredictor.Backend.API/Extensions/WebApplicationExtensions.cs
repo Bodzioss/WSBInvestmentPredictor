@@ -14,7 +14,7 @@ public static class WebApplicationExtensions
             app.UseSwaggerUI();
         }
 
-        app.UseHttpsRedirection();
+        app.UseRouting();
         app.UseCors("AllowFrontend");
         app.UseAuthorization();
 
@@ -23,6 +23,11 @@ public static class WebApplicationExtensions
 
         // Mapowanie endpointów z modułu Prediction
         app.MapCqrsEndpoints(typeof(GetApiStatusQuery).Assembly, "AllowFrontend");
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
 
         return app;
     }

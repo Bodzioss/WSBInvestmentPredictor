@@ -17,6 +17,9 @@ public static class WebApplicationBuilderExtensions
                 policy
                     .WithOrigins(
                         "https://localhost:7236",
+                        "http://localhost:7236",
+                        "https://localhost:5175",
+                        "http://localhost:5175",
                         "https://wsbinvestmentpredictor-frontend-g6gegxf5gdhnbpe8.polandcentral-01.azurewebsites.net",
                         "https://wsbinvestmentpredictor.azurewebsites.net"
                     )

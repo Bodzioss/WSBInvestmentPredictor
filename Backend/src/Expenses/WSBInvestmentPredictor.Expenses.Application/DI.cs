@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Commands;
 
 namespace WSBInvestmentPredictor.Expenses.Application;
 
@@ -6,11 +7,10 @@ public static class DI
 {
     public static IServiceCollection AddExpensesApplication(this IServiceCollection services)
     {
-        var applicationAssembly = typeof(DI).Assembly;
-
         services.AddMediatR(cfg =>
         {
-            cfg.RegisterServicesFromAssembly(applicationAssembly);
+            cfg.RegisterServicesFromAssembly(typeof(DI).Assembly);
+            cfg.RegisterServicesFromAssembly(typeof(AddTransactions).Assembly);
         });
 
         return services;

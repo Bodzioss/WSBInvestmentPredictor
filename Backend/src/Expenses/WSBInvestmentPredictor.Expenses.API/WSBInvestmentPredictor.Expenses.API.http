@@ -1,6 +1,0 @@
-@WSBInvestmentPredictor.Expenses.API_HostAddress = http://localhost:5277
-
-GET {{WSBInvestmentPredictor.Expenses.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
