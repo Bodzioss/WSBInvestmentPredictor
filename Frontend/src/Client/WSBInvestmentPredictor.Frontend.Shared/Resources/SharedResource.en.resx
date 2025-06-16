@@ -159,4 +159,106 @@
   <data name="ThemeHumanistic" xml:space="preserve">
     <value>Humanistic</value>
   </data>
+
+  <!-- QuickPrediction translations -->
+  <data name="QuickPredictionTitle" xml:space="preserve">
+    <value>⚡️ Quick Company Prediction</value>
+  </data>
+  <data name="LoadingTickers" xml:space="preserve">
+    <value>Loading ticker list...</value>
+  </data>
+  <data name="SearchCompany" xml:space="preserve">
+    <value>Search company:</value>
+  </data>
+  <data name="SearchCompanyPlaceholder" xml:space="preserve">
+    <value>e.g. Apple, MSFT, Tesla...</value>
+  </data>
+  <data name="SelectCompany" xml:space="preserve">
+    <value>Select company:</value>
+  </data>
+  <data name="NoMatchingCompanies" xml:space="preserve">
+    <value>No matching companies found.</value>
+  </data>
+  <data name="NumberOfDays" xml:space="preserve">
+    <value>Number of days:</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
+  <data name="CalculatePrediction" xml:space="preserve">
+    <value>Calculate prediction</value>
+  </data>
+  <data name="LoadingDataAndGeneratingPrediction" xml:space="preserve">
+    <value>Loading data and generating prediction...</value>
+  </data>
+  <data name="NoHistoricalDataAvailable" xml:space="preserve">
+    <value>No historical data available for the selected symbol.</value>
+  </data>
+  <data name="Prediction30DayReturn" xml:space="preserve">
+    <value>30-day return prediction:</value>
+  </data>
+
+  <!-- PredictionForm translations -->
+  <data name="PredictionTitle" xml:space="preserve">
+    <value>📈 Prediction</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="High" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="Low" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Predict" xml:space="preserve">
+    <value>Predict</value>
+  </data>
+  <data name="PredictionResult" xml:space="preserve">
+    <value>Prediction (30d return):</value>
+  </data>
+
+  <!-- Navigation translations -->
+  <data name="NavigationPredictions" xml:space="preserve">
+    <value>Predictions</value>
+  </data>
+  <data name="NavigationQuickPrediction" xml:space="preserve">
+    <value>Quick Prediction</value>
+  </data>
+  <data name="NavigationAdvancedPrediction" xml:space="preserve">
+    <value>Advanced Prediction</value>
+  </data>
+  <data name="NavigationBacktest" xml:space="preserve">
+    <value>Backtest</value>
+  </data>
+  <data name="NavigationPersonalFinance" xml:space="preserve">
+    <value>Personal Finance</value>
+  </data>
+  <data name="NavigationExpenses" xml:space="preserve">
+    <value>Expenses</value>
+  </data>
+  <data name="NavigationBudget" xml:space="preserve">
+    <value>Budget</value>
+  </data>
+  <data name="NavigationCategories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="NavigationReports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="NavigationImportTransactions" xml:space="preserve">
+    <value>Import Transactions</value>
+  </data>
+  <data name="NavigationTransactions" xml:space="preserve">
+    <value>Transactions</value>
+  </data>
 </root> 

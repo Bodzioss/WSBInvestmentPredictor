@@ -1,24 +1,31 @@
 @page "/import"
 @using WSBInvestmentPredictor.Expenses.Services
 @using WSBInvestmentPredictor.Expenses.Shared.Models
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+@inject IStringLocalizer<SharedResource> Loc
 
-<PageTitle>Import Transactions</PageTitle>
+<PageTitle>@Loc["ImportBankTransactions"]</PageTitle>
 
-<h1>Import Bank Transactions</h1>
+<h1>@Loc["ImportBankTransactions"]</h1>
+<p>@Loc["UploadBankStatementDescription"]</p>
 
+<!-- File upload control -->
 <div class="row mb-3">
     <div class="col">
-        <InputFile OnChange="@LoadFiles" class="form-control" />
+        <InputFile OnChange="@LoadFiles" class="form-control" accept=".csv" />
     </div>
 </div>
 
+<!-- Loading indicator -->
 @if (isLoading)
 {
     <div class="alert alert-info">
-        Loading file...
+        @Loc["LoadingFile"]
     </div>
 }
 
+<!-- Error message display -->
 @if (errorMessage != null)
 {
     <div class="alert alert-danger">
@@ -26,24 +33,27 @@
     </div>
 }
 
+<!-- Transactions preview and actions -->
 @if (transactions != null && transactions.Any())
 {
+    <!-- Success message -->
     <div class="alert alert-success">
-        Successfully imported @transactions.Count transactions
+        @Loc["SuccessfullyImported"] @transactions.Count @Loc["Transactions"]
     </div>
 
+    <!-- Transactions preview table -->
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Transaction Date</th>
-                    <th>Booking Date</th>
-                    <th>Counterparty</th>
-                    <th>Title</th>
-                    <th>Amount</th>
-                    <th>Currency</th>
-                    <th>Account</th>
-                    <th>Balance</th>
+                    <th>@Loc["TransactionDate"]</th>
+                    <th>@Loc["BookingDate"]</th>
+                    <th>@Loc["Counterparty"]</th>
+                    <th>@Loc["Title"]</th>
+                    <th>@Loc["Amount"]</th>
+                    <th>@Loc["Currency"]</th>
+                    <th>@Loc["Account"]</th>
+                    <th>@Loc["Balance"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,18 +74,19 @@
         </table>
     </div>
 
+    <!-- Action buttons -->
     <div class="mt-3">
         <button class="btn btn-primary" @onclick="SaveTransactions" disabled="@isSaving">
             @if (isSaving)
             {
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span class="ms-1">Saving...</span>
+                <span class="ms-1">@Loc["Saving"]</span>
             }
             else
             {
-                <span>Save Transactions</span>
+                <span>@Loc["SaveTransactions"]</span>
             }
         </button>
-        <button class="btn btn-secondary" @onclick="ViewTransactions">View All Transactions</button>
+        <button class="btn btn-secondary" @onclick="ViewTransactions">@Loc["ViewAllTransactions"]</button>
     </div>
 } 

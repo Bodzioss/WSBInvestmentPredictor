@@ -7,26 +7,37 @@
 @inject ThemeService ThemeService
 
 @code {
+    // Controls sidebar visibility state
     private bool sidebarVisible = true;
+    // Computed style for sidebar based on visibility
     private string SidebarStyle => sidebarVisible ? "width: 220px; transition: width 0.2s;" : "width: 0; overflow: hidden; transition: width 0.2s; padding: 0; border: none;";
+    // Computed style for main content based on sidebar visibility
     private string MainContentStyle => sidebarVisible ? "margin-left: 220px; transition: margin-left 0.2s;" : "margin-left: 0; transition: margin-left 0.2s;";
 
+    // Available theme options
     private List<string> themes = new()
     {
         "material",
         "dark"
     };
+    // Current active theme
     private string currentTheme = "material";
+    // Icon to display based on current theme
     private string ThemeIcon => currentTheme == "dark" ? "light_mode" : "dark_mode";
 
-    // Computed style for Topbar
+    // Computed style for Topbar with background color
     private string TopbarComputedStyle => $"height: 60px; background-color: {TopbarBackgroundColor}; z-index: 1000;";
+    // Background color for topbar based on theme
     private string TopbarBackgroundColor => currentTheme == "material" ? "#ff9800" : "var(--rz-base)"; // Orange for light theme, Radzen var for dark
 
-    // Computed style for Sidebar
+    // Computed style for Sidebar with background color and positioning
     private string SidebarComputedStyle => $"{SidebarStyle} background-color: {SidebarBackgroundColor}; border-right: 1px solid var(--rz-border-color); position: fixed; top: 60px; bottom: 0; left: 0;";
+    // Background color for sidebar based on theme
     private string SidebarBackgroundColor => currentTheme == "material" ? "white" : "var(--rz-base)"; // White for light theme, Radzen var for dark
 
+    /// <summary>
+    /// Initializes the layout component by loading the current theme.
+    /// </summary>
     protected override void OnInitialized()
     {
         currentTheme = ThemeService.Theme;
@@ -36,23 +47,35 @@
         }
     }
 
+    /// <summary>
+    /// Toggles between light and dark themes.
+    /// </summary>
     private void ToggleTheme()
     {
         currentTheme = (currentTheme == "dark") ? "material" : "dark";
         ThemeService.SetTheme(currentTheme);
     }
 
+    /// <summary>
+    /// Represents a theme option with its value and localization key.
+    /// </summary>
     private record ThemeOption(string Value, string LocalizationKey);
 
+    /// <summary>
+    /// Gets the localized display name for a theme option.
+    /// </summary>
     private string GetThemeDisplayName(object theme)
     {
         return Loc[((ThemeOption)theme).LocalizationKey];
     }
 }
 
+<!-- Global notification component -->
 <RadzenNotification />
+
+<!-- Main layout container -->
 <div class="d-flex flex-column vh-100">
-    <!-- Topbar -->
+    <!-- Topbar with navigation controls and theme/language selectors -->
     <RadzenHeader Class="rz-shadow-1 d-flex align-items-center px-3 rz-fixed-header border-bottom" Style="@TopbarComputedStyle">
         <RadzenButton Icon="menu" Click="@(() => sidebarVisible = !sidebarVisible)" ButtonStyle="ButtonStyle.Secondary" Class="me-2" Style="background-color: transparent; border: none;" />
         <span class="navbar-brand fw-bold" style="color: var(--rz-text-color);">📊 WSB Investment Predictor</span>
@@ -64,7 +87,7 @@
 
     <!-- Main content area with sidebar -->
     <div class="d-flex flex-grow-1" style="margin-top: 60px; height: calc(100vh - 60px);">
-        <!-- Sidebar -->
+        <!-- Sidebar navigation menu -->
         <aside class="rz-sidebar rz-shadow-1" Style="@SidebarComputedStyle">
             @if (sidebarVisible)
             {
@@ -72,7 +95,7 @@
             }
         </aside>
 
-        <!-- Main content -->
+        <!-- Main content container -->
         <main class="flex-grow-1 overflow-auto p-4" style="@MainContentStyle">
             <div class="container-fluid h-100">
                 @Body

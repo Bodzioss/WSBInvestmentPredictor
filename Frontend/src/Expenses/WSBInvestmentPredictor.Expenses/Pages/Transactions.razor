@@ -3,18 +3,23 @@
 @using WSBInvestmentPredictor.Expenses.Shared.Models
 @using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Queries
 @using WSBInvestmentPredictor.Technology.Cqrs
-<PageTitle>Transactions</PageTitle>
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
 
-<h1>Bank Transactions</h1>
+<PageTitle>@Loc["NavigationTransactions"]</PageTitle>
 
+<h1>@Loc["NavigationTransactions"]</h1>
+
+<!-- Loading indicator -->
 @if (isLoading)
 {
     <div class="d-flex justify-content-center">
         <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">@Loc["Loading"]</span>
         </div>
     </div>
 }
+<!-- Error message display -->
 else if (error != null)
 {
     <div class="alert alert-danger">
@@ -23,10 +28,12 @@ else if (error != null)
 }
 else
 {
+    <!-- Filter controls -->
     <div class="row mb-3">
+        <!-- Year filter -->
         <div class="col-md-3">
             <select class="form-select" @bind="selectedYear" @bind:after="OnYearChanged">
-                <option value="0">All Years</option>
+                <option value="0">@Loc["AllYears"]</option>
                 @if (years != null)
                 {
                     @foreach (var year in years)
@@ -36,18 +43,20 @@ else
                 }
             </select>
         </div>
+        <!-- Month filter -->
         <div class="col-md-3">
             <select class="form-select" @bind="selectedMonth" @bind:after="OnMonthChanged" disabled="@(selectedYear == 0)">
-                <option value="0">All Months</option>
+                <option value="0">@Loc["AllMonths"]</option>
                 @for (int i = 1; i <= 12; i++)
                 {
                     <option value="@i">@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
                 }
             </select>
         </div>
+        <!-- Account filter -->
         <div class="col-md-3">
             <select class="form-select" @bind="selectedAccount" @bind:after="OnAccountChanged">
-                <option value="">All Accounts</option>
+                <option value="">@Loc["AllAccounts"]</option>
                 @if (filteredAccounts != null)
                 {
                     @foreach (var account in filteredAccounts)
@@ -57,9 +66,10 @@ else
                 }
             </select>
         </div>
+        <!-- Counterparty filter -->
         <div class="col-md-3">
             <select class="form-select" @bind="selectedCounterparty" @bind:after="OnCounterpartyChanged">
-                <option value="">All Counterparties</option>
+                <option value="">@Loc["AllCounterparties"]</option>
                 @if (filteredCounterparties != null)
                 {
                     @foreach (var counterparty in filteredCounterparties)
@@ -71,34 +81,37 @@ else
         </div>
     </div>
 
+    <!-- Total amount display -->
     @if (selectedYear > 0)
     {
         <div class="alert alert-info">
-            Total for @(selectedMonth > 0 ? $"{CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(selectedMonth)} {selectedYear}" : $"Year {selectedYear}"): 
+            @Loc["TotalFor"] @(selectedMonth > 0 ? $"{CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(selectedMonth)} {selectedYear}" : $"{Loc["Year"]} {selectedYear}"): 
             @totalAmount.ToString("N2") PLN
         </div>
     }
 
+    <!-- No transactions message -->
     @if (transactions == null || !transactions.Any())
     {
         <div class="alert alert-warning">
-            No transactions found. Please import some transactions first.
+            @Loc["NoTransactionsFound"] @Loc["PleaseImportSomeTransactionsFirst"]
         </div>
     }
     else
     {
+        <!-- Transactions table -->
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Transaction Date</th>
-                        <th>Booking Date</th>
-                        <th>Counterparty</th>
-                        <th>Title</th>
-                        <th>Amount</th>
-                        <th>Currency</th>
-                        <th>Account</th>
-                        <th>Balance</th>
+                        <th>@Loc["TransactionDate"]</th>
+                        <th>@Loc["BookingDate"]</th>
+                        <th>@Loc["Counterparty"]</th>
+                        <th>@Loc["Title"]</th>
+                        <th>@Loc["Amount"]</th>
+                        <th>@Loc["Currency"]</th>
+                        <th>@Loc["Account"]</th>
+                        <th>@Loc["Balance"]</th>
                     </tr>
                 </thead>
                 <tbody>

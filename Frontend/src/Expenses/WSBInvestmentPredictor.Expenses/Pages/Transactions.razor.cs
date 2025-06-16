@@ -1,33 +1,116 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Radzen;
 using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Queries;
 using WSBInvestmentPredictor.Expenses.Shared.Models;
+using WSBInvestmentPredictor.Frontend.Shared;
+using WSBInvestmentPredictor.Frontend.Shared.Resources;
 using WSBInvestmentPredictor.Technology.Cqrs;
 
 namespace WSBInvestmentPredictor.Expenses.Pages;
 
+/// <summary>
+/// Component for displaying and filtering bank transactions.
+/// Provides functionality to view transactions with various filters and aggregations.
+/// </summary>
 public partial class Transactions : ComponentBase
 {
-    [Inject] private ICqrsRequestService CqrsRequestService { get; set; } = default!;
-    [Inject] private NotificationService NotificationService { get; set; } = default!;
+    /// <summary>
+    /// Service for handling CQRS requests to the backend.
+    /// </summary>
+    [Inject] private ICqrsRequestService RequestService { get; set; } = default!;
 
+    /// <summary>
+    /// Service for displaying notifications to the user.
+    /// </summary>
+    [Inject] private Radzen.NotificationService NotificationService { get; set; } = default!;
+
+    /// <summary>
+    /// Service for accessing localized strings.
+    /// </summary>
+    [Inject] private IStringLocalizer<SharedResource> Loc { get; set; } = default!;
+
+    /// <summary>
+    /// Collection of bank transactions to display.
+    /// </summary>
     protected IEnumerable<BankTransaction>? transactions;
+
+    /// <summary>
+    /// Available years for filtering transactions.
+    /// </summary>
     protected IEnumerable<int>? years;
+
+    /// <summary>
+    /// Available accounts for filtering transactions.
+    /// </summary>
     protected IEnumerable<string>? filteredAccounts;
+
+    /// <summary>
+    /// Available counterparties for filtering transactions.
+    /// </summary>
     protected IEnumerable<string>? filteredCounterparties;
+
+    /// <summary>
+    /// Currently selected year filter.
+    /// </summary>
     protected int selectedYear;
+
+    /// <summary>
+    /// Currently selected month filter.
+    /// </summary>
     protected int selectedMonth;
+
+    /// <summary>
+    /// Currently selected account filter.
+    /// </summary>
     protected string selectedAccount = string.Empty;
+
+    /// <summary>
+    /// Currently selected counterparty filter.
+    /// </summary>
     protected string selectedCounterparty = string.Empty;
+
+    /// <summary>
+    /// Total amount of filtered transactions.
+    /// </summary>
     protected decimal totalAmount;
+
+    /// <summary>
+    /// Indicates if data is currently being loaded.
+    /// </summary>
     protected bool isLoading;
+
+    /// <summary>
+    /// Error message if data loading fails.
+    /// </summary>
     protected string? error;
 
+    /// <summary>
+    /// Initializes the component by loading transaction data.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
-        await LoadData();
+        try
+        {
+            var query = new GetTransactionsQuery();
+            var response = await RequestService.SendAsync<GetTransactionsQuery, GetTransactionsResponse>(query);
+            transactions = response.Transactions;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            NotificationService.Notify(NotificationSeverity.Error, Loc["Error"], ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 
+    /// <summary>
+    /// Loads transaction data based on current filter selections.
+    /// Updates available filters and total amount.
+    /// </summary>
     protected async Task LoadData()
     {
         try
@@ -35,6 +118,7 @@ public partial class Transactions : ComponentBase
             isLoading = true;
             error = null;
 
+            // Create query with current filter values
             var request = new GetTransactions(
                 selectedYear > 0 ? selectedYear : null,
                 selectedMonth > 0 ? selectedMonth : null,
@@ -42,10 +126,12 @@ public partial class Transactions : ComponentBase
                 !string.IsNullOrEmpty(selectedCounterparty) ? selectedCounterparty : null
             );
 
-            var result = await CqrsRequestService.Handle<GetTransactions, GetTransactionsResponse>(request);
+            // Fetch transactions from the backend
+            var result = await RequestService.Handle<GetTransactions, GetTransactionsResponse>(request);
             transactions = result?.Transactions ?? Enumerable.Empty<BankTransaction>();
             totalAmount = result?.TotalAmount ?? 0;
 
+            // Update available filter options based on loaded data
             filteredAccounts = transactions
                 .Select(t => t.Account)
                 .Where(a => !string.IsNullOrEmpty(a))
@@ -68,6 +154,7 @@ public partial class Transactions : ComponentBase
         }
         catch (Exception ex)
         {
+            // Handle errors and reset data
             error = $"Error loading data: {ex.Message}";
             NotificationService.Notify(NotificationSeverity.Error, "Error", error);
             transactions = Enumerable.Empty<BankTransaction>();
@@ -82,6 +169,10 @@ public partial class Transactions : ComponentBase
         }
     }
 
+    /// <summary>
+    /// Handles year filter change.
+    /// Resets month selection if year is cleared.
+    /// </summary>
     protected async Task OnYearChanged()
     {
         if (selectedYear == 0)
@@ -91,16 +182,25 @@ public partial class Transactions : ComponentBase
         await LoadData();
     }
 
+    /// <summary>
+    /// Handles month filter change.
+    /// </summary>
     protected async Task OnMonthChanged()
     {
         await LoadData();
     }
 
+    /// <summary>
+    /// Handles account filter change.
+    /// </summary>
     protected async Task OnAccountChanged()
     {
         await LoadData();
     }
 
+    /// <summary>
+    /// Handles counterparty filter change.
+    /// </summary>
     protected async Task OnCounterpartyChanged()
     {
         await LoadData();

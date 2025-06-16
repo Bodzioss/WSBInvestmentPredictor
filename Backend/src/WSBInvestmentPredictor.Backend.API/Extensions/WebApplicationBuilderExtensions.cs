@@ -3,8 +3,16 @@ using WSBInvestmentPredictor.Prediction.InternalShared.Extensions;
 
 namespace WSBInvestmentPredictor.Backend.API.Extensions;
 
+/// <summary>
+/// Provides extension methods for configuring the WebApplicationBuilder and its services.
+/// </summary>
 public static class WebApplicationBuilderExtensions
 {
+    /// <summary>
+    /// Configures the basic application services including controllers, API explorer, Swagger, and CORS.
+    /// </summary>
+    /// <param name="builder">The WebApplicationBuilder instance to configure.</param>
+    /// <returns>The configured WebApplicationBuilder instance.</returns>
     public static WebApplicationBuilder ConfigureApplicationServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddControllers();
@@ -31,6 +39,12 @@ public static class WebApplicationBuilderExtensions
         return builder;
     }
 
+    /// <summary>
+    /// Configures services for all application modules (Expenses and Prediction).
+    /// </summary>
+    /// <param name="services">The IServiceCollection to configure.</param>
+    /// <param name="configuration">The application configuration.</param>
+    /// <returns>The configured IServiceCollection instance.</returns>
     public static IServiceCollection ConfigureModuleServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Konfiguracja modułu Expenses

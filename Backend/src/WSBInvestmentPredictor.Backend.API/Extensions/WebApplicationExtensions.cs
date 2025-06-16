@@ -1,11 +1,20 @@
 using WSBInvestmentPredictor.Backend.API.Cqrs;
 using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Commands;
 using WSBInvestmentPredictor.Prediction.Shared.Queries;
+using WSBInvestmentPredictor.Technology.Middleware;
 
 namespace WSBInvestmentPredictor.Backend.API.Extensions;
 
+/// <summary>
+/// Provides extension methods for configuring the WebApplication and its middleware pipeline.
+/// </summary>
 public static class WebApplicationExtensions
 {
+    /// <summary>
+    /// Configures the application's middleware pipeline and maps endpoints for all modules.
+    /// </summary>
+    /// <param name="app">The WebApplication instance to configure.</param>
+    /// <returns>The configured WebApplication instance.</returns>
     public static async Task<WebApplication> ConfigureApplicationModules(this WebApplication app)
     {
         if (app.Environment.IsDevelopment())
@@ -16,18 +25,16 @@ public static class WebApplicationExtensions
 
         app.UseRouting();
         app.UseCors("AllowFrontend");
+        app.UseHttpsRedirection();
         app.UseAuthorization();
 
-        // Mapowanie endpointów z modułu Expenses
+        // Add error handling middleware before endpoint mapping
+        app.UseErrorHandling();
+
+        // Map endpoints for all modules
+        app.MapControllers();
         app.MapCqrsEndpoints(typeof(AddTransactions).Assembly, "AllowFrontend");
-
-        // Mapowanie endpointów z modułu Prediction
         app.MapCqrsEndpoints(typeof(GetApiStatusQuery).Assembly, "AllowFrontend");
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
 
         return app;
     }

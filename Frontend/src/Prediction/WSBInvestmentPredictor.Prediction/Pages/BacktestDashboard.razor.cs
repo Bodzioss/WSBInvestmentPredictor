@@ -14,6 +14,10 @@ using WSBInvestmentPredictor.Technology.Cqrs;
 
 namespace WSBInvestmentPredictor.Prediction.Pages;
 
+/// <summary>
+/// Component for running and displaying backtest results.
+/// Allows users to test the prediction model's performance on historical data.
+/// </summary>
 public class BacktestDashboardBase : ComponentBase
 {
     [Inject] protected ICqrsRequestService Cqrs { get; set; } = default!;
@@ -21,17 +25,33 @@ public class BacktestDashboardBase : ComponentBase
     [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
     [Inject] private IStringLocalizer<SharedResource> Loc { get; set; } = default!;
 
+    // List of available company tickers
     protected List<CompanyTicker> Tickers { get; set; } = new();
+
+    // Selected company symbol
     protected string SelectedTicker { get; set; } = string.Empty;
+
+    // Selected year for backtest
     protected int SelectedYear { get; set; } = DateTime.Now.Year;
+
+    // Available years for backtest
     protected List<int> AvailableYears { get; set; } = new() { 2023, 2024 };
 
+    // Backtest results
     protected BacktestResultDto? Result { get; set; }
+
+    // Error message if backtest fails
     protected string? ErrorMessage { get; set; }
+
+    // Loading state indicator
     protected bool IsLoading { get; set; }
 
+    // Determines if backtest can be run
     protected bool CanRun => !string.IsNullOrWhiteSpace(SelectedTicker) && !IsLoading;
 
+    /// <summary>
+    /// Initializes the component by loading available tickers.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         try
@@ -44,6 +64,9 @@ public class BacktestDashboardBase : ComponentBase
         }
     }
 
+    /// <summary>
+    /// Runs the backtest for the selected company and year.
+    /// </summary>
     protected async Task RunBacktest()
     {
         if (!CanRun) return;
@@ -69,21 +92,24 @@ public class BacktestDashboardBase : ComponentBase
         }
     }
 
+    /// <summary>
+    /// Shows an error notification to the user.
+    /// </summary>
     private void ShowError(string message)
     {
         NotificationService.Notify(new NotificationMessage
         {
             Severity = NotificationSeverity.Error,
-            Summary = "Błąd",
+            Summary = "Error",
             Detail = message,
             Duration = 4000
         });
     }
 
     /// <summary>
-    /// Generuje linię diagonalną y=x do wykresu punktowego (idealna linia predykcji).
+    /// Generates diagonal line points for the scatter plot (ideal prediction line).
     /// </summary>
-    /// <returns>Lista punktów na linii diagonalnej</returns>
+    /// <returns>List of points on the diagonal line</returns>
     protected List<DiagonalPoint> GetDiagonalLine()
     {
         var points = new List<DiagonalPoint>();
@@ -95,9 +121,9 @@ public class BacktestDashboardBase : ComponentBase
     }
 
     /// <summary>
-    /// Tworzy histogram błędów predykcji.
+    /// Creates a histogram of prediction errors.
     /// </summary>
-    /// <returns>Lista przedziałów histogramu i liczba punktów w każdym</returns>
+    /// <returns>List of histogram bins and their counts</returns>
     protected List<ErrorHistogramPoint> GetErrorHistogram()
     {
         if (Result?.Points == null || Result.Points.Count == 0)
@@ -124,6 +150,9 @@ public class BacktestDashboardBase : ComponentBase
         return histogram;
     }
 
+    /// <summary>
+    /// Exports backtest results to a CSV file.
+    /// </summary>
     protected async Task ExportToCsv()
     {
         if (Result?.Points == null || !Result.Points.Any())
@@ -135,7 +164,7 @@ public class BacktestDashboardBase : ComponentBase
         try
         {
             var csv = new StringBuilder();
-            csv.AppendLine("Data,Predykcja (%),Rzeczywistość (%),Błąd (%)");
+            csv.AppendLine("Date,Prediction (%),Actual (%),Error (%)");
 
             foreach (var point in Result.Points)
             {
@@ -162,11 +191,17 @@ public class BacktestDashboardBase : ComponentBase
         }
     }
 
+    /// <summary>
+    /// Represents a point on the diagonal line in the scatter plot.
+    /// </summary>
     protected class DiagonalPoint
     {
         public float Value { get; set; }
     }
 
+    /// <summary>
+    /// Represents a bin in the error histogram.
+    /// </summary>
     protected class ErrorHistogramPoint
     {
         public string Range { get; set; } = string.Empty;

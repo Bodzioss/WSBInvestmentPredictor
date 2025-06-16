@@ -30,9 +30,11 @@ public class HttpCqrsRequestService : ICqrsRequestService
                 case "GET":
                     response = await _http.GetAsync(endpoint);
                     break;
+
                 case "POST":
                     response = await _http.PostAsJsonAsync(endpoint, request);
                     break;
+
                 default:
                     throw new NotImplementedException($"Nieobsługiwana metoda HTTP: {attr.HttpMethod}");
             }

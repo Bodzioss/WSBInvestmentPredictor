@@ -12,6 +12,10 @@ using WSBInvestmentPredictor.Frontend.Shared;
 
 namespace WSBInvestmentPredictor.Prediction
 {
+    /// <summary>
+    /// Main program class that configures and runs the Blazor WebAssembly application.
+    /// Handles dependency injection, localization, and application startup.
+    /// </summary>
     public class Program
     {
         public static async Task Main(string[] args)
@@ -20,12 +24,13 @@ namespace WSBInvestmentPredictor.Prediction
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
+            // Configure HTTP client for API communication
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             // Add shared services including localization
             builder.Services.AddFrontendSharedServices();
 
-            // Configure localization options
+            // Configure supported cultures for localization
             var supportedCultures = new[]
             {
                 new CultureInfo("en"),
@@ -49,7 +54,7 @@ namespace WSBInvestmentPredictor.Prediction
             var cultureName = !string.IsNullOrEmpty(savedCulture) ? savedCulture : "en";
             var cultureInfo = new CultureInfo(cultureName);
 
-            // Set the culture
+            // Set the culture for the application
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             CultureInfo.CurrentCulture = cultureInfo;

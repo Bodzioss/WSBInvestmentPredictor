@@ -6,6 +6,11 @@ using WSBInvestmentPredictor.Technology.Cqrs;
 
 namespace WSBInvestmentPredictor.Backend.API.Cqrs;
 
+/// <summary>
+/// Provides functionality to automatically map CQRS requests to HTTP endpoints.
+/// This class handles the registration of command and query handlers as API endpoints
+/// based on the ApiRequestAttribute decoration.
+/// </summary>
 public static class CqrsEndpointMapper
 {
     private static readonly JsonSerializerOptions _jsonOptions = new()
@@ -13,6 +18,12 @@ public static class CqrsEndpointMapper
         PropertyNameCaseInsensitive = true
     };
 
+    /// <summary>
+    /// Maps all CQRS requests decorated with ApiRequestAttribute to their corresponding HTTP endpoints.
+    /// </summary>
+    /// <param name="app">The WebApplication instance to configure endpoints for.</param>
+    /// <param name="assembly">The assembly containing the CQRS request types.</param>
+    /// <param name="corsPolicyName">The name of the CORS policy to apply to the endpoints.</param>
     public static void MapCqrsEndpoints(this WebApplication app, Assembly assembly, string corsPolicyName)
     {
         var requestTypes = assembly
@@ -69,6 +80,12 @@ public static class CqrsEndpointMapper
         }
     }
 
+    /// <summary>
+    /// Creates a delegate that handles query requests and returns a result.
+    /// </summary>
+    /// <param name="requestType">The type of the query request.</param>
+    /// <param name="resultType">The type of the query result.</param>
+    /// <returns>A delegate that processes the query request and returns the result.</returns>
     private static Delegate CreateQueryHandler(Type requestType, Type resultType)
     {
         var props = requestType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -101,6 +118,11 @@ public static class CqrsEndpointMapper
         };
     }
 
+    /// <summary>
+    /// Creates a delegate that handles command requests without returning a result.
+    /// </summary>
+    /// <param name="requestType">The type of the command request.</param>
+    /// <returns>A delegate that processes the command request and returns an OK result.</returns>
     private static Delegate CreateCommandHandler(Type requestType)
     {
         var props = requestType.GetProperties(BindingFlags.Public | BindingFlags.Instance);

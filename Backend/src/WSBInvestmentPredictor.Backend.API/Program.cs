@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using WSBInvestmentPredictor.Backend.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,10 +22,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseRouting();
-app.UseCors("AllowFrontend");
-app.UseHttpsRedirection();
-
 app.Run();
 
-public partial class Program { }
+public partial class Program
+{ }

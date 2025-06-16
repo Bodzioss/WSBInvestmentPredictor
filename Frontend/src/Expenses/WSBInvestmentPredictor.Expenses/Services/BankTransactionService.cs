@@ -7,16 +7,31 @@ using WSBInvestmentPredictor.Expenses.Shared.Models;
 
 namespace WSBInvestmentPredictor.Expenses.Services;
 
+/// <summary>
+/// Service implementation for processing bank transaction data from CSV files.
+/// Handles parsing of CSV files with specific formatting for Polish bank statements.
+/// </summary>
 public class BankTransactionService : IBankTransactionService
 {
+    /// <summary>
+    /// Static constructor to register the Windows-1250 encoding provider.
+    /// Required for proper handling of Polish characters in CSV files.
+    /// </summary>
     static BankTransactionService()
     {
         // Register encoding provider for Windows-1250
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
     }
 
+    /// <summary>
+    /// Processes a CSV file stream and converts it into a list of bank transactions.
+    /// Handles specific CSV format with Polish locale and Windows-1250 encoding.
+    /// </summary>
+    /// <param name="fileStream">The stream containing the CSV file data</param>
+    /// <returns>A list of parsed bank transactions</returns>
     public async Task<List<BankTransaction>> ProcessCsvFile(Stream fileStream)
     {
+        // Configure CSV reader with Polish locale and Windows-1250 encoding
         var config = new CsvConfiguration(new CultureInfo("pl-PL"))
         {
             Delimiter = ";",
@@ -28,7 +43,7 @@ public class BankTransactionService : IBankTransactionService
         using var reader = new StreamReader(fileStream, Encoding.GetEncoding(1250));
         using var csv = new CsvReader(reader, config);
 
-        // Register type converters
+        // Register custom type converters for proper data parsing
         csv.Context.TypeConverterCache.AddConverter<DateTime>(new UniversalDateTimeConverter());
         csv.Context.TypeConverterCache.AddConverter<DateTime?>(new UniversalDateTimeConverter());
         csv.Context.TypeConverterCache.AddConverter<decimal>(new UniversalDecimalConverter());
@@ -42,6 +57,7 @@ public class BankTransactionService : IBankTransactionService
             await csv.ReadAsync();
         }
 
+        // Process each transaction row
         while (await csv.ReadAsync())
         {
             try
@@ -54,6 +70,7 @@ public class BankTransactionService : IBankTransactionService
                 }
                 Console.WriteLine($"Raw CSV row: {string.Join(" | ", rowData)}");
 
+                // Map CSV fields to BankTransaction object
                 var transaction = new BankTransaction
                 {
                     TransactionDate = csv.GetField<DateTime>(0),
