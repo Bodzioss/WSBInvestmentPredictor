@@ -1,4 +1,3 @@
-
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WSBInvestmentPredictor.Prediction.Domain.Interfaces;
@@ -24,4 +23,4 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
-} 
+}

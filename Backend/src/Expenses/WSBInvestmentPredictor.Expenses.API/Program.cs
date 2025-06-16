@@ -1,9 +1,9 @@
+using WSBInvestmentPredictor.Expenses.API.Cqrs;
 using WSBInvestmentPredictor.Expenses.Application;
 using WSBInvestmentPredictor.Expenses.Domain.Interfaces;
 using WSBInvestmentPredictor.Expenses.Infrastructure.Repositories;
 using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Commands;
 using WSBInvestmentPredictor.Technology.Middleware;
-using WSBInvestmentPredictor.Expenses.API.Cqrs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +32,6 @@ builder.Services.AddOpenApi();
 
 // Rejestracja CQRS
 builder.Services.AddExpensesApplication();
-
 
 // Register repositories
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();

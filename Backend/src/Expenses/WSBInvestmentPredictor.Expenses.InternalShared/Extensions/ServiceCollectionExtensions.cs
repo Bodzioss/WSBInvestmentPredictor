@@ -13,9 +13,9 @@ public static class ServiceCollectionExtensions
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly));
         services.AddScoped<ITransactionService, TransactionService>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
-        
+
         // Tutaj dodaj inne serwisy z modułu Expenses
-        
+
         return services;
     }
-} 
+}

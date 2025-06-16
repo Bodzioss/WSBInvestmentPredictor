@@ -17,4 +17,4 @@ public class AddTransactionsHandler : IRequestHandler<AddTransactions>
     {
         await _transactionRepository.AddTransactions(request.Transactions);
     }
-} 
+}

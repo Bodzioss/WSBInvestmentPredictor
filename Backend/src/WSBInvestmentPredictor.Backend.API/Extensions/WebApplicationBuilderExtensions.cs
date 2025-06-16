@@ -1,4 +1,3 @@
-
 using WSBInvestmentPredictor.Expenses.InternalShared.Extensions;
 using WSBInvestmentPredictor.Prediction.InternalShared.Extensions;
 
@@ -39,4 +38,4 @@ public static class WebApplicationBuilderExtensions
 
         return services;
     }
-} 
+}
