@@ -90,21 +90,7 @@ public partial class Transactions : ComponentBase
     /// </summary>
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            var query = new GetTransactionsQuery();
-            var response = await RequestService.SendAsync<GetTransactionsQuery, GetTransactionsResponse>(query);
-            transactions = response.Transactions;
-        }
-        catch (Exception ex)
-        {
-            error = ex.Message;
-            NotificationService.Notify(NotificationSeverity.Error, Loc["Error"], ex.Message);
-        }
-        finally
-        {
-            isLoading = false;
-        }
+        await LoadData();
     }
 
     /// <summary>
