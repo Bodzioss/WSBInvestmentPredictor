@@ -4,7 +4,6 @@ using Radzen;
 using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Queries;
 using WSBInvestmentPredictor.Expenses.Shared.Models;
 using WSBInvestmentPredictor.Frontend.Shared;
-using WSBInvestmentPredictor.Frontend.Shared.Resources;
 using WSBInvestmentPredictor.Technology.Cqrs;
 
 namespace WSBInvestmentPredictor.Expenses.Pages;

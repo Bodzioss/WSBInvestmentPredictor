@@ -71,23 +71,24 @@ public class BankTransactionService : IBankTransactionService
                 Console.WriteLine($"Raw CSV row: {string.Join(" | ", rowData)}");
 
                 // Map CSV fields to BankTransaction object
-                var transaction = new BankTransaction
+                var transaction = new BankTransaction(
+                    csv.GetField<DateTime>(0),
+                    csv.GetField<string>(3),
+                    csv.GetField<decimal>(8),
+                    csv.GetField<string>(14),
+                    csv.GetField<string>(2)
+                )
                 {
-                    TransactionDate = csv.GetField<DateTime>(0),
                     BookingDate = csv.GetField<DateTime?>(1),
-                    Counterparty = csv.GetField<string>(2),
-                    Title = csv.GetField<string>(3),
                     AccountNumber = csv.GetField<string>(4),
                     BankName = csv.GetField<string>(5),
                     Details = csv.GetField<string>(6),
                     TransactionNumber = csv.GetField<string>(7),
-                    Amount = csv.GetField<decimal>(8),
                     Currency = csv.GetField<string>(9),
                     BlockedAmount = csv.GetField<decimal?>(10),
                     BlockedCurrency = csv.GetField<string>(11),
                     PaymentAmount = csv.GetField<decimal?>(12),
                     PaymentCurrency = csv.GetField<string>(13),
-                    Account = csv.GetField<string>(14),
                     BalanceAfterTransaction = csv.GetField<decimal?>(15),
                     BalanceCurrency = csv.GetField<string>(16)
                 };

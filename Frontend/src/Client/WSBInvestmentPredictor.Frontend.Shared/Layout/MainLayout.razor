@@ -3,47 +3,35 @@
 @using Microsoft.Extensions.Localization
 @using WSBInvestmentPredictor.Frontend.Shared
 @using WSBInvestmentPredictor.Frontend.Shared.Shared
+@using Radzen
+@using Radzen.Blazor
+@using WSBInvestmentPredictor.Frontend.Shared.Navigation
 @inject IStringLocalizer<SharedResource> Loc 
-@inject ThemeService ThemeService
+@inject Radzen.ThemeService ThemeService
+@inject NavigationRegistry NavigationRegistry
 
 @code {
     // Controls sidebar visibility state
     private bool sidebarVisible = true;
-    // Computed style for sidebar based on visibility
-    private string SidebarStyle => sidebarVisible ? "width: 220px; transition: width 0.2s;" : "width: 0; overflow: hidden; transition: width 0.2s; padding: 0; border: none;";
-    // Computed style for main content based on sidebar visibility
-    private string MainContentStyle => sidebarVisible ? "margin-left: 220px; transition: margin-left 0.2s;" : "margin-left: 0; transition: margin-left 0.2s;";
 
     // Available theme options
     private List<string> themes = new()
     {
-        "material",
-        "dark"
+        "standard",
+        "standard-dark"
     };
     // Current active theme
-    private string currentTheme = "material";
+    private string currentTheme = "standard";
     // Icon to display based on current theme
-    private string ThemeIcon => currentTheme == "dark" ? "light_mode" : "dark_mode";
+    private string ThemeIcon => currentTheme == "standard-dark" ? "light_mode" : "dark_mode";
 
-    // Computed style for Topbar with background color
-    private string TopbarComputedStyle => $"height: 60px; background-color: {TopbarBackgroundColor}; z-index: 1000;";
-    // Background color for topbar based on theme
-    private string TopbarBackgroundColor => currentTheme == "material" ? "#ff9800" : "var(--rz-base)"; // Orange for light theme, Radzen var for dark
-
-    // Computed style for Sidebar with background color and positioning
-    private string SidebarComputedStyle => $"{SidebarStyle} background-color: {SidebarBackgroundColor}; border-right: 1px solid var(--rz-border-color); position: fixed; top: 60px; bottom: 0; left: 0;";
-    // Background color for sidebar based on theme
-    private string SidebarBackgroundColor => currentTheme == "material" ? "white" : "var(--rz-base)"; // White for light theme, Radzen var for dark
-
-    /// <summary>
-    /// Initializes the layout component by loading the current theme.
-    /// </summary>
     protected override void OnInitialized()
     {
+        // On component init, get the current theme from the service
         currentTheme = ThemeService.Theme;
         if (!themes.Contains(currentTheme))
         {
-            currentTheme = "material"; // Default to a light theme if current is not dark/material
+            currentTheme = "standard";
         }
     }
 
@@ -52,7 +40,7 @@
     /// </summary>
     private void ToggleTheme()
     {
-        currentTheme = (currentTheme == "dark") ? "material" : "dark";
+        currentTheme = (currentTheme == "standard-dark") ? "standard" : "standard-dark";
         ThemeService.SetTheme(currentTheme);
     }
 
@@ -73,34 +61,41 @@
 <!-- Global notification component -->
 <RadzenNotification />
 
-<!-- Main layout container -->
-<div class="d-flex flex-column vh-100">
-    <!-- Topbar with navigation controls and theme/language selectors -->
-    <RadzenHeader Class="rz-shadow-1 d-flex align-items-center px-3 rz-fixed-header border-bottom" Style="@TopbarComputedStyle">
-        <RadzenButton Icon="menu" Click="@(() => sidebarVisible = !sidebarVisible)" ButtonStyle="ButtonStyle.Secondary" Class="me-2" Style="background-color: transparent; border: none;" />
-        <span class="navbar-brand fw-bold" style="color: var(--rz-text-color);">📊 WSB Investment Predictor</span>
-        <div class="ms-auto d-flex align-items-center gap-3">
-            <RadzenButton Icon="@ThemeIcon" Click="@ToggleTheme" ButtonStyle="ButtonStyle.Secondary" Class="me-2" Style="background-color: transparent; border: none;" />
-            <LanguageSelector />
+<RadzenLayout>
+    <RadzenHeader>
+        <div class="d-flex align-items-center h-100">
+            <RadzenButton Icon="menu" Variant="Variant.Text" Click="@(() => sidebarVisible = !sidebarVisible)" Class="ms-3 me-2" />
+            <span class="navbar-brand fw-bold">📊 WSB Investment Predictor</span>
+            <div class="ms-auto d-flex align-items-center gap-3 me-3">
+                <RadzenButton Icon="@ThemeIcon" Click="@ToggleTheme" Variant="Variant.Text" />
+                <LanguageSelector />
+            </div>
         </div>
     </RadzenHeader>
-
-    <!-- Main content area with sidebar -->
-    <div class="d-flex flex-grow-1" style="margin-top: 60px; height: calc(100vh - 60px);">
-        <!-- Sidebar navigation menu -->
-        <aside class="rz-sidebar rz-shadow-1" Style="@SidebarComputedStyle">
-            @if (sidebarVisible)
+    <RadzenSidebar @bind-Expanded="sidebarVisible" Style="background-color: var(--rz-header-background-color);">
+        <RadzenPanelMenu Style="background-color: inherit;">
+            @foreach (var link in NavigationRegistry.Links)
             {
-                <NavMenu />
+                @if (link is NavLinkGroup group && group.Items.Any())
+                {
+                    <RadzenPanelMenuItem Text="@group.Title" Style="background-color: inherit;">
+                        @foreach (var item in group.Items)
+                        {
+                            <RadzenPanelMenuItem Text="@item.Title" Path="@item.Url" Style="background-color: inherit;" />
+                        }
+                    </RadzenPanelMenuItem>
+                }
+                else
+                {
+                    <RadzenPanelMenuItem Text="@link.Title" Path="@link.Url" Style="background-color: inherit;" />
+                }
             }
-        </aside>
-
-        <!-- Main content container -->
-        <main class="flex-grow-1 overflow-auto p-4" style="@MainContentStyle">
-            <div class="container-fluid h-100">
-                @Body
-            </div>
-        </main>
-    </div>
-</div>
+        </RadzenPanelMenu>
+    </RadzenSidebar>
+    <RadzenBody>
+        <div class="p-4 h-100">
+            @Body
+        </div>
+    </RadzenBody>
+</RadzenLayout>
 

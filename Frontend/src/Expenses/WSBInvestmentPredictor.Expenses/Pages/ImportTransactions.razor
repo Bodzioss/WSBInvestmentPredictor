@@ -41,6 +41,22 @@
         @Loc["SuccessfullyImported"] @transactions.Count @Loc["Transactions"]
     </div>
 
+    <!-- Action buttons -->
+    <div class="mb-3">
+        <button class="btn btn-primary me-2" @onclick="SaveTransactions" disabled="@isSaving">
+            @if (isSaving)
+            {
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="ms-1">@Loc["Saving"]</span>
+            }
+            else
+            {
+                <span>@Loc["SaveTransactions"]</span>
+            }
+        </button>
+        <button class="btn btn-secondary" @onclick="ViewTransactions">@Loc["ViewAllTransactions"]</button>
+    </div>
+
     <!-- Transactions preview table -->
     <div class="table-responsive">
         <table class="table table-striped">
@@ -72,21 +88,5 @@
                 }
             </tbody>
         </table>
-    </div>
-
-    <!-- Action buttons -->
-    <div class="mt-3">
-        <button class="btn btn-primary" @onclick="SaveTransactions" disabled="@isSaving">
-            @if (isSaving)
-            {
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span class="ms-1">@Loc["Saving"]</span>
-            }
-            else
-            {
-                <span>@Loc["SaveTransactions"]</span>
-            }
-        </button>
-        <button class="btn btn-secondary" @onclick="ViewTransactions">@Loc["ViewAllTransactions"]</button>
     </div>
 } 

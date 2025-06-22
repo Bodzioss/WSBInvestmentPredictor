@@ -10,7 +10,6 @@
 
 <h1>@Loc["NavigationTransactions"]</h1>
 
-<!-- Loading indicator -->
 @if (isLoading)
 {
     <div class="d-flex justify-content-center">
@@ -19,7 +18,6 @@
         </div>
     </div>
 }
-<!-- Error message display -->
 else if (error != null)
 {
     <div class="alert alert-danger">
@@ -28,9 +26,7 @@ else if (error != null)
 }
 else
 {
-    <!-- Filter controls -->
     <div class="row mb-3">
-        <!-- Year filter -->
         <div class="col-md-3">
             <select class="form-select" @bind="selectedYear" @bind:after="OnYearChanged">
                 <option value="0">@Loc["AllYears"]</option>
@@ -43,7 +39,6 @@ else
                 }
             </select>
         </div>
-        <!-- Month filter -->
         <div class="col-md-3">
             <select class="form-select" @bind="selectedMonth" @bind:after="OnMonthChanged" disabled="@(selectedYear == 0)">
                 <option value="0">@Loc["AllMonths"]</option>
@@ -53,7 +48,6 @@ else
                 }
             </select>
         </div>
-        <!-- Account filter -->
         <div class="col-md-3">
             <select class="form-select" @bind="selectedAccount" @bind:after="OnAccountChanged">
                 <option value="">@Loc["AllAccounts"]</option>
@@ -66,7 +60,6 @@ else
                 }
             </select>
         </div>
-        <!-- Counterparty filter -->
         <div class="col-md-3">
             <select class="form-select" @bind="selectedCounterparty" @bind:after="OnCounterpartyChanged">
                 <option value="">@Loc["AllCounterparties"]</option>
@@ -81,7 +74,6 @@ else
         </div>
     </div>
 
-    <!-- Total amount display -->
     @if (selectedYear > 0)
     {
         <div class="alert alert-info">
@@ -90,7 +82,6 @@ else
         </div>
     }
 
-    <!-- No transactions message -->
     @if (transactions == null || !transactions.Any())
     {
         <div class="alert alert-warning">
@@ -99,7 +90,6 @@ else
     }
     else
     {
-        <!-- Transactions table -->
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>

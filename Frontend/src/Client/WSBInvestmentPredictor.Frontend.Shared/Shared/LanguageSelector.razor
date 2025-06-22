@@ -2,33 +2,29 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @using WSBInvestmentPredictor.Frontend.Shared
+@using Radzen
+@using Radzen.Blazor
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
 <!-- Language selector dropdown component -->
-<div class="dropdown">
-    <!-- Current language button with flag and name -->
-    <button class="btn dropdown-toggle px-3 py-1 fw-bold shadow-sm" type="button" id="languageDropdown"
-            data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 1.5rem;">
-        <span class="fi fi-@(CurrentCulture.Name.ToLowerInvariant() == "en" ? "gb-eng" : CurrentCulture.Name.ToLowerInvariant())"></span>
-        <span class="ms-2">@CurrentCulture.NativeName</span>
-    </button>
-    <!-- Dropdown menu with available languages -->
-    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="languageDropdown">
-        @foreach (var culture in SupportedCultures)
-        {
-            <li>
-                <button class="dropdown-item @(culture.Name == CurrentCulture.Name ? "active" : "")"
-                        @onclick="() => OnLanguageChanged(culture.Name)">
-                    <span class="fi fi-@(culture.Name.ToLowerInvariant() == "en" ? "gb-eng" : culture.Name.ToLowerInvariant())"></span>
-                    <span class="ms-2">@culture.NativeName</span>
-                </button>
-            </li>
-        }
-    </ul>
-</div>
+<RadzenDropDown @bind-Value="currentCultureName" 
+                Data="@SupportedCultures" 
+                TextProperty="NativeName" 
+                ValueProperty="Name"
+                Style="min-width: 120px;"
+                ButtonStyle="ButtonStyle.Light">
+    <Template Context="culture">
+        <div class="d-flex align-items-center">
+            <span class="fi fi-@(culture.Name.ToLowerInvariant() == "en" ? "gb-eng" : culture.Name.ToLowerInvariant())"></span>
+            <span class="ms-2">@culture.NativeName</span>
+        </div>
+    </Template>
+</RadzenDropDown>
 
 @code {
+    private string currentCultureName = "en";
+
     /// <summary>
     /// Gets the current culture information.
     /// </summary>
@@ -57,7 +53,20 @@
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             CultureInfo.CurrentCulture = cultureInfo;
             CultureInfo.CurrentUICulture = cultureInfo;
+            currentCultureName = savedCulture;
             StateHasChanged();
+        }
+        else
+        {
+            currentCultureName = CultureInfo.CurrentCulture.Name;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender && !string.IsNullOrEmpty(currentCultureName) && currentCultureName != CultureInfo.CurrentCulture.Name)
+        {
+            await OnLanguageChanged(currentCultureName);
         }
     }
 
