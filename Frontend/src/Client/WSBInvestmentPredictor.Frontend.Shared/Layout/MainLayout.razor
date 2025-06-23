@@ -72,22 +72,22 @@
             </div>
         </div>
     </RadzenHeader>
-    <RadzenSidebar @bind-Expanded="sidebarVisible" Style="background-color: var(--rz-header-background-color);">
-        <RadzenPanelMenu Style="background-color: inherit;">
+    <RadzenSidebar @bind-Expanded="sidebarVisible">
+        <RadzenPanelMenu>
             @foreach (var link in NavigationRegistry.Links)
             {
                 @if (link is NavLinkGroup group && group.Items.Any())
                 {
-                    <RadzenPanelMenuItem Text="@group.Title" Style="background-color: inherit;">
+                    <RadzenPanelMenuItem Text="@group.Title">
                         @foreach (var item in group.Items)
                         {
-                            <RadzenPanelMenuItem Text="@item.Title" Path="@item.Url" Style="background-color: inherit;" />
+                            <RadzenPanelMenuItem Text="@item.Title" Path="@item.Url" />
                         }
                     </RadzenPanelMenuItem>
                 }
                 else
                 {
-                    <RadzenPanelMenuItem Text="@link.Title" Path="@link.Url" Style="background-color: inherit;" />
+                    <RadzenPanelMenuItem Text="@link.Title" Path="@link.Url" />
                 }
             }
         </RadzenPanelMenu>
