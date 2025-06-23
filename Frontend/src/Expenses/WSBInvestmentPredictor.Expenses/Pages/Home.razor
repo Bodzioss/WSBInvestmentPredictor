@@ -1,0 +1,120 @@
+﻿@page "/expenses"
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Localization
+@using Radzen
+@using WSBInvestmentPredictor.Frontend.Shared
+@using WSBInvestmentPredictor.Expenses.Services
+@using WSBInvestmentPredictor.Expenses.Shared.Models
+@inject IBankTransactionService BankTransactionService
+@inject Radzen.NotificationService NotificationService
+@inject IStringLocalizer<SharedResource> Loc
+
+<PageTitle>@Loc["NavigationExpenses"]</PageTitle>
+
+<!-- Main container for the expenses management page -->
+<div class="container">
+    <h1 class="mb-4">@Loc["ExpensesManagement"]</h1>
+
+    <!-- File upload card -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">@Loc["ImportBankTransactions"]</h5>
+            <p class="card-text">@Loc["UploadBankStatementDescription"]</p>
+            
+            <!-- CSV file input with loading indicator -->
+            <InputFile OnChange="OnFileSelected" class="form-control mb-3" accept=".csv" />
+            
+            @if (isLoading)
+            {
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">@Loc["Loading"]</span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Transactions preview table -->
+    @if (transactions?.Any() == true)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@Loc["ImportedTransactions"]</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>@Loc["Date"]</th>
+                                <th>@Loc["Title"]</th>
+                                <th>@Loc["Counterparty"]</th>
+                                <th>@Loc["Amount"]</th>
+                                <th>@Loc["Currency"]</th>
+                                <th>@Loc["Account"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in transactions)
+                            {
+                                <tr>
+                                    <td>@transaction.TransactionDate.ToShortDateString()</td>
+                                    <td>@transaction.Title</td>
+                                    <td>@transaction.Counterparty</td>
+                                    <td>@transaction.Amount.ToString("N2")</td>
+                                    <td>@transaction.Currency</td>
+                                    <td>@transaction.Account</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>
+    /// Collection of processed transactions from the uploaded file.
+    /// </summary>
+    private List<BankTransaction>? transactions;
+
+    /// <summary>
+    /// Indicates if file processing is in progress.
+    /// </summary>
+    private bool isLoading;
+
+    /// <summary>
+    /// Handles file selection and processes the uploaded CSV file.
+    /// Updates the transactions list and shows appropriate notifications.
+    /// </summary>
+    /// <param name="e">Event arguments containing the uploaded file information</param>
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            isLoading = true;
+            var file = e.File;
+            
+            if (file == null)
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Error", "No file selected");
+                return;
+            }
+
+            // Process the uploaded CSV file
+            using var stream = file.OpenReadStream();
+            transactions = await BankTransactionService.ProcessCsvFile(stream);
+            
+            NotificationService.Notify(NotificationSeverity.Success, "Success", 
+                $"Successfully imported {transactions.Count} transactions");
+        }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Error", 
+                $"Error processing file: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

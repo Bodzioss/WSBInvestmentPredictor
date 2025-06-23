@@ -13,7 +13,9 @@ public class PolygonClient : IPolygonClient
     public PolygonClient(HttpClient httpClient, IConfiguration config)
     {
         _httpClient = httpClient;
-        _apiKey = config["Polygon:ApiKey"] ?? throw new ArgumentNullException("Polygon API key is missing.");
+        var apiKey = config["Polygon:ApiKey"];
+        Console.WriteLine($"PolygonClient: API Key from config: {apiKey}");
+        _apiKey = apiKey ?? throw new ArgumentNullException("Polygon API key is missing.");
     }
 
     public async Task<List<RawMarketData>> GetDailyOhlcvAsync(string symbol, DateTime from, DateTime to)
@@ -22,6 +24,7 @@ public class PolygonClient : IPolygonClient
         var toStr = to.ToString("yyyy-MM-dd");
 
         var url = $"https://api.polygon.io/v2/aggs/ticker/{symbol.ToUpper()}/range/1/day/{fromStr}/{toStr}?adjusted=true&sort=asc&apiKey={_apiKey}";
+        Console.WriteLine($"PolygonClient: Making request to: {url}");
 
         var response = await _httpClient.GetFromJsonAsync<PolygonCandleResponseDto>(url);
 

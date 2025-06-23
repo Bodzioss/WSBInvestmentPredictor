@@ -1,21 +1,24 @@
 ﻿@page "/quick-predict"
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+@inject IStringLocalizer<SharedResource> Loc
 
-<h3>⚡️ Szybka predykcja spółki</h3>
+<h3>@Loc["QuickPredictionTitle"]</h3>
 
 @if (availableTickers.Count == 0)
 {
-    <p><em>Ładowanie listy tickerów...</em></p>
+    <p><em>@Loc["LoadingTickers"]</em></p>
 }
 else
 {
     <div class="mb-3">
-        <label for="search">Wyszukaj spółkę:</label>
-        <InputText class="form-control" @bind-Value="searchTerm" placeholder="np. Apple, MSFT, Tesla..." />
+        <label for="search">@Loc["SearchCompany"]</label>
+        <InputText class="form-control" @bind-Value="searchTerm" placeholder="@Loc["SearchCompanyPlaceholder"]" />
     </div>
 
     <div class="row mb-3">
         <div class="col-md-6">
-            <label for="symbol">Wybierz spółkę:</label>
+            <label for="symbol">@Loc["SelectCompany"]</label>
             <InputSelect class="form-select" @bind-Value="symbol">
                 @foreach (var t in FilteredTickers)
                 {
@@ -25,28 +28,28 @@ else
 
             @if (!FilteredTickers.Any())
             {
-                <div class="text-muted mt-1">Brak pasujących spółek.</div>
+                <div class="text-muted mt-1">@Loc["NoMatchingCompanies"]</div>
             }
         </div>
 
         <div class="col-md-3">
-            <label for="days">Liczba dni:</label>
+            <label for="days">@Loc["NumberOfDays"]</label>
             <InputSelect class="form-select" @bind-Value="selectedDays">
                 @foreach (var d in dayOptions)
                 {
-                    <option value="@d">@d dni</option>
+                    <option value="@d">@string.Format(Loc["Days"], d)</option>
                 }
             </InputSelect>
         </div>
 
         <div class="col-md-3 d-flex align-items-end">
-            <button class="btn btn-primary w-100" @onclick="PredictAsync">Oblicz predykcję</button>
+            <button class="btn btn-primary w-100" @onclick="PredictAsync">@Loc["CalculatePrediction"]</button>
         </div>
     </div>
 
     @if (isLoading)
     {
-        <p><em>Ładowanie danych i generowanie predykcji...</em></p>
+        <p><em>@Loc["LoadingDataAndGeneratingPrediction"]</em></p>
     }
     else if (error != null)
     {
@@ -55,7 +58,7 @@ else
     else if (prediction.HasValue)
     {
         <div class="alert alert-success">
-            <strong>Predykcja 30-dniowego zwrotu:</strong> @prediction.Value.ToString("P2")
+            <strong>@Loc["Prediction30DayReturn"]</strong> @prediction.Value.ToString("P2")
         </div>
     }
 }

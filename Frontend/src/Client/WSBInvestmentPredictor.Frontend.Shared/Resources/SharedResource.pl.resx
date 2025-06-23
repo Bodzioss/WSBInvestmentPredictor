@@ -243,4 +243,178 @@
   <data name="ThemeHumanistic" xml:space="preserve">
     <value>Humanistyczny</value>
   </data>
+  <data name="QuickPredictionTitle" xml:space="preserve">
+    <value>⚡️ Szybka Predykcja Spółki</value>
+  </data>
+  <data name="LoadingTickers" xml:space="preserve">
+    <value>Ładowanie listy spółek...</value>
+  </data>
+  <data name="SearchCompany" xml:space="preserve">
+    <value>Szukaj spółki:</value>
+  </data>
+  <data name="SearchCompanyPlaceholder" xml:space="preserve">
+    <value>np. Apple, MSFT, Tesla...</value>
+  </data>
+  <data name="NoMatchingCompanies" xml:space="preserve">
+    <value>Nie znaleziono pasujących spółek.</value>
+  </data>
+  <data name="NumberOfDays" xml:space="preserve">
+    <value>Liczba dni:</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>{0} dni</value>
+  </data>
+  <data name="CalculatePrediction" xml:space="preserve">
+    <value>Oblicz predykcję</value>
+  </data>
+  <data name="LoadingDataAndGeneratingPrediction" xml:space="preserve">
+    <value>Ładowanie danych i generowanie predykcji...</value>
+  </data>
+  <data name="NoHistoricalDataAvailable" xml:space="preserve">
+    <value>Brak danych historycznych dla wybranego symbolu.</value>
+  </data>
+  <data name="Prediction30DayReturn" xml:space="preserve">
+    <value>Predykcja zwrotu 30-dniowego:</value>
+  </data>
+  <data name="PredictionTitle" xml:space="preserve">
+    <value>📈 Predykcja</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Otwarcie</value>
+  </data>
+  <data name="High" xml:space="preserve">
+    <value>Najwyższy</value>
+  </data>
+  <data name="Low" xml:space="preserve">
+    <value>Najniższy</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Zamknięcie</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Wolumen</value>
+  </data>
+  <data name="Predict" xml:space="preserve">
+    <value>Przewiduj</value>
+  </data>
+  <data name="PredictionResult" xml:space="preserve">
+    <value>Predykcja (zwrot 30d):</value>
+  </data>
+  <data name="NavigationPredictions" xml:space="preserve">
+    <value>Predykcje</value>
+  </data>
+  <data name="NavigationQuickPrediction" xml:space="preserve">
+    <value>Szybka Predykcja</value>
+  </data>
+  <data name="NavigationAdvancedPrediction" xml:space="preserve">
+    <value>Zaawansowana Predykcja</value>
+  </data>
+  <data name="NavigationBacktest" xml:space="preserve">
+    <value>Backtest</value>
+  </data>
+  <data name="NavigationPersonalFinance" xml:space="preserve">
+    <value>Finanse Osobiste</value>
+  </data>
+  <data name="NavigationExpenses" xml:space="preserve">
+    <value>Wydatki</value>
+  </data>
+  <data name="NavigationBudget" xml:space="preserve">
+    <value>Budżet</value>
+  </data>
+  <data name="NavigationCategories" xml:space="preserve">
+    <value>Kategorie</value>
+  </data>
+  <data name="NavigationReports" xml:space="preserve">
+    <value>Raporty</value>
+  </data>
+  <data name="NavigationImportTransactions" xml:space="preserve">
+    <value>Importuj Transakcje</value>
+  </data>
+  <data name="NavigationTransactions" xml:space="preserve">
+    <value>Transakcje</value>
+  </data>
+  <data name="ExpensesManagement" xml:space="preserve">
+    <value>Zarządzanie Wydatkami</value>
+  </data>
+  <data name="ImportBankTransactions" xml:space="preserve">
+    <value>Importuj Transakcje Bankowe</value>
+  </data>
+  <data name="UploadBankStatementDescription" xml:space="preserve">
+    <value>Prześlij plik CSV z wyciągiem bankowym, aby zaimportować transakcje.</value>
+  </data>
+  <data name="ImportedTransactions" xml:space="preserve">
+    <value>Zaimportowane Transakcje</value>
+  </data>
+  <data name="LoadingFile" xml:space="preserve">
+    <value>Ładowanie pliku...</value>
+  </data>
+  <data name="SuccessfullyImported" xml:space="preserve">
+    <value>Pomyślnie zaimportowano</value>
+  </data>
+  <data name="Transactions" xml:space="preserve">
+    <value>transakcji</value>
+  </data>
+  <data name="AllYears" xml:space="preserve">
+    <value>Wszystkie Lata</value>
+  </data>
+  <data name="AllMonths" xml:space="preserve">
+    <value>Wszystkie Miesiące</value>
+  </data>
+  <data name="AllAccounts" xml:space="preserve">
+    <value>Wszystkie Konta</value>
+  </data>
+  <data name="AllCounterparties" xml:space="preserve">
+    <value>Wszyscy Kontrahenci</value>
+  </data>
+  <data name="TotalFor" xml:space="preserve">
+    <value>Suma dla</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Rok</value>
+  </data>
+  <data name="NoTransactionsFound" xml:space="preserve">
+    <value>Nie znaleziono transakcji.</value>
+  </data>
+  <data name="PleaseImportSomeTransactionsFirst" xml:space="preserve">
+    <value>Najpierw zaimportuj jakieś transakcje.</value>
+  </data>
+  <data name="TransactionDate" xml:space="preserve">
+    <value>Data Transakcji</value>
+  </data>
+  <data name="BookingDate" xml:space="preserve">
+    <value>Data Księgowania</value>
+  </data>
+  <data name="Counterparty" xml:space="preserve">
+    <value>Kontrahent</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Tytuł</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Kwota</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Waluta</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Konto</value>
+  </data>
+  <data name="Balance" xml:space="preserve">
+    <value>Saldo</value>
+  </data>
+  <data name="ViewAndManageTransactions" xml:space="preserve">
+    <value>Przeglądaj i zarządzaj zaimportowanymi transakcjami bankowymi.</value>
+  </data>
+  <data name="ViewTransactions" xml:space="preserve">
+    <value>Przeglądaj Transakcje</value>
+  </data>
+  <data name="SaveTransactions" xml:space="preserve">
+    <value>Zapisz transakcje</value>
+  </data>
+  <data name="ViewAllTransactions" xml:space="preserve">
+    <value>Pokaż wszystkie transakcje</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Zapisywanie...</value>
+  </data>
 </root> 

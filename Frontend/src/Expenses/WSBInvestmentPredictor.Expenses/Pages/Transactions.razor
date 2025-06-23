@@ -1,0 +1,131 @@
+@page "/transactions"
+@using System.Globalization
+@using WSBInvestmentPredictor.Expenses.Shared.Models
+@using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Queries
+@using WSBInvestmentPredictor.Technology.Cqrs
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+
+<PageTitle>@Loc["NavigationTransactions"]</PageTitle>
+
+<h1>@Loc["NavigationTransactions"]</h1>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">@Loc["Loading"]</span>
+        </div>
+    </div>
+}
+else if (error != null)
+{
+    <div class="alert alert-danger">
+        @error
+    </div>
+}
+else
+{
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <select class="form-select" @bind="selectedYear" @bind:after="OnYearChanged">
+                <option value="0">@Loc["AllYears"]</option>
+                @if (years != null)
+                {
+                    @foreach (var year in years)
+                    {
+                        <option value="@year">@year</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" @bind="selectedMonth" @bind:after="OnMonthChanged" disabled="@(selectedYear == 0)">
+                <option value="0">@Loc["AllMonths"]</option>
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <option value="@i">@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" @bind="selectedAccount" @bind:after="OnAccountChanged">
+                <option value="">@Loc["AllAccounts"]</option>
+                @if (filteredAccounts != null)
+                {
+                    @foreach (var account in filteredAccounts)
+                    {
+                        <option value="@account">@account</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" @bind="selectedCounterparty" @bind:after="OnCounterpartyChanged">
+                <option value="">@Loc["AllCounterparties"]</option>
+                @if (filteredCounterparties != null)
+                {
+                    @foreach (var counterparty in filteredCounterparties)
+                    {
+                        <option value="@counterparty">@counterparty</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+    @if (selectedYear > 0)
+    {
+        <div class="alert alert-info">
+            @Loc["TotalFor"] @(selectedMonth > 0 ? $"{CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(selectedMonth)} {selectedYear}" : $"{Loc["Year"]} {selectedYear}"): 
+            @totalAmount.ToString("N2") PLN
+        </div>
+    }
+
+    @if (transactions == null || !transactions.Any())
+    {
+        <div class="alert alert-warning">
+            @Loc["NoTransactionsFound"] @Loc["PleaseImportSomeTransactionsFirst"]
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <RadzenDataGrid Data="@transactions" TItem="BankTransaction" Pageable="true" PageSize="20" Class="transactions-table rz-shadow-1" Responsive="true" AllowSorting="true" AllowColumnResize="true">
+                <Columns>
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="TransactionDate" Title="@Loc["TransactionDate"]" FormatString="{0:yyyy-MM-dd}" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="BookingDate" Title="@Loc["BookingDate"]">
+                        <Template Context="t">@(t.BookingDate?.ToShortDateString() ?? "-")</Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Counterparty" Title="@Loc["Counterparty"]" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Title" Title="@Loc["Title"]" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Amount" Title="@Loc["Amount"]">
+                        <Template Context="t">@t.Amount.ToString("N2")</Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Currency" Title="@Loc["Currency"]" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Account" Title="@Loc["Account"]" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="BalanceAfterTransaction" Title="@Loc["Balance"]">
+                        <Template Context="t">@(t.BalanceAfterTransaction?.ToString("N2") ?? "-") @t.BalanceCurrency</Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </div>
+    }
+}
+
+<style>
+.transactions-table {
+    background-color: var(--rz-header-background-color);
+    color: var(--rz-text-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--rz-shadow-1);
+    transition: background 0.2s, color 0.2s;
+}
+.transactions-table th, .transactions-table td {
+    border-color: var(--rz-border);
+}
+.transactions-table tbody tr:hover {
+    background-color: var(--rz-table-row-hover-bg);
+}
+</style>

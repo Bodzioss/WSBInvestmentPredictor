@@ -2,38 +2,46 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @using WSBInvestmentPredictor.Frontend.Shared
+@using Radzen
+@using Radzen.Blazor
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
-<div class="dropdown">
-    <button class="btn dropdown-toggle px-3 py-1 fw-bold shadow-sm" type="button" id="languageDropdown"
-            data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 1.5rem;">
-        <span class="fi fi-@(CurrentCulture.Name.ToLowerInvariant() == "en" ? "gb-eng" : CurrentCulture.Name.ToLowerInvariant())"></span>
-        <span class="ms-2">@CurrentCulture.NativeName</span>
-    </button>
-    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="languageDropdown">
-        @foreach (var culture in SupportedCultures)
-        {
-            <li>
-                <button class="dropdown-item @(culture.Name == CurrentCulture.Name ? "active" : "")"
-                        @onclick="() => OnLanguageChanged(culture.Name)">
-                    <span class="fi fi-@(culture.Name.ToLowerInvariant() == "en" ? "gb-eng" : culture.Name.ToLowerInvariant())"></span>
-                    <span class="ms-2">@culture.NativeName</span>
-                </button>
-            </li>
-        }
-    </ul>
-</div>
+<!-- Language selector dropdown component -->
+<RadzenDropDown @bind-Value="currentCultureName" 
+                Data="@SupportedCultures" 
+                TextProperty="NativeName" 
+                ValueProperty="Name"
+                Style="min-width: 120px;"
+                ButtonStyle="ButtonStyle.Light">
+    <Template Context="culture">
+        <div class="d-flex align-items-center">
+            <span class="fi fi-@(culture.Name.ToLowerInvariant() == "en" ? "gb-eng" : culture.Name.ToLowerInvariant())"></span>
+            <span class="ms-2">@culture.NativeName</span>
+        </div>
+    </Template>
+</RadzenDropDown>
 
 @code {
+    private string currentCultureName = "en";
+
+    /// <summary>
+    /// Gets the current culture information.
+    /// </summary>
     private CultureInfo CurrentCulture => CultureInfo.CurrentCulture;
 
+    /// <summary>
+    /// List of supported cultures in the application.
+    /// </summary>
     private static readonly CultureInfo[] SupportedCultures = new[]
     {
         new CultureInfo("en"),
         new CultureInfo("pl")
     };
 
+    /// <summary>
+    /// Initializes the component by loading the saved culture from localStorage.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         // Try to get the saved culture from localStorage
@@ -45,33 +53,51 @@
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             CultureInfo.CurrentCulture = cultureInfo;
             CultureInfo.CurrentUICulture = cultureInfo;
+            currentCultureName = savedCulture;
             StateHasChanged();
+        }
+        else
+        {
+            currentCultureName = CultureInfo.CurrentCulture.Name;
         }
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender && !string.IsNullOrEmpty(currentCultureName) && currentCultureName != CultureInfo.CurrentCulture.Name)
+        {
+            await OnLanguageChanged(currentCultureName);
+        }
+    }
+
+    /// <summary>
+    /// Handles language change when a new culture is selected.
+    /// Updates the application culture and persists the selection.
+    /// </summary>
+    /// <param name="culture">The culture code to switch to</param>
     private async Task OnLanguageChanged(string culture)
     {
         try
         {
-            // Set the culture
+            // Set the culture for the application
             var cultureInfo = new CultureInfo(culture);
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             CultureInfo.CurrentCulture = cultureInfo;
             CultureInfo.CurrentUICulture = cultureInfo;
 
-            // Save to localStorage
+            // Save the selection to localStorage
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", "culture", culture);
             
             // Force UI update
             StateHasChanged();
 
-            // Reload the page to ensure all components are updated
+            // Reload the page to ensure all components are updated with the new culture
             NavigationManager.NavigateTo(NavigationManager.Uri, true);
         }
         catch (Exception ex)
         {
-            // In case of error, reload the page
+            // In case of error, reload the page to reset to a known state
             NavigationManager.NavigateTo(NavigationManager.Uri, true);
         }
     }
