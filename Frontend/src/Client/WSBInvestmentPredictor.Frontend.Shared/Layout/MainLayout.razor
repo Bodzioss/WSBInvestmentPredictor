@@ -76,18 +76,18 @@
         <RadzenPanelMenu>
             @foreach (var link in NavigationRegistry.Links)
             {
-                @if (link is NavLinkGroup group && group.Items.Any())
+                if (link is NavLinkGroup group && group.Items.Any())
                 {
-                    <RadzenPanelMenuItem Text="@group.Title">
+                    <RadzenPanelMenuItem Text="@Loc[group.TitleKey]">
                         @foreach (var item in group.Items)
                         {
-                            <RadzenPanelMenuItem Text="@item.Title" Path="@item.Url" />
+                            <RadzenPanelMenuItem Text="@Loc[item.TitleKey]" Path="@item.Url" />
                         }
                     </RadzenPanelMenuItem>
                 }
                 else
                 {
-                    <RadzenPanelMenuItem Text="@link.Title" Path="@link.Url" />
+                    <RadzenPanelMenuItem Text="@Loc[link.TitleKey]" Path="@link.Url" />
                 }
             }
         </RadzenPanelMenu>

@@ -25,13 +25,13 @@ public static class DI
     /// <param name="localizer">The string localizer for translations</param>
     public static void RegisterNavigation(NavigationRegistry registry, IStringLocalizer<SharedResource> localizer)
     {
-        registry.Links.Add(new NavLinkGroup(localizer["NavigationPredictions"], "bi bi-graph-up")
+        registry.Links.Add(new NavLinkGroup("NavigationPredictions", "bi bi-graph-up")
         {
             Items =
             [
-                new (localizer["NavigationQuickPrediction"], "/quick-predict", "bi bi-lightning-charge"),
-                new(localizer["NavigationAdvancedPrediction"], "/predict", "bi bi-sliders"),
-                new (localizer["NavigationBacktest"], "/backtest", "bi bi-arrow-repeat")
+                new ("NavigationQuickPrediction", "/quick-predict", "bi bi-lightning-charge"),
+                new("NavigationAdvancedPrediction", "/predict", "bi bi-sliders"),
+                new ("NavigationBacktest", "/backtest", "bi bi-arrow-repeat")
             ]
         });
     }

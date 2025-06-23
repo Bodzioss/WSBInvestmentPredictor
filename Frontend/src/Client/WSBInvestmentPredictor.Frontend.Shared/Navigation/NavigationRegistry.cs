@@ -17,7 +17,7 @@ public class NavigationRegistry
 /// <summary>
 /// Represents a single navigation item in the application menu.
 /// </summary>
-/// <param name="Title">The display title of the navigation item</param>
+/// <param name="TitleKey">The localization key for the navigation item title</param>
 /// <param name="Url">The URL the item links to</param>
 /// <param name="Icon">Optional icon identifier for the item</param>
-public record NavLinkItem(string Title, string Url, string? Icon = null);
+public record NavLinkItem(string TitleKey, string Url, string? Icon = null);

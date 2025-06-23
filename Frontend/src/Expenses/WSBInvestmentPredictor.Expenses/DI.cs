@@ -18,16 +18,16 @@ public static class DI
 
     public static void RegisterNavigation(NavigationRegistry registry, IStringLocalizer<SharedResource> localizer)
     {
-        registry.Links.Add(new NavLinkGroup(localizer["NavigationPersonalFinance"], "bi bi-wallet2")
+        registry.Links.Add(new NavLinkGroup("NavigationPersonalFinance", "bi bi-wallet2")
         {
             Items =
             [
-                new (localizer["NavigationExpenses"], "/expenses", "bi bi-cash"),
-                new (localizer["NavigationBudget"], "/expenses/budget", "bi bi-piggy-bank"),
-                new (localizer["NavigationCategories"], "/expenses/categories", "bi bi-tags"),
-                new (localizer["NavigationReports"], "/expenses/reports", "bi bi-graph-up"),
-                new (localizer["NavigationImportTransactions"], "/import", "bi bi-upload"),
-                new (localizer["NavigationTransactions"], "/transactions", "bi bi-list-ul")
+                new ("NavigationExpenses", "/expenses", "bi bi-cash"),
+                new ("NavigationBudget", "/expenses/budget", "bi bi-piggy-bank"),
+                new ("NavigationCategories", "/expenses/categories", "bi bi-tags"),
+                new ("NavigationReports", "/expenses/reports", "bi bi-graph-up"),
+                new ("NavigationImportTransactions", "/import", "bi bi-upload"),
+                new ("NavigationTransactions", "/transactions", "bi bi-list-ul")
             ]
         });
     }

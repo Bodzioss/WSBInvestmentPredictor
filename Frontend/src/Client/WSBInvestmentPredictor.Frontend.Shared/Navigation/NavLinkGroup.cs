@@ -6,10 +6,10 @@ namespace WSBInvestmentPredictor.Frontend.Shared.Navigation;
 /// Represents a group of navigation links in the sidebar menu.
 /// Extends NavLinkItem to support nested navigation items.
 /// </summary>
-/// <param name="Title">The display title of the navigation group</param>
+/// <param name="TitleKey">The localization key for the navigation group title</param>
 /// <param name="Url">The URL associated with the group (if any)</param>
 /// <param name="Icon">Optional icon identifier for the group</param>
-public record NavLinkGroup(string Title, string Url, string? Icon = null) : NavLinkItem(Title, Url, Icon)
+public record NavLinkGroup(string TitleKey, string Url, string? Icon = null) : NavLinkItem(TitleKey, Url, Icon)
 {
     /// <summary>
     /// List of navigation items contained within this group.
