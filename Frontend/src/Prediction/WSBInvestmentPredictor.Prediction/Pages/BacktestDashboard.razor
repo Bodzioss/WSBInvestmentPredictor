@@ -60,37 +60,37 @@
 {
     <div class="row mb-4">
         <div class="col-md-3">
-            <div class="card" style="background-color: var(--rz-surface-card); color: var(--rz-text-color);">
+            <div class="card metrics-panel">
                 <div class="card-body text-center">
                     <h5 class="card-title">@Loc["Accuracy"]</h5>
-                    <h3 style="color: var(--rz-primary);">@(Result.Accuracy.ToString("P2"))</h3>
+                    <h3 class="metrics-value">@(Result.Accuracy.ToString("P2"))</h3>
                     <p class="text-muted">@Loc["AccuracyDescription"]</p>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card" style="background-color: var(--rz-surface-card); color: var(--rz-text-color);">
+            <div class="card metrics-panel">
                 <div class="card-body text-center">
                     <h5 class="card-title">@Loc["MeanSquaredError"]</h5>
-                    <h3 style="color: var(--rz-primary);">@(Result.MeanSquaredError.ToString("P4"))</h3>
+                    <h3 class="metrics-value">@(Result.MeanSquaredError.ToString("P4"))</h3>
                     <p class="text-muted">@Loc["MeanSquaredErrorDescription"]</p>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card" style="background-color: var(--rz-surface-card); color: var(--rz-text-color);">
+            <div class="card metrics-panel">
                 <div class="card-body text-center">
                     <h5 class="card-title">@Loc["NumberOfPredictions"]</h5>
-                    <h3 style="color: var(--rz-primary);">@Result.Points.Count</h3>
+                    <h3 class="metrics-value">@Result.Points.Count</h3>
                     <p class="text-muted">@Loc["NumberOfPredictionsDescription"]</p>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card" style="background-color: var(--rz-surface-card); color: var(--rz-text-color);">
+            <div class="card metrics-panel">
                 <div class="card-body text-center">
                     <h5 class="card-title">@Loc["AverageError"]</h5>
-                    <h3 style="color: var(--rz-primary);">@(Result.Points.Average(p => Math.Abs(p.PredictedChange - p.ActualChange)).ToString("P2"))</h3>
+                    <h3 class="metrics-value">@(Result.Points.Average(p => Math.Abs(p.PredictedChange - p.ActualChange)).ToString("P2"))</h3>
                     <p class="text-muted">@Loc["AverageErrorDescription"]</p>
                 </div>
             </div>
@@ -98,7 +98,7 @@
     </div>
 
     <div style="display: flex; gap: 20px; justify-content: center; align-items: flex-start;">
-        <div style="flex: 1; min-width: 0;">
+        <div class="metrics-chart-panel" style="flex: 1; min-width: 0;">
             <h4>@Loc["LineChartTitle"]</h4>
             <RadzenChart Style="height: 400px; width: 100%;" Class="rz-shadow-1">
                 <RadzenDateTimeAxis Property="Date" Title="@Loc["Date"]" />
@@ -116,7 +116,7 @@
             </RadzenChart>
         </div>
 
-        <div style="flex: 1; min-width: 0;">
+        <div class="metrics-chart-panel" style="flex: 1; min-width: 0;">
             <h4>@Loc["ErrorHistogramTitle"]</h4>
             <RadzenChart Style="height: 400px; width: 100%;" Class="rz-shadow-1">
                 <RadzenBarSeries Data="@GetErrorHistogram()" CategoryProperty="Range" ValueProperty="Count" Title="@Loc["ErrorHistogramTitle"]" />
@@ -126,10 +126,10 @@
         </div>
     </div>
     
-    <h4>@Loc["BacktestResults"]</h4>
     <div class="d-flex justify-content-end mb-2">
         <RadzenButton Text="@Loc["ExportToCsv"]" Click="@ExportToCsv" Icon="file_download" ButtonStyle="ButtonStyle.Secondary" />
     </div>
+    <h4>@Loc["BacktestResults"]</h4>
     <RadzenDataGrid Data="@Result.Points" TItem="BacktestPoint" Pageable="true" PageSize="10" Style="margin-top: 20px;" Class="rz-shadow-1">
         <Columns>
             <RadzenDataGridColumn TItem="BacktestPoint" Property="Date" Title="@Loc["Date"]" FormatString="{0:yyyy-MM-dd}" />
@@ -143,4 +143,56 @@
         </Columns>
     </RadzenDataGrid>
 }
+
+<style>
+.metrics-panel {
+    background-color: var(--rz-header-background-color);
+    color: var(--rz-text-color);
+    border-radius: 12px;
+    box-shadow: var(--rz-shadow-2);
+    border: 1px solid var(--rz-border, #e0e0e0);
+    margin-bottom: 1rem;
+    transition: background 0.2s, color 0.2s;
+}
+.metrics-chart-panel {
+    background-color: var(--rz-header-background-color);
+    border-radius: 12px;
+    box-shadow: var(--rz-shadow-2);
+    border: 1px solid var(--rz-border, #e0e0e0);
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: background 0.2s, color 0.2s;
+}
+.metrics-value {
+    color: var(--rz-primary);
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0.5rem 0 0.5rem 0;
+}
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+.metrics-panel .text-muted {
+    color: var(--rz-text-secondary, #6c757d)!important;
+    opacity: 0.85;
+    font-size: 0.98rem;
+}
+.backtest-table {
+    background-color: var(--rz-header-background-color);
+    color: var(--rz-text-color);
+    border-radius: 12px;
+    border: 1px solid var(--rz-border, #e0e0e0);
+    box-shadow: var(--rz-shadow-1);
+    transition: background 0.2s, color 0.2s;
+}
+.backtest-table .rz-datatable-tbody > tr > td {
+    background-color: transparent;
+    color: var(--rz-text-color);
+}
+.backtest-table .rz-datatable-thead > tr > th {
+    background-color: var(--rz-header-background-color);
+    color: var(--rz-text-color);
+}
+</style>
 

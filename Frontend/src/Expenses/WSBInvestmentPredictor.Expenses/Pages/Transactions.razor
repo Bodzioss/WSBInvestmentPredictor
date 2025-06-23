@@ -91,35 +91,41 @@ else
     else
     {
         <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>@Loc["TransactionDate"]</th>
-                        <th>@Loc["BookingDate"]</th>
-                        <th>@Loc["Counterparty"]</th>
-                        <th>@Loc["Title"]</th>
-                        <th>@Loc["Amount"]</th>
-                        <th>@Loc["Currency"]</th>
-                        <th>@Loc["Account"]</th>
-                        <th>@Loc["Balance"]</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var transaction in transactions)
-                    {
-                        <tr>
-                            <td>@transaction.TransactionDate.ToShortDateString()</td>
-                            <td>@(transaction.BookingDate?.ToShortDateString() ?? "-")</td>
-                            <td>@transaction.Counterparty</td>
-                            <td>@transaction.Title</td>
-                            <td>@transaction.Amount.ToString("N2")</td>
-                            <td>@transaction.Currency</td>
-                            <td>@transaction.Account</td>
-                            <td>@(transaction.BalanceAfterTransaction?.ToString("N2") ?? "-") @transaction.BalanceCurrency</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <RadzenDataGrid Data="@transactions" TItem="BankTransaction" Pageable="true" PageSize="20" Class="transactions-table rz-shadow-1" Responsive="true" AllowSorting="true" AllowColumnResize="true">
+                <Columns>
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="TransactionDate" Title="@Loc["TransactionDate"]" FormatString="{0:yyyy-MM-dd}" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="BookingDate" Title="@Loc["BookingDate"]">
+                        <Template Context="t">@(t.BookingDate?.ToShortDateString() ?? "-")</Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Counterparty" Title="@Loc["Counterparty"]" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Title" Title="@Loc["Title"]" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Amount" Title="@Loc["Amount"]">
+                        <Template Context="t">@t.Amount.ToString("N2")</Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Currency" Title="@Loc["Currency"]" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Account" Title="@Loc["Account"]" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="BalanceAfterTransaction" Title="@Loc["Balance"]">
+                        <Template Context="t">@(t.BalanceAfterTransaction?.ToString("N2") ?? "-") @t.BalanceCurrency</Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
         </div>
     }
 }
+
+<style>
+.transactions-table {
+    background-color: var(--rz-header-background-color);
+    color: var(--rz-text-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--rz-shadow-1);
+    transition: background 0.2s, color 0.2s;
+}
+.transactions-table th, .transactions-table td {
+    border-color: var(--rz-border);
+}
+.transactions-table tbody tr:hover {
+    background-color: var(--rz-table-row-hover-bg);
+}
+</style>

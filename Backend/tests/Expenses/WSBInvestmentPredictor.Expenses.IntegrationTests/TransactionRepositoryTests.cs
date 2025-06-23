@@ -6,11 +6,17 @@ namespace WSBInvestmentPredictor.Expenses.IntegrationTests;
 
 public class TransactionRepositoryTests
 {
+    private readonly TransactionRepository _repository = new();
+
+    public TransactionRepositoryTests()
+    {
+        _repository.Clear();
+    }
+
     [Fact]
     public async Task AddTransactions_ShouldAddTransactionsToRepository()
     {
         // Arrange
-        var repository = new TransactionRepository();
         var transactions = new List<BankTransaction>
         {
             new BankTransaction(DateTime.Now, "Test1", 100m, "Account1", "Counterparty1"),
@@ -18,10 +24,10 @@ public class TransactionRepositoryTests
         };
 
         // Act
-        await repository.AddTransactions(transactions);
+        await _repository.AddTransactions(transactions);
 
         // Assert
-        var result = await repository.GetTransactions();
+        var result = await _repository.GetTransactions();
         Assert.Equal(2, result.Count());
         Assert.Contains(result, t => t.Title == "Test1" && t.Amount == 100m);
         Assert.Contains(result, t => t.Title == "Test2" && t.Amount == 200m);
@@ -31,7 +37,6 @@ public class TransactionRepositoryTests
     public async Task GetTransactions_WithFilters_ShouldReturnFilteredTransactions()
     {
         // Arrange
-        var repository = new TransactionRepository();
         var date1 = new DateTime(2024, 3, 1);
         var date2 = new DateTime(2024, 4, 1);
         var transactions = new List<BankTransaction>
@@ -39,10 +44,10 @@ public class TransactionRepositoryTests
             new BankTransaction(date1, "Test1", 100m, "Account1", "Counterparty1"),
             new BankTransaction(date2, "Test2", 200m, "Account2", "Counterparty2")
         };
-        await repository.AddTransactions(transactions);
+        await _repository.AddTransactions(transactions);
 
         // Act
-        var result = await repository.GetTransactions(2024, 3, "Account1", "Counterparty1");
+        var result = await _repository.GetTransactions(2024, 3, "Account1", "Counterparty1");
 
         // Assert
         Assert.Single(result);
@@ -57,17 +62,16 @@ public class TransactionRepositoryTests
     public async Task GetAllAccounts_ShouldReturnAllUniqueAccounts()
     {
         // Arrange
-        var repository = new TransactionRepository();
         var transactions = new List<BankTransaction>
         {
             new BankTransaction(DateTime.Now, "Test1", 100m, "Account1", "Counterparty1"),
             new BankTransaction(DateTime.Now, "Test2", 200m, "Account1", "Counterparty2"),
             new BankTransaction(DateTime.Now, "Test3", 300m, "Account2", "Counterparty1")
         };
-        await repository.AddTransactions(transactions);
+        await _repository.AddTransactions(transactions);
 
         // Act
-        var accounts = await repository.GetAllAccounts();
+        var accounts = await _repository.GetAllAccounts();
 
         // Assert
         Assert.Equal(2, accounts.Count());
@@ -79,17 +83,16 @@ public class TransactionRepositoryTests
     public async Task GetAllCounterparties_ShouldReturnAllUniqueCounterparties()
     {
         // Arrange
-        var repository = new TransactionRepository();
         var transactions = new List<BankTransaction>
         {
             new BankTransaction(DateTime.Now, "Test1", 100m, "Account1", "Counterparty1"),
             new BankTransaction(DateTime.Now, "Test2", 200m, "Account2", "Counterparty1"),
             new BankTransaction(DateTime.Now, "Test3", 300m, "Account1", "Counterparty2")
         };
-        await repository.AddTransactions(transactions);
+        await _repository.AddTransactions(transactions);
 
         // Act
-        var counterparties = await repository.GetAllCounterparties();
+        var counterparties = await _repository.GetAllCounterparties();
 
         // Assert
         Assert.Equal(2, counterparties.Count());
@@ -101,17 +104,16 @@ public class TransactionRepositoryTests
     public async Task GetAllYears_ShouldReturnAllUniqueYears()
     {
         // Arrange
-        var repository = new TransactionRepository();
         var transactions = new List<BankTransaction>
         {
             new BankTransaction(new DateTime(2023, 1, 1), "Test1", 100m, "Account1", "Counterparty1"),
             new BankTransaction(new DateTime(2024, 1, 1), "Test2", 200m, "Account2", "Counterparty2"),
             new BankTransaction(new DateTime(2024, 2, 1), "Test3", 300m, "Account1", "Counterparty1")
         };
-        await repository.AddTransactions(transactions);
+        await _repository.AddTransactions(transactions);
 
         // Act
-        var years = await repository.GetAllYears();
+        var years = await _repository.GetAllYears();
 
         // Assert
         Assert.Equal(2, years.Count());

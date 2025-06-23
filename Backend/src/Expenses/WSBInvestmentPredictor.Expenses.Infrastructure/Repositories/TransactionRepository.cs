@@ -66,4 +66,9 @@ public class TransactionRepository : ITransactionRepository
     {
         _transactions.AddRange(transactions);
     }
+
+    public void Clear()
+    {
+        _transactions.Clear();
+    }
 }
