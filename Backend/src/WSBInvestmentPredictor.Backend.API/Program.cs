@@ -1,17 +1,13 @@
 using WSBInvestmentPredictor.Backend.API.Extensions;
+using WSBInvestmentPredictor.Backend.API.Cqrs;
 
+// Add environment variables
 var builder = WebApplication.CreateBuilder(args);
 
-// Dodaj zmienne środowiskowe
-builder.Configuration.AddEnvironmentVariables();
-
-// Debug: wyświetl wartość klucza API
-var apiKey = builder.Configuration["Polygon:ApiKey"];
-Console.WriteLine($"Polygon API Key: {apiKey}");
+// Debug: display API key value
+Console.WriteLine($"API Key: {builder.Configuration["PolygonApiKey"]}");
 
 builder.ConfigureApplicationServices();
-
-// Serwisy z modułów
 builder.Services.ConfigureModuleServices(builder.Configuration);
 
 var app = await builder.Build().ConfigureApplicationModules();

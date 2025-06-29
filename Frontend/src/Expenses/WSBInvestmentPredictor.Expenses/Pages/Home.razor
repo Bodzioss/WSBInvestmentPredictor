@@ -46,6 +46,7 @@
                                 <th>@Loc["Date"]</th>
                                 <th>@Loc["Title"]</th>
                                 <th>@Loc["Counterparty"]</th>
+                                <th>@Loc["Category"]</th>
                                 <th>@Loc["Amount"]</th>
                                 <th>@Loc["Currency"]</th>
                                 <th>@Loc["Account"]</th>
@@ -58,6 +59,7 @@
                                     <td>@transaction.TransactionDate.ToShortDateString()</td>
                                     <td>@transaction.Title</td>
                                     <td>@transaction.Counterparty</td>
+                                    <td>@(string.IsNullOrEmpty(transaction.Category) ? "-" : transaction.Category)</td>
                                     <td>@transaction.Amount.ToString("N2")</td>
                                     <td>@transaction.Currency</td>
                                     <td>@transaction.Account</td>

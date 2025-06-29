@@ -30,7 +30,9 @@ public class BacktestQueryHandler : IRequestHandler<RunBacktestQuery, BacktestRe
         // Pobierz dane OHLCV
         var allData = await _polygonClient.GetDailyOhlcvAsync(ticker, start.AddDays(-360), end.AddDays(60));
 
-        // Co tydzień (poniedziałek) backtest
+        // Weekly backtest (Monday)
+        var backtestResults = new List<BacktestPoint>();
+
         var mondayDates = Enumerable.Range(0, 52)
             .Select(i => start.AddDays(i * 7))
             .Where(d => d <= end)

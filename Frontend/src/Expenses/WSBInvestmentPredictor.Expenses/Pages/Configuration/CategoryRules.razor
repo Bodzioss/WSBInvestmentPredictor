@@ -1,0 +1,95 @@
+@page "/expenses/configuration/category-rules"
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+@using WSBInvestmentPredictor.Expenses.Shared.Dto
+@using WSBInvestmentPredictor.Expenses.Shared.Enums
+
+<PageTitle>@Loc["CategoryRules"]</PageTitle>
+
+<h1>@Loc["CategoryRules"]</h1>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">@Loc["Loading"]</span>
+        </div>
+    </div>
+}
+else if (error != null)
+{
+    <div class="alert alert-danger">
+        @error
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <RadzenDataGrid Data="@rules" TItem="CategoryRuleDto" Pageable="true" PageSize="20" Class="rules-table rz-shadow-1" Responsive="true" AllowSorting="true" AllowColumnResize="true">
+            <Columns>
+                <RadzenDataGridColumn TItem="CategoryRuleDto" Property="Keyword" Title="@Loc["Keyword"]" />
+                <RadzenDataGridColumn TItem="CategoryRuleDto" Property="FieldType" Title="@Loc["FieldType"]">
+                    <Template Context="r">
+                        @(r.FieldType == TransactionFieldType.Title ? Loc["FieldTypeTitle"] : Loc["FieldTypeCounterparty"])
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="CategoryRuleDto" Property="Category.Name" Title="@Loc["Category"]" />
+                <RadzenDataGridColumn TItem="CategoryRuleDto" Title="@Loc["Actions"]">
+                    <Template Context="r">
+                        <button class="btn btn-link" @onclick="() => EditRule(r)">@Loc["Edit"]</button>
+                        <button class="btn btn-link text-danger" @onclick="() => DeleteRule(r.Id)">@Loc["Delete"]</button>
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    </div>
+}
+
+<h4>@(editRule == null ? Loc["AddRule"] : Loc["EditRule"])</h4>
+<EditForm Model="formModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="mb-2">
+        <label>@Loc["Keyword"]</label>
+        <InputText class="form-control" @bind-Value="formModel.Keyword" />
+    </div>
+    <div class="mb-2">
+        <label>@Loc["FieldType"]</label>
+        <InputSelect class="form-control" @bind-Value="formModel.FieldType">
+            <option value="@TransactionFieldType.Title">@Loc["FieldTypeTitle"]</option>
+            <option value="@TransactionFieldType.Counterparty">@Loc["FieldTypeCounterparty"]</option>
+        </InputSelect>
+    </div>
+    <div class="mb-2">
+        <label>@Loc["Category"]</label>
+        <InputSelect class="form-control" @bind-Value="formModel.CategoryId">
+            <option value="0">@Loc["SelectCategory"]</option>
+            @foreach (var cat in categories)
+            {
+                <option value="@cat.Id">@cat.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <button class="btn btn-primary" type="submit">@(editRule == null ? Loc["Add"] : Loc["SaveChanges"])</button>
+    @if (editRule != null)
+    {
+        <button class="btn btn-secondary ms-2" type="button" @onclick="CancelEdit">@Loc["Cancel"]</button>
+    }
+</EditForm>
+
+<style>
+.rules-table {
+    background-color: var(--rz-header-background-color);
+    color: var(--rz-text-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--rz-shadow-1);
+    transition: background 0.2s, color 0.2s;
+}
+.rules-table th, .rules-table td {
+    border-color: var(--rz-border);
+}
+.rules-table tbody tr:hover {
+    background-color: var(--rz-table-row-hover-bg);
+}
+</style>

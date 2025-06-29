@@ -211,7 +211,7 @@
     <value>Rzeczywistość (%)</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Błąd (%)</value>
+    <value>Błąd</value>
   </data>
   <data name="ErrorRange" xml:space="preserve">
     <value>Zakres błędu</value>
@@ -274,7 +274,7 @@
     <value>Brak danych historycznych dla wybranego symbolu.</value>
   </data>
   <data name="Prediction30DayReturn" xml:space="preserve">
-    <value>Predykcja zwrotu 30-dniowego:</value>
+    <value>Przewidywany zwrot 30-dniowy:</value>
   </data>
   <data name="PredictionTitle" xml:space="preserve">
     <value>📈 Predykcja</value>
@@ -416,5 +416,114 @@
   </data>
   <data name="Saving" xml:space="preserve">
     <value>Zapisywanie...</value>
+  </data>
+
+  <!-- Categories translations -->
+  <data name="CategoriesConfiguration" xml:space="preserve">
+    <value>Konfiguracja Kategorii</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Kategoria</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Akcje</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edytuj</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Zapisz Zmiany</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="AddCategory" xml:space="preserve">
+    <value>Dodaj Kategorię</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>Błąd podczas ładowania danych</value>
+  </data>
+  <data name="ApplyRules" xml:space="preserve">
+    <value>Zastosuj reguły</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Sukces</value>
+  </data>
+  <data name="RulesAppliedSuccessfully" xml:space="preserve">
+    <value>Reguły zostały zastosowane pomyślnie</value>
+  </data>
+  <data name="ErrorApplyingRules" xml:space="preserve">
+    <value>Błąd podczas stosowania reguł</value>
+  </data>
+  <data name="CategorizeTransactions" xml:space="preserve">
+    <value>Kategoryzuj transakcje</value>
+  </data>
+  <data name="NoUncategorizedTransactions" xml:space="preserve">
+    <value>Nie znaleziono niezakategoryzowanych transakcji</value>
+  </data>
+  <data name="SelectCategory" xml:space="preserve">
+    <value>Wybierz kategorię</value>
+  </data>
+  <data name="AddRule" xml:space="preserve">
+    <value>Dodaj regułę</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Opis</value>
+  </data>
+  <data name="ErrorSavingRule" xml:space="preserve">
+    <value>Błąd podczas zapisywania reguły</value>
+  </data>
+  <data name="ErrorDeletingRule" xml:space="preserve">
+    <value>Błąd podczas usuwania reguły</value>
+  </data>
+  <data name="EditRule" xml:space="preserve">
+    <value>Edytuj regułę</value>
+  </data>
+  <data name="FieldIsRequired" xml:space="preserve">
+    <value>To pole jest wymagane</value>
+  </data>
+  <data name="CategoryNameTooLong" xml:space="preserve">
+    <value>Nazwa kategorii nie może być dłuższa niż 100 znaków</value>
+  </data>
+  <data name="CategoryDescriptionTooLong" xml:space="preserve">
+    <value>Opis nie może być dłuższy niż 500 znaków</value>
+  </data>
+  <data name="KeywordTooLong" xml:space="preserve">
+    <value>Słowo kluczowe nie może być dłuższe niż 200 znaków</value>
+  </data>
+  <data name="CategoryIsRequired" xml:space="preserve">
+    <value>Kategoria jest wymagana</value>
+  </data>
+  <data name="YouMustSelectCategory" xml:space="preserve">
+    <value>Musisz wybrać kategorię</value>
+  </data>
+
+  <!-- Category Analysis translations -->
+  <data name="CategoryAnalysis" xml:space="preserve">
+    <value>Analiza kategorii</value>
+  </data>
+  <data name="NoDataForAnalysis" xml:space="preserve">
+    <value>Brak danych do analizy</value>
+  </data>
+  <data name="Transactions" xml:space="preserve">
+    <value>transakcji</value>
+  </data>
+  <data name="FieldType" xml:space="preserve">
+    <value>Typ pola</value>
+  </data>
+  <data name="FieldTypeTitle" xml:space="preserve">
+    <value>Tytuł transakcji</value>
+  </data>
+  <data name="FieldTypeCounterparty" xml:space="preserve">
+    <value>Odbiorca transakcji</value>
+  </data>
+  <data name="SelectFieldType" xml:space="preserve">
+    <value>Wybierz typ pola</value>
   </data>
 </root> 

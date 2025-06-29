@@ -47,10 +47,10 @@ public static class WebApplicationBuilderExtensions
     /// <returns>The configured IServiceCollection instance.</returns>
     public static IServiceCollection ConfigureModuleServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Konfiguracja modułu Expenses
+        // Configure Expenses module
         services.AddExpensesModule(configuration);
-
-        // Konfiguracja modułu Prediction
+        
+        // Configure Prediction module
         services.AddPredictionModule(configuration);
 
         return services;

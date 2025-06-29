@@ -6,6 +6,7 @@ namespace WSBInvestmentPredictor.Expenses.Infrastructure.Repositories;
 public class TransactionRepository : ITransactionRepository
 {
     private static readonly List<BankTransaction> _transactions = new();
+    private static int _nextId = 1;
 
     public async Task<IEnumerable<BankTransaction>> GetTransactions(int? year = null, int? month = null, string? account = null, string? counterparty = null)
     {
@@ -31,6 +32,11 @@ public class TransactionRepository : ITransactionRepository
         }
 
         return query.OrderByDescending(t => t.TransactionDate).ToList();
+    }
+
+    public async Task<IEnumerable<BankTransaction>> GetAllAsync()
+    {
+        return _transactions.OrderByDescending(t => t.TransactionDate).ToList();
     }
 
     public async Task<IEnumerable<string>> GetAllAccounts()
@@ -64,11 +70,25 @@ public class TransactionRepository : ITransactionRepository
 
     public async Task AddTransactions(IEnumerable<BankTransaction> transactions)
     {
-        _transactions.AddRange(transactions);
+        foreach (var tx in transactions)
+        {
+            tx.Id = _nextId++;
+            _transactions.Add(tx);
+        }
     }
 
     public void Clear()
     {
         _transactions.Clear();
+    }
+
+    public async Task UpdateAsync(BankTransaction transaction)
+    {
+        var existingTransaction = _transactions.FirstOrDefault(t => t.Id == transaction.Id);
+        if (existingTransaction != null)
+        {
+            var index = _transactions.IndexOf(existingTransaction);
+            _transactions[index] = transaction;
+        }
     }
 }

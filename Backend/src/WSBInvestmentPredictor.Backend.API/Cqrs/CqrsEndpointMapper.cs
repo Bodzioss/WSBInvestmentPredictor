@@ -1,8 +1,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using WSBInvestmentPredictor.Technology.Cqrs;
+using System.Linq.Expressions;
 
 namespace WSBInvestmentPredictor.Backend.API.Cqrs;
 
@@ -36,111 +39,135 @@ public static class CqrsEndpointMapper
             var httpMethod = attribute.HttpMethod.ToUpperInvariant();
             var endpoint = attribute.Endpoint;
 
-            // Sprawdź, czy to komenda czy zapytanie
             var isCommand = requestType.GetInterfaces().Any(i => i == typeof(IRequest));
             var isQuery = requestType.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>));
 
             if (!isCommand && !isQuery)
                 continue;
 
+            Type? resultType = null;
             if (isQuery)
             {
-                var resultType = requestType.GetInterfaces()
+                resultType = requestType.GetInterfaces()
                     .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>))
                     .GetGenericArguments().First();
-
-                var routeBuilder = httpMethod switch
-                {
-                    "GET" => app.MapGet(endpoint, CreateQueryHandler(requestType, resultType)),
-                    "POST" => app.MapPost(endpoint, CreateQueryHandler(requestType, resultType)),
-                    "PUT" => app.MapPut(endpoint, CreateQueryHandler(requestType, resultType)),
-                    "DELETE" => app.MapDelete(endpoint, CreateQueryHandler(requestType, resultType)),
-                    _ => throw new NotSupportedException($"HTTP method {httpMethod} is not supported")
-                };
-
-                routeBuilder
-                    .WithName(requestType.Name)
-                    .RequireCors(corsPolicyName);
             }
-            else
-            {
-                var routeBuilder = httpMethod switch
-                {
-                    "GET" => app.MapGet(endpoint, CreateCommandHandler(requestType)),
-                    "POST" => app.MapPost(endpoint, CreateCommandHandler(requestType)),
-                    "PUT" => app.MapPut(endpoint, CreateCommandHandler(requestType)),
-                    "DELETE" => app.MapDelete(endpoint, CreateCommandHandler(requestType)),
-                    _ => throw new NotSupportedException($"HTTP method {httpMethod} is not supported")
-                };
 
-                routeBuilder
-                    .WithName(requestType.Name)
-                    .RequireCors(corsPolicyName);
-            }
+            var routeDelegate = CreateUniversalHandler(requestType, resultType, isQuery, endpoint);
+            var routeBuilder = app.MapMethods(endpoint, new[] { httpMethod }, routeDelegate);
+
+            routeBuilder
+                .WithName(requestType.Name)
+                .RequireCors(corsPolicyName);
         }
     }
 
-    /// <summary>
-    /// Creates a delegate that handles query requests and returns a result.
-    /// </summary>
-    /// <param name="requestType">The type of the query request.</param>
-    /// <param name="resultType">The type of the query result.</param>
-    /// <returns>A delegate that processes the query request and returns the result.</returns>
-    private static Delegate CreateQueryHandler(Type requestType, Type resultType)
+    private static Delegate CreateUniversalHandler(Type requestType, Type? resultType, bool isQuery, string endpoint)
     {
         var props = requestType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        var isGet = HttpMethods.IsGet(requestType.GetCustomAttribute<ApiRequestAttribute>()?.HttpMethod);
+        var routeParams = Regex.Matches(endpoint, "{(.*?)}")
+                               .Cast<Match>()
+                               .Select(m => m.Groups[1].Value)
+                               .ToList();
 
+        // Handler without parameters
         if (props.Length == 0)
         {
-            return async ([FromServices] IMediator mediator) =>
+            if (isQuery)
             {
-                var request = Activator.CreateInstance(requestType)!;
-                return await mediator.Send(request);
-            };
+                return async ([FromServices] IMediator mediator) =>
+                {
+                    var request = Activator.CreateInstance(requestType)!;
+                    return await mediator.Send(request);
+                };
+            }
+            else
+            {
+                return async ([FromServices] IMediator mediator) =>
+                {
+                    var request = Activator.CreateInstance(requestType)!;
+                    await mediator.Send(request);
+                    return Results.Ok();
+                };
+            }
         }
 
+        // Handler with path parameters
+        var pathParams = props
+            .Where(p => p.GetCustomAttribute<FromRouteAttribute>() != null)
+            .Select(p => p.Name)
+            .ToList();
+
+        if (pathParams.Any())
+        {
+            var pathParamString = string.Join("/", pathParams.Select(p => $"{{{p}}}"));
+            return DynamicHandlerFactory.Create(requestType, resultType, isQuery, pathParams);
+        }
+
+        // GET with query string
+        var isGet = HttpMethods.IsGet(requestType.GetCustomAttribute<ApiRequestAttribute>()?.HttpMethod);
         if (isGet)
         {
-            return async ([FromQuery] object request, [FromServices] IMediator mediator) =>
+            if (isQuery)
+            {
+                return async ([FromQuery] object request, [FromServices] IMediator mediator) =>
+                {
+                    var json = JsonSerializer.Serialize(request, _jsonOptions);
+                    var typedRequest = JsonSerializer.Deserialize(json, requestType, _jsonOptions)!;
+                    return await mediator.Send(typedRequest);
+                };
+            }
+            else
+            {
+                return async ([FromQuery] object request, [FromServices] IMediator mediator) =>
+                {
+                    var json = JsonSerializer.Serialize(request, _jsonOptions);
+                    var typedRequest = JsonSerializer.Deserialize(json, requestType, _jsonOptions)!;
+                    await mediator.Send(typedRequest);
+                    return Results.Ok();
+                };
+            }
+        }
+
+        // DELETE, POST, PUT with body
+        var httpMethod = requestType.GetCustomAttribute<ApiRequestAttribute>()?.HttpMethod?.ToUpperInvariant();
+        var isBodyMethod = httpMethod == "DELETE" || httpMethod == "POST" || httpMethod == "PUT";
+        if (isBodyMethod)
+        {
+            if (isQuery)
+            {
+                return async ([FromBody] object request, [FromServices] IMediator mediator) =>
+                {
+                    var json = JsonSerializer.Serialize(request, _jsonOptions);
+                    var typedRequest = JsonSerializer.Deserialize(json, requestType, _jsonOptions)!;
+                    return await mediator.Send(typedRequest);
+                };
+            }
+            else
+            {
+                return async ([FromBody] object request, [FromServices] IMediator mediator) =>
+                {
+                    var json = JsonSerializer.Serialize(request, _jsonOptions);
+                    var typedRequest = JsonSerializer.Deserialize(json, requestType, _jsonOptions)!;
+                    await mediator.Send(typedRequest);
+                    return Results.Ok();
+                };
+            }
+        }
+
+        // Default: body
+        if (isQuery)
+        {
+            return async ([FromBody] object request, [FromServices] IMediator mediator) =>
             {
                 var json = JsonSerializer.Serialize(request, _jsonOptions);
                 var typedRequest = JsonSerializer.Deserialize(json, requestType, _jsonOptions)!;
                 return await mediator.Send(typedRequest);
             };
         }
-
-        return async ([FromBody] object request, [FromServices] IMediator mediator) =>
+        else
         {
-            var json = JsonSerializer.Serialize(request, _jsonOptions);
-            var typedRequest = JsonSerializer.Deserialize(json, requestType, _jsonOptions)!;
-            return await mediator.Send(typedRequest);
-        };
-    }
-
-    /// <summary>
-    /// Creates a delegate that handles command requests without returning a result.
-    /// </summary>
-    /// <param name="requestType">The type of the command request.</param>
-    /// <returns>A delegate that processes the command request and returns an OK result.</returns>
-    private static Delegate CreateCommandHandler(Type requestType)
-    {
-        var props = requestType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        var isGet = HttpMethods.IsGet(requestType.GetCustomAttribute<ApiRequestAttribute>()?.HttpMethod);
-
-        if (props.Length == 0)
-        {
-            return async ([FromServices] IMediator mediator) =>
-            {
-                var request = Activator.CreateInstance(requestType)!;
-                await mediator.Send(request);
-                return Results.Ok();
-            };
-        }
-
-        if (isGet)
-        {
-            return async ([FromQuery] object request, [FromServices] IMediator mediator) =>
+            return async ([FromBody] object request, [FromServices] IMediator mediator) =>
             {
                 var json = JsonSerializer.Serialize(request, _jsonOptions);
                 var typedRequest = JsonSerializer.Deserialize(json, requestType, _jsonOptions)!;
@@ -148,13 +175,67 @@ public static class CqrsEndpointMapper
                 return Results.Ok();
             };
         }
+    }
+}
 
-        return async ([FromBody] object request, [FromServices] IMediator mediator) =>
+public static class DynamicHandlerFactory
+{
+    public static Delegate Create(Type requestType, Type? resultType, bool isQuery, List<string> routeParams)
+    {
+        // Tworzymy parametry metody
+        var parameterTypes = routeParams.Select(_ => typeof(string)).ToList();
+        parameterTypes.Add(typeof(IMediator));
+
+        // Tworzymy dynamiczny delegat
+        if (isQuery)
         {
-            var json = JsonSerializer.Serialize(request, _jsonOptions);
-            var typedRequest = JsonSerializer.Deserialize(json, requestType, _jsonOptions)!;
-            await mediator.Send(typedRequest);
-            return Results.Ok();
+            return CreateQueryDelegate(requestType, resultType, routeParams);
+        }
+        else
+        {
+            return CreateCommandDelegate(requestType, routeParams);
+        }
+    }
+
+    private static Delegate CreateCommandDelegate(Type requestType, List<string> routeParams)
+    {
+        var parameterTypes = routeParams.Select(_ => typeof(string)).Append(typeof(IMediator)).ToArray();
+
+        return parameterTypes.Length switch
+        {
+            2 => (Func<string, IMediator, Task<IResult>>)(async (p1, mediator) =>
+            {
+                var request = Activator.CreateInstance(requestType, p1)!;
+                await mediator.Send((dynamic)request);
+                return Results.Ok();
+            }),
+            3 => (Func<string, string, IMediator, Task<IResult>>)(async (p1, p2, mediator) =>
+            {
+                var request = Activator.CreateInstance(requestType, p1, p2)!;
+                await mediator.Send((dynamic)request);
+                return Results.Ok();
+            }),
+            _ => throw new NotSupportedException("Too many route parameters for auto-mapping.")
+        };
+    }
+
+    private static Delegate CreateQueryDelegate(Type requestType, Type? resultType, List<string> routeParams)
+    {
+        var parameterTypes = routeParams.Select(_ => typeof(string)).Append(typeof(IMediator)).ToArray();
+
+        return parameterTypes.Length switch
+        {
+            2 => (Func<string, IMediator, Task<object>>)(async (p1, mediator) =>
+            {
+                var request = Activator.CreateInstance(requestType, p1)!;
+                return await mediator.Send((dynamic)request);
+            }),
+            3 => (Func<string, string, IMediator, Task<object>>)(async (p1, p2, mediator) =>
+            {
+                var request = Activator.CreateInstance(requestType, p1, p2)!;
+                return await mediator.Send((dynamic)request);
+            }),
+            _ => throw new NotSupportedException("Too many route parameters for auto-mapping.")
         };
     }
 }

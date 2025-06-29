@@ -1,0 +1,94 @@
+@page "/expenses/configuration/categories"
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+@using WSBInvestmentPredictor.Expenses.Shared.Dto
+
+<PageTitle>@Loc["CategoriesConfiguration"]</PageTitle>
+
+<h1>@Loc["CategoriesConfiguration"]</h1>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">@Loc["Loading"]</span>
+        </div>
+    </div>
+}
+else if (error != null)
+{
+    <div class="alert alert-danger">
+        @error
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>@Loc["Category"]</th>
+                    <th>@Loc["Description"]</th>
+                    <th>@Loc["Actions"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in categories)
+                {
+                    <tr>
+                        <td>
+                            @if (editCategory?.Id == category.Id)
+                            {
+                                <InputText class="form-control" @bind-Value="editValue" />
+                            }
+                            else
+                            {
+                                @category.Name
+                            }
+                        </td>
+                        <td>
+                            @if (editCategory?.Id == category.Id)
+                            {
+                                <InputText class="form-control" @bind-Value="editDescription" />
+                            }
+                            else
+                            {
+                                @category.Description
+                            }
+                        </td>
+                        <td>
+                            @if (editCategory?.Id == category.Id)
+                            {
+                                <button class="btn btn-primary btn-sm me-2" @onclick="SaveEdit">@Loc["SaveChanges"]</button>
+                                <button class="btn btn-secondary btn-sm" @onclick="CancelEdit">@Loc["Cancel"]</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-link" @onclick="() => StartEdit(category)">@Loc["Edit"]</button>
+                                <button class="btn btn-link text-danger" @onclick="() => DeleteCategory(category.Id)">@Loc["Delete"]</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <h4>@Loc["AddCategory"]</h4>
+    <EditForm Model="addCategoryModel" OnValidSubmit="AddCategory">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="mb-2">
+            <label>@Loc["Category"]</label>
+            <InputText class="form-control" @bind-Value="addCategoryModel.Name" />
+        </div>
+        <div class="mb-2">
+            <label>@Loc["Description"]</label>
+            <InputText class="form-control" @bind-Value="addCategoryModel.Description" />
+        </div>
+        <button class="btn btn-primary" type="submit">@Loc["Add"]</button>
+    </EditForm>
+}
+
+@code {
+    private AddCategoryModel addCategoryModel = new();
+}

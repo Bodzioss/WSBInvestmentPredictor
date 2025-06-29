@@ -6,6 +6,9 @@ namespace WSBInvestmentPredictor.Expenses.Shared.Models;
 /// </summary>
 public record BankTransaction(DateTime TransactionDate, string? Title, decimal Amount, string? Account, string? Counterparty)
 {
+    public int Id { get; set; }
+    public string? Category { get; set; }
+
     /// <summary>
     /// Gets or sets the date when the transaction was booked in the account.
     /// </summary>

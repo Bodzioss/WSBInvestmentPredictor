@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Radzen;
+using Radzen.Blazor;
 using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Queries;
 using WSBInvestmentPredictor.Expenses.Shared.Models;
 using WSBInvestmentPredictor.Frontend.Shared;
 using WSBInvestmentPredictor.Technology.Cqrs;
+using WSBInvestmentPredictor.Expenses.Models;
+using WSBInvestmentPredictor.Expenses.Shared.Dto;
 
 namespace WSBInvestmentPredictor.Expenses.Pages;
 
@@ -25,6 +28,11 @@ public partial class Transactions : ComponentBase
     [Inject] private Radzen.NotificationService NotificationService { get; set; } = default!;
 
     /// <summary>
+    /// Service for displaying dialogs.
+    /// </summary>
+    [Inject] private Radzen.DialogService DialogService { get; set; } = default!;
+
+    /// <summary>
     /// Service for accessing localized strings.
     /// </summary>
     [Inject] private IStringLocalizer<SharedResource> Loc { get; set; } = default!;
@@ -35,54 +43,44 @@ public partial class Transactions : ComponentBase
     protected IEnumerable<BankTransaction>? transactions;
 
     /// <summary>
-    /// Available years for filtering transactions.
+    /// Filtered transactions based on selected category.
     /// </summary>
-    protected IEnumerable<int>? years;
+    protected IEnumerable<BankTransaction>? filteredTransactions;
 
     /// <summary>
-    /// Available accounts for filtering transactions.
+    /// Currently selected category for filtering.
     /// </summary>
-    protected IEnumerable<string>? filteredAccounts;
+    public string? selectedCategory { get; set; }
 
     /// <summary>
-    /// Available counterparties for filtering transactions.
+    /// Public property for selected category (for binding in .razor)
     /// </summary>
-    protected IEnumerable<string>? filteredCounterparties;
+    public string? SelectedCategory => selectedCategory;
 
     /// <summary>
-    /// Currently selected year filter.
+    /// Indicates if import dialog is shown.
     /// </summary>
-    protected int selectedYear;
+    protected bool showImportDialog;
 
     /// <summary>
-    /// Currently selected month filter.
+    /// Indicates if edit dialog is shown.
     /// </summary>
-    protected int selectedMonth;
+    protected bool showEditDialog;
 
     /// <summary>
-    /// Currently selected account filter.
+    /// Currently selected transaction for editing.
     /// </summary>
-    protected string selectedAccount = string.Empty;
+    protected BankTransaction? selectedTransaction;
 
     /// <summary>
-    /// Currently selected counterparty filter.
+    /// Category analysis data for the pie chart.
     /// </summary>
-    protected string selectedCounterparty = string.Empty;
+    protected List<CategoryAnalysisDto>? categoryAnalysis;
 
     /// <summary>
-    /// Total amount of filtered transactions.
+    /// Reference to the data grid component.
     /// </summary>
-    protected decimal totalAmount;
-
-    /// <summary>
-    /// Indicates if data is currently being loaded.
-    /// </summary>
-    protected bool isLoading;
-
-    /// <summary>
-    /// Error message if data loading fails.
-    /// </summary>
-    protected string? error;
+    protected RadzenDataGrid<BankTransaction>? dataGrid;
 
     /// <summary>
     /// Initializes the component by loading transaction data.
@@ -93,101 +91,101 @@ public partial class Transactions : ComponentBase
     }
 
     /// <summary>
-    /// Loads transaction data based on current filter selections.
-    /// Updates available filters and total amount.
+    /// Loads transaction data and category analysis.
     /// </summary>
     protected async Task LoadData()
     {
         try
         {
-            isLoading = true;
-            error = null;
-
-            // Create query with current filter values
-            var request = new GetTransactions(
-                selectedYear > 0 ? selectedYear : null,
-                selectedMonth > 0 ? selectedMonth : null,
-                !string.IsNullOrEmpty(selectedAccount) ? selectedAccount : null,
-                !string.IsNullOrEmpty(selectedCounterparty) ? selectedCounterparty : null
-            );
-
-            // Fetch transactions from the backend
-            var result = await RequestService.Handle<GetTransactions, GetTransactionsResponse>(request);
-            transactions = result?.Transactions ?? Enumerable.Empty<BankTransaction>();
-            totalAmount = result?.TotalAmount ?? 0;
-
-            // Update available filter options based on loaded data
-            filteredAccounts = transactions
-                .Select(t => t.Account)
-                .Where(a => !string.IsNullOrEmpty(a))
-                .Distinct()
-                .OrderBy(a => a)
-                .ToList();
-
-            filteredCounterparties = transactions
-                .Select(t => t.Counterparty)
-                .Where(c => !string.IsNullOrEmpty(c))
-                .Distinct()
-                .OrderBy(c => c)
-                .ToList();
-
-            years = transactions
-                .Select(t => t.TransactionDate.Year)
-                .Distinct()
-                .OrderByDescending(y => y)
-                .ToList();
+            // Load transactions
+            var query = new GetTransactions();
+            var response = await RequestService.Handle<GetTransactions, GetTransactionsResponse>(query);
+            transactions = response?.Transactions ?? new List<BankTransaction>();
+            
+            // Load category analysis
+            var analysisQuery = new GetCategoryAnalysis();
+            var analysisArray = await RequestService.Handle<GetCategoryAnalysis, CategoryAnalysisDto[]>(analysisQuery);
+            categoryAnalysis = analysisArray?.ToList() ?? new List<CategoryAnalysisDto>();
+            
+            ApplyFilter();
         }
         catch (Exception ex)
         {
-            // Handle errors and reset data
-            error = $"Error loading data: {ex.Message}";
-            NotificationService.Notify(NotificationSeverity.Error, "Error", error);
-            transactions = Enumerable.Empty<BankTransaction>();
-            filteredAccounts = Enumerable.Empty<string>();
-            filteredCounterparties = Enumerable.Empty<string>();
-            years = Enumerable.Empty<int>();
-            totalAmount = 0;
+            NotificationService.Notify(NotificationSeverity.Error, "Error", $"Error loading data: {ex.Message}");
         }
-        finally
+    }
+
+    /// <summary>
+    /// Applies category filter to transactions.
+    /// </summary>
+    private void ApplyFilter()
+    {
+        if (transactions == null) return;
+
+        if (string.IsNullOrEmpty(selectedCategory))
         {
-            isLoading = false;
+            filteredTransactions = transactions.ToList();
         }
-    }
-
-    /// <summary>
-    /// Handles year filter change.
-    /// Resets month selection if year is cleared.
-    /// </summary>
-    protected async Task OnYearChanged()
-    {
-        if (selectedYear == 0)
+        else if (selectedCategory == "Uncategorized")
         {
-            selectedMonth = 0;
+            filteredTransactions = transactions
+                .Where(t => string.IsNullOrWhiteSpace(t.Category))
+                .ToList();
         }
-        await LoadData();
+        else
+        {
+            filteredTransactions = transactions
+                .Where(t => string.Equals(t.Category, selectedCategory, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
     }
 
     /// <summary>
-    /// Handles month filter change.
+    /// Handles category selection from pie chart.
     /// </summary>
-    protected async Task OnMonthChanged()
+    protected async Task OnCategorySelected(string? category)
     {
-        await LoadData();
+        selectedCategory = category;
+        ApplyFilter();
+        StateHasChanged();
     }
 
     /// <summary>
-    /// Handles account filter change.
+    /// Clears the current category filter.
     /// </summary>
-    protected async Task OnAccountChanged()
+    protected void ClearFilter()
     {
-        await LoadData();
+        selectedCategory = null;
+        ApplyFilter();
+        StateHasChanged();
     }
 
     /// <summary>
-    /// Handles counterparty filter change.
+    /// Opens import dialog.
     /// </summary>
-    protected async Task OnCounterpartyChanged()
+    protected async Task OpenImportDialog()
     {
-        await LoadData();
+        var result = await DialogService.OpenAsync<ImportTransactions>("Import Transactions");
+        if (result != null)
+        {
+            await LoadData();
+        }
+    }
+
+    /// <summary>
+    /// Opens edit dialog for a transaction.
+    /// </summary>
+    protected async Task EditTransaction(BankTransaction transaction)
+    {
+        var parameters = new Dictionary<string, object>
+        {
+            { "Transaction", transaction }
+        };
+
+        var result = await DialogService.OpenAsync<EditTransaction>("Edit Transaction", parameters);
+        if (result != null)
+        {
+            await LoadData();
+        }
     }
 }

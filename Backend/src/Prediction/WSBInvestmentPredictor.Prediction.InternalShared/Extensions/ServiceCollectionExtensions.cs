@@ -22,16 +22,20 @@ public static class ServiceCollectionExtensions
     /// <returns>The configured IServiceCollection instance.</returns>
     public static IServiceCollection AddPredictionModule(this IServiceCollection services, IConfiguration configuration)
     {
-        // Rejestracja aplikacji (MediatR)
+        // Register application (MediatR)
         services.AddPredictionApplication();
 
-        // Rejestracja serwisów domenowych
-        services.AddScoped<IStockPredictorService, StockPredictorService>();
-        services.AddSingleton<ISp500TickerProvider, Sp500CsvTickerProvider>();
-        services.AddSingleton<MarketDataPredictionBuilder>();
-        services.AddHttpClient<IPolygonClient, PolygonClient>();
+        // Register domain services
         services.AddScoped<IPredictionEngine, PredictionEngine>();
-        // Tutaj dodaj inne serwisy z modułu Prediction
+        services.AddScoped<IStockPredictorService, StockPredictorService>();
+        services.AddScoped<IPolygonClient, PolygonClient>();
+        services.AddScoped<ISp500TickerProvider, Sp500CsvTickerProvider>();
+        services.AddScoped<MarketDataPredictionBuilder>();
+
+        // Register HttpClient for PolygonClient
+        services.AddHttpClient<IPolygonClient, PolygonClient>();
+
+        // Add other Prediction module services here
 
         return services;
     }
