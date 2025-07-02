@@ -5,6 +5,7 @@ using WSBInvestmentPredictor.Expenses.Domain.Categorization;
 using WSBInvestmentPredictor.Expenses.Domain.Interfaces;
 using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Commands;
 using WSBInvestmentPredictor.Expenses.Shared.Dto;
+using WSBInvestmentPredictor.Expenses.Shared.Models;
 using Xunit;
 
 namespace WSBInvestmentPredictor.Expenses.UnitTests;
@@ -13,13 +14,19 @@ public class CategoryRuleCommandHandlerTests
 {
     private readonly Mock<ICategoryRuleRepository> _categoryRuleRepositoryMock;
     private readonly Mock<ICategoryRepository> _categoryRepositoryMock;
+    private readonly Mock<ITransactionRepository> _transactionRepositoryMock;
     private readonly CategoryRuleCommandHandler _handler;
 
     public CategoryRuleCommandHandlerTests()
     {
         _categoryRuleRepositoryMock = new Mock<ICategoryRuleRepository>();
         _categoryRepositoryMock = new Mock<ICategoryRepository>();
-        _handler = new CategoryRuleCommandHandler(_categoryRuleRepositoryMock.Object, _categoryRepositoryMock.Object);
+        _transactionRepositoryMock = new Mock<ITransactionRepository>();
+        
+        _handler = new CategoryRuleCommandHandler(
+            _categoryRuleRepositoryMock.Object, 
+            _categoryRepositoryMock.Object,
+            _transactionRepositoryMock.Object);
     }
 
     [Fact]
@@ -31,6 +38,11 @@ public class CategoryRuleCommandHandlerTests
         
         _categoryRuleRepositoryMock.Setup(x => x.AddAsync(It.IsAny<CategoryRule>())).Returns(Task.CompletedTask);
         _categoryRepositoryMock.Setup(x => x.GetByIdAsync(request.CategoryId)).ReturnsAsync(category);
+        
+        // Setup mocks for ApplyRulesToTransactions
+        _categoryRuleRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<CategoryRule>());
+        _categoryRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<Category>());
+        _transactionRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<BankTransaction>());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -57,6 +69,11 @@ public class CategoryRuleCommandHandlerTests
         
         _categoryRuleRepositoryMock.Setup(x => x.AddAsync(It.IsAny<CategoryRule>())).Returns(Task.CompletedTask);
         _categoryRepositoryMock.Setup(x => x.GetByIdAsync(request.CategoryId)).ReturnsAsync((Category?)null);
+        
+        // Setup mocks for ApplyRulesToTransactions
+        _categoryRuleRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<CategoryRule>());
+        _categoryRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<Category>());
+        _transactionRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<BankTransaction>());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -81,6 +98,11 @@ public class CategoryRuleCommandHandlerTests
         
         _categoryRuleRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<CategoryRule>())).Returns(Task.CompletedTask);
         _categoryRepositoryMock.Setup(x => x.GetByIdAsync(request.CategoryId)).ReturnsAsync(category);
+        
+        // Setup mocks for ApplyRulesToTransactions
+        _categoryRuleRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<CategoryRule>());
+        _categoryRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<Category>());
+        _transactionRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<BankTransaction>());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -108,6 +130,11 @@ public class CategoryRuleCommandHandlerTests
         
         _categoryRuleRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<CategoryRule>())).Returns(Task.CompletedTask);
         _categoryRepositoryMock.Setup(x => x.GetByIdAsync(request.CategoryId)).ReturnsAsync((Category?)null);
+        
+        // Setup mocks for ApplyRulesToTransactions
+        _categoryRuleRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<CategoryRule>());
+        _categoryRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<Category>());
+        _transactionRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<BankTransaction>());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -130,6 +157,11 @@ public class CategoryRuleCommandHandlerTests
         // Arrange
         var request = new DeleteCategoryRule(1);
         _categoryRuleRepositoryMock.Setup(x => x.DeleteAsync(request.Id)).Returns(Task.CompletedTask);
+        
+        // Setup mocks for ApplyRulesToTransactions
+        _categoryRuleRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<CategoryRule>());
+        _categoryRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<Category>());
+        _transactionRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<BankTransaction>());
 
         // Act
         await _handler.Handle(request, CancellationToken.None);
@@ -147,6 +179,11 @@ public class CategoryRuleCommandHandlerTests
         
         _categoryRuleRepositoryMock.Setup(x => x.AddAsync(It.IsAny<CategoryRule>())).Returns(Task.CompletedTask);
         _categoryRepositoryMock.Setup(x => x.GetByIdAsync(request.CategoryId)).ReturnsAsync(category);
+        
+        // Setup mocks for ApplyRulesToTransactions
+        _categoryRuleRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<CategoryRule>());
+        _categoryRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<Category>());
+        _transactionRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<BankTransaction>());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -170,6 +207,11 @@ public class CategoryRuleCommandHandlerTests
         
         _categoryRuleRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<CategoryRule>())).Returns(Task.CompletedTask);
         _categoryRepositoryMock.Setup(x => x.GetByIdAsync(request.CategoryId)).ReturnsAsync(category);
+        
+        // Setup mocks for ApplyRulesToTransactions
+        _categoryRuleRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<CategoryRule>());
+        _categoryRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<Category>());
+        _transactionRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<BankTransaction>());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -193,6 +235,11 @@ public class CategoryRuleCommandHandlerTests
         
         _categoryRuleRepositoryMock.Setup(x => x.AddAsync(It.IsAny<CategoryRule>())).Returns(Task.CompletedTask);
         _categoryRepositoryMock.Setup(x => x.GetByIdAsync(request.CategoryId)).ReturnsAsync(category);
+        
+        // Setup mocks for ApplyRulesToTransactions
+        _categoryRuleRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<CategoryRule>());
+        _categoryRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<Category>());
+        _transactionRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<BankTransaction>());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
