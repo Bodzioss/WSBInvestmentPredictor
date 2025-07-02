@@ -290,6 +290,9 @@
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="Rules" xml:space="preserve">
+    <value>Rules</value>
+  </data>
   <data name="ErrorLoadingData" xml:space="preserve">
     <value>Error loading data</value>
   </data>
@@ -374,5 +377,316 @@
   </data>
   <data name="SelectFieldType" xml:space="preserve">
     <value>Select field type</value>
+  </data>
+  <data name="BackToCategories" xml:space="preserve">
+    <value>Back to Categories</value>
+  </data>
+  <data name="SelectCategoryToViewRules" xml:space="preserve">
+    <value>Please select a category to view its rules</value>
+  </data>
+  <data name="CreateRuleForKeyword" xml:space="preserve">
+    <value>Create a rule for keyword</value>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="CategoryAddedSuccessfully" xml:space="preserve">
+    <value>Category added successfully</value>
+  </data>
+  <data name="RuleAddedSuccessfully" xml:space="preserve">
+    <value>Rule added successfully</value>
+  </data>
+  <data name="RuleUpdatedSuccessfully" xml:space="preserve">
+    <value>Rule updated successfully</value>
+  </data>
+  <data name="RuleDeletedSuccessfully" xml:space="preserve">
+    <value>Rule deleted successfully</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="CategoriesHelpTitle" xml:space="preserve">
+    <value>Categories - Help</value>
+  </data>
+  <data name="WhatAreCategories" xml:space="preserve">
+    <value>What are Categories?</value>
+  </data>
+  <data name="CategoriesExplanation" xml:space="preserve">
+    <value>Categories help you organize your transactions by grouping similar expenses together. For example, you might have categories like "Groceries", "Transportation", "Entertainment", etc. This makes it easier to track your spending patterns and create reports.</value>
+  </data>
+  <data name="HowToUseCategories" xml:space="preserve">
+    <value>How to use Categories</value>
+  </data>
+  <data name="AddCategoryHelp" xml:space="preserve">
+    <value>Click the "Add Category" button to create a new category. Enter a name and optional description.</value>
+  </data>
+  <data name="EditCategoryHelp" xml:space="preserve">
+    <value>Click the pencil icon to edit a category's name or description.</value>
+  </data>
+  <data name="RulesHelp" xml:space="preserve">
+    <value>Click the gear icon to manage categorization rules for this category. Rules automatically assign transactions to categories based on keywords.</value>
+  </data>
+  <data name="DeleteCategoryHelp" xml:space="preserve">
+    <value>Click the trash icon to delete a category. This will also delete all associated rules.</value>
+  </data>
+  <data name="Tips" xml:space="preserve">
+    <value>Tips</value>
+  </data>
+  <data name="CategoryTips1" xml:space="preserve">
+    <value>Use clear, descriptive names for your categories to make them easy to identify.</value>
+  </data>
+  <data name="CategoryTips2" xml:space="preserve">
+    <value>Create rules for each category to automatically categorize your transactions.</value>
+  </data>
+  <data name="CategoryTips3" xml:space="preserve">
+    <value>You can edit categories at any time, but be careful when deleting them as this will affect existing transactions.</value>
+  </data>
+  <data name="GotIt" xml:space="preserve">
+    <value>Got it!</value>
+  </data>
+  <data name="RulesHelpTitle" xml:space="preserve">
+    <value>Category Rules - Help</value>
+  </data>
+  <data name="WhatAreRules" xml:space="preserve">
+    <value>What are Category Rules?</value>
+  </data>
+  <data name="RulesExplanation" xml:space="preserve">
+    <value>Category rules automatically assign transactions to categories based on keywords found in transaction data. Rules are applied immediately when you add, edit, or delete them, as well as when new transactions are imported. This saves you time by eliminating the need to manually categorize each transaction.</value>
+  </data>
+  <data name="HowRulesWork" xml:space="preserve">
+    <value>How do Rules Work?</value>
+  </data>
+  <data name="RulesWorkExplanation" xml:space="preserve">
+    <value>Rules are applied automatically in real-time. When you create or modify a rule, the system immediately scans all transactions and looks for the specified keywords in the selected field. If a match is found, the transaction is automatically assigned to the category. New transactions are also automatically categorized when imported.</value>
+  </data>
+  <data name="FieldTypes" xml:space="preserve">
+    <value>Field Types</value>
+  </data>
+  <data name="FieldTypeTitleHelp" xml:space="preserve">
+    <value>Search for keywords in the transaction title/description field.</value>
+  </data>
+  <data name="FieldTypeCounterpartyHelp" xml:space="preserve">
+    <value>Search for keywords in the counterparty/merchant name field.</value>
+  </data>
+  <data name="HowToUseRules" xml:space="preserve">
+    <value>How to use Rules</value>
+  </data>
+  <data name="AddRuleHelp" xml:space="preserve">
+    <value>Click "Add Rule" to create a new rule. Enter a keyword and select which field to search in.</value>
+  </data>
+  <data name="EditRuleHelp" xml:space="preserve">
+    <value>Click the pencil icon to modify an existing rule's keyword or field type.</value>
+  </data>
+  <data name="DeleteRuleHelp" xml:space="preserve">
+    <value>Click the trash icon to remove a rule. This will stop automatic categorization for that keyword.</value>
+  </data>
+  <data name="RuleTips1" xml:space="preserve">
+    <value>Use specific keywords that are unique to the category to avoid false matches.</value>
+  </data>
+  <data name="RuleTips2" xml:space="preserve">
+    <value>Test your rules by applying them and checking if transactions are categorized correctly.</value>
+  </data>
+  <data name="RuleTips3" xml:space="preserve">
+    <value>You can have multiple rules for the same category to catch different variations of transaction descriptions.</value>
+  </data>
+  <data name="RuleAddedAndAppliedSuccessfully" xml:space="preserve">
+    <value>Rule added successfully and applied to all matching transactions</value>
+  </data>
+  <data name="RuleUpdatedAndAppliedSuccessfully" xml:space="preserve">
+    <value>Rule updated successfully and applied to all matching transactions</value>
+  </data>
+  <data name="RuleDeletedAndAppliedSuccessfully" xml:space="preserve">
+    <value>Rule deleted successfully and remaining rules applied to all transactions</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Saving...</value>
+  </data>
+  <data name="ImportTransactionsHelpTitle" xml:space="preserve">
+    <value>Import Transactions Help</value>
+  </data>
+  <data name="ImportTransactionsHelpContent" xml:space="preserve">
+    <value>This dialog allows you to import bank transactions from CSV files.
+
+**How to use:**
+1. Click "Choose File" to select your bank statement CSV file
+2. The system will automatically process and display a preview of the transactions
+3. Review the transactions in the table below
+4. Click "Save Transactions" to import them into the system
+5. After import, category rules will be automatically applied to categorize the transactions
+
+**Supported formats:**
+- CSV files from most major banks
+- Files should contain columns for date, amount, description, and account information
+
+**What happens after import:**
+- All transactions are saved to the database
+- Category rules are automatically applied to categorize transactions
+- You can view and edit transactions on the main transactions page
+- The pie chart will update to show spending by category</value>
+  </data>
+  <data name="TransactionsHelpTitle" xml:space="preserve">
+    <value>Transactions Page Help</value>
+  </data>
+  <data name="TransactionsHelpContent" xml:space="preserve">
+    <value>This page allows you to view, filter, and manage your bank transactions.</value>
+  </data>
+  <data name="TransactionsHelpDescription" xml:space="preserve">
+    <value>This page allows you to view, filter, and manage your bank transactions.</value>
+  </data>
+  <data name="TransactionsHelpMainFeatures" xml:space="preserve">
+    <value>Main features:</value>
+  </data>
+  <data name="TransactionsHelpMainFeature1" xml:space="preserve">
+    <value>Browse all imported transactions in a searchable and sortable table</value>
+  </data>
+  <data name="TransactionsHelpMainFeature2" xml:space="preserve">
+    <value>Filter transactions by category using the pie chart or buttons</value>
+  </data>
+  <data name="TransactionsHelpMainFeature3" xml:space="preserve">
+    <value>Import new transactions using the "Import Transactions" button (CSV files)</value>
+  </data>
+  <data name="TransactionsHelpMainFeature4" xml:space="preserve">
+    <value>Edit individual transactions</value>
+  </data>
+  <data name="TransactionsHelpMainFeature5" xml:space="preserve">
+    <value>See a pie chart of expenses by category (expenses only)</value>
+  </data>
+  <data name="TransactionsHelpMainFeature6" xml:space="preserve">
+    <value>All imported transactions are automatically categorized according to your rules</value>
+  </data>
+  <data name="TransactionsHelpHowTo" xml:space="preserve">
+    <value>How to use:</value>
+  </data>
+  <data name="TransactionsHelpHowTo1" xml:space="preserve">
+    <value>Use the pie chart to filter by category or click "Clear Filter" to see all</value>
+  </data>
+  <data name="TransactionsHelpHowTo2" xml:space="preserve">
+    <value>Click "Import Transactions" to add new transactions from a bank statement</value>
+  </data>
+  <data name="TransactionsHelpHowTo3" xml:space="preserve">
+    <value>Use the pencil icon to edit a transaction</value>
+  </data>
+  <data name="TransactionsHelpHowTo4" xml:space="preserve">
+    <value>Add or edit category rules in the configuration section to improve automatic categorization</value>
+  </data>
+  <data name="TransactionsHelpTips" xml:space="preserve">
+    <value>Tips:</value>
+  </data>
+  <data name="TransactionsHelpTip1" xml:space="preserve">
+    <value>Only expenses (negative amounts) are visible on the pie chart</value>
+  </data>
+  <data name="TransactionsHelpTip2" xml:space="preserve">
+    <value>After import, rules are applied automatically and the chart updates</value>
+  </data>
+  <data name="TransactionsHelpTip3" xml:space="preserve">
+    <value>You can always re-import or edit transactions as needed</value>
+  </data>
+  <data name="TransactionsHelpGotIt" xml:space="preserve">
+    <value>Got it!</value>
+  </data>
+  <data name="ExpensesAnalysisTitle" xml:space="preserve">
+    <value>Expenses Analysis (Outflows Only)</value>
+  </data>
+  <data name="Summary" xml:space="preserve">
+    <value>Summary</value>
+  </data>
+  <data name="TotalExpenses" xml:space="preserve">
+    <value>Total Expenses</value>
+  </data>
+  <data name="TotalTransactions" xml:space="preserve">
+    <value>Total Transactions</value>
+  </data>
+  <data name="Categorized" xml:space="preserve">
+    <value>Categorized</value>
+  </data>
+  <data name="Uncategorized" xml:space="preserve">
+    <value>Uncategorized</value>
+  </data>
+  <data name="NoExpenseDataAvailable" xml:space="preserve">
+    <value>No expense data available for analysis</value>
+  </data>
+  <data name="TechnologiesUsed" xml:space="preserve">
+    <value>Technologies Used</value>
+  </data>
+  <data name="PredictionModel" xml:space="preserve">
+    <value>Prediction Model</value>
+  </data>
+  <data name="PredictionModelDescription" xml:space="preserve">
+    <value>Advanced machine learning model for stock market prediction using sentiment analysis from Reddit's WallStreetBets community.</value>
+  </data>
+  <data name="PredictionFeature1" xml:space="preserve">
+    <value>Real-time sentiment analysis from Reddit</value>
+  </data>
+  <data name="PredictionFeature2" xml:space="preserve">
+    <value>Machine learning-based stock predictions</value>
+  </data>
+  <data name="PredictionFeature3" xml:space="preserve">
+    <value>Backtesting capabilities for strategy validation</value>
+  </data>
+  <data name="PredictionFeature4" xml:space="preserve">
+    <value>Market data integration and analysis</value>
+  </data>
+  <data name="ExplorePrediction" xml:space="preserve">
+    <value>Explore Prediction</value>
+  </data>
+  <data name="ExpensesDescription" xml:space="preserve">
+    <value>Comprehensive personal finance management system for tracking and categorizing bank transactions.</value>
+  </data>
+  <data name="ExpensesFeature1" xml:space="preserve">
+    <value>CSV import from bank statements</value>
+  </data>
+  <data name="ExpensesFeature2" xml:space="preserve">
+    <value>Automatic transaction categorization</value>
+  </data>
+  <data name="ExpensesFeature3" xml:space="preserve">
+    <value>Custom category rules and management</value>
+  </data>
+  <data name="ExpensesFeature4" xml:space="preserve">
+    <value>Visual spending analysis with charts</value>
+  </data>
+  <data name="ManageExpenses" xml:space="preserve">
+    <value>Manage Expenses</value>
+  </data>
+  <data name="AllTransactions" xml:space="preserve">
+    <value>All Transactions</value>
+  </data>
+  <data name="ImportTransactions" xml:space="preserve">
+    <value>Import Transactions</value>
+  </data>
+  <data name="AddSampleData" xml:space="preserve">
+    <value>Add Sample Data</value>
+  </data>
+  <data name="ClearAllTransactions" xml:space="preserve">
+    <value>Clear All Transactions</value>
+  </data>
+  <data name="ClearFilter" xml:space="preserve">
+    <value>Clear Filter</value>
+  </data>
+  <data name="LoadingTransactions" xml:space="preserve">
+    <value>Loading transactions...</value>
+  </data>
+  <data name="NoTransactionsFound" xml:space="preserve">
+    <value>No transactions found</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Counterparty" xml:space="preserve">
+    <value>Counterparty</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading...</value>
   </data>
 </root> 

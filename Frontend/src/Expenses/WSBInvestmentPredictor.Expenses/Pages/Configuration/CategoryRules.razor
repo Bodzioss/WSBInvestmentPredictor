@@ -1,4 +1,5 @@
 @page "/expenses/configuration/category-rules"
+@page "/expenses/configuration/category-rules/{CategoryId:int}"
 @using Microsoft.Extensions.Localization
 @using WSBInvestmentPredictor.Frontend.Shared
 @using WSBInvestmentPredictor.Expenses.Shared.Dto
@@ -6,7 +7,16 @@
 
 <PageTitle>@Loc["CategoryRules"]</PageTitle>
 
-<h1>@Loc["CategoryRules"]</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>@Loc["CategoryRules"]</h1>
+    @if (selectedCategory != null)
+    {
+        <div class="d-flex align-items-center">
+            <span class="me-3">@Loc["Category"]: <strong>@selectedCategory.Name</strong></span>
+            <button class="btn btn-outline-secondary btn-sm" @onclick="GoBack">@Loc["BackToCategories"]</button>
+        </div>
+    }
+</div>
 
 @if (isLoading)
 {
@@ -24,60 +34,154 @@ else if (error != null)
 }
 else
 {
-    <div class="table-responsive">
-        <RadzenDataGrid Data="@rules" TItem="CategoryRuleDto" Pageable="true" PageSize="20" Class="rules-table rz-shadow-1" Responsive="true" AllowSorting="true" AllowColumnResize="true">
-            <Columns>
-                <RadzenDataGridColumn TItem="CategoryRuleDto" Property="Keyword" Title="@Loc["Keyword"]" />
-                <RadzenDataGridColumn TItem="CategoryRuleDto" Property="FieldType" Title="@Loc["FieldType"]">
-                    <Template Context="r">
-                        @(r.FieldType == TransactionFieldType.Title ? Loc["FieldTypeTitle"] : Loc["FieldTypeCounterparty"])
-                    </Template>
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="CategoryRuleDto" Property="Category.Name" Title="@Loc["Category"]" />
-                <RadzenDataGridColumn TItem="CategoryRuleDto" Title="@Loc["Actions"]">
-                    <Template Context="r">
-                        <button class="btn btn-link" @onclick="() => EditRule(r)">@Loc["Edit"]</button>
-                        <button class="btn btn-link text-danger" @onclick="() => DeleteRule(r.Id)">@Loc["Delete"]</button>
-                    </Template>
-                </RadzenDataGridColumn>
-            </Columns>
-        </RadzenDataGrid>
-    </div>
+    @if (selectedCategory == null)
+    {
+        <div class="alert alert-info">
+            @Loc["SelectCategoryToViewRules"]
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>@Loc["Rules"]</h4>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-info btn-sm" @onclick="ShowHelpDialog" title="@Loc["Help"]">
+                    <i class="bi bi-question-circle"></i>
+                </button>
+                <button class="btn btn-primary" @onclick="ShowAddDialog">
+                    <i class="bi bi-plus-circle me-1"></i>@Loc["AddRule"]
+                </button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <RadzenDataGrid Data="@rules" TItem="CategoryRuleDto" Pageable="true" PageSize="20" Class="rules-table rz-shadow-1" Responsive="true" AllowSorting="true" AllowColumnResize="true">
+                <Columns>
+                    <RadzenDataGridColumn TItem="CategoryRuleDto" Property="Keyword" Title="@Loc["Keyword"]" />
+                    <RadzenDataGridColumn TItem="CategoryRuleDto" Property="FieldType" Title="@Loc["FieldType"]">
+                        <Template Context="r">
+                            @(r.FieldType == TransactionFieldType.Title ? Loc["FieldTypeTitle"] : Loc["FieldTypeCounterparty"])
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="CategoryRuleDto" Title="@Loc["Actions"]" Width="150px">
+                        <Template Context="r">
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" @onclick="() => EditRule(r)" title="@Loc["Edit"]">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-outline-danger" @onclick="() => DeleteRule(r.Id)" title="@Loc["Delete"]">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </div>
+    }
 }
 
-<h4>@(editRule == null ? Loc["AddRule"] : Loc["EditRule"])</h4>
-<EditForm Model="formModel" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="mb-2">
-        <label>@Loc["Keyword"]</label>
-        <InputText class="form-control" @bind-Value="formModel.Keyword" />
+<!-- Add/Edit Rule Dialog -->
+@if (showDialog)
+{
+    <div class="modal fade show" style="display: block;" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(editRule == null ? Loc["AddRule"] : Loc["EditRule"])</h5>
+                    <button type="button" class="btn-close" @onclick="HideDialog"></button>
+                </div>
+                <EditForm Model="formModel" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">@Loc["Keyword"] *</label>
+                            <InputText class="form-control" @bind-Value="formModel.Keyword" />
+                            <ValidationMessage For="@(() => formModel.Keyword)" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">@Loc["FieldType"] *</label>
+                            <InputSelect class="form-control" @bind-Value="formModel.FieldType">
+                                <option value="@TransactionFieldType.Title">@Loc["FieldTypeTitle"]</option>
+                                <option value="@TransactionFieldType.Counterparty">@Loc["FieldTypeCounterparty"]</option>
+                            </InputSelect>
+                            <ValidationMessage For="@(() => formModel.FieldType)" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="HideDialog">@Loc["Cancel"]</button>
+                        <button type="submit" class="btn btn-primary">@(editRule == null ? Loc["Add"] : Loc["SaveChanges"])</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
     </div>
-    <div class="mb-2">
-        <label>@Loc["FieldType"]</label>
-        <InputSelect class="form-control" @bind-Value="formModel.FieldType">
-            <option value="@TransactionFieldType.Title">@Loc["FieldTypeTitle"]</option>
-            <option value="@TransactionFieldType.Counterparty">@Loc["FieldTypeCounterparty"]</option>
-        </InputSelect>
+    <div class="modal-backdrop fade show"></div>
+}
+
+<!-- Help Dialog -->
+@if (showHelpDialog)
+{
+    <div class="modal fade show" style="display: block;" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-question-circle me-2"></i>@Loc["RulesHelpTitle"]
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="HideHelpDialog"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h6>@Loc["WhatAreRules"]</h6>
+                            <p>@Loc["RulesExplanation"]</p>
+                            
+                            <h6>@Loc["HowRulesWork"]</h6>
+                            <p>@Loc["RulesWorkExplanation"]</p>
+                            
+                            <h6>@Loc["FieldTypes"]</h6>
+                            <ul>
+                                <li><strong>@Loc["FieldTypeTitle"]:</strong> @Loc["FieldTypeTitleHelp"]</li>
+                                <li><strong>@Loc["FieldTypeCounterparty"]:</strong> @Loc["FieldTypeCounterpartyHelp"]</li>
+                            </ul>
+                            
+                            <h6>@Loc["HowToUseRules"]</h6>
+                            <ul>
+                                <li><strong>@Loc["AddRule"]:</strong> @Loc["AddRuleHelp"]</li>
+                                <li><strong>@Loc["Edit"]:</strong> @Loc["EditRuleHelp"]</li>
+                                <li><strong>@Loc["Delete"]:</strong> @Loc["DeleteRuleHelp"]</li>
+                            </ul>
+                            
+                            <h6>@Loc["Tips"]</h6>
+                            <ul>
+                                <li>@Loc["RuleTips1"]</li>
+                                <li>@Loc["RuleTips2"]</li>
+                                <li>@Loc["RuleTips3"]</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="HideHelpDialog">@Loc["GotIt"]</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="mb-2">
-        <label>@Loc["Category"]</label>
-        <InputSelect class="form-control" @bind-Value="formModel.CategoryId">
-            <option value="0">@Loc["SelectCategory"]</option>
-            @foreach (var cat in categories)
-            {
-                <option value="@cat.Id">@cat.Name</option>
-            }
-        </InputSelect>
-    </div>
-    <button class="btn btn-primary" type="submit">@(editRule == null ? Loc["Add"] : Loc["SaveChanges"])</button>
-    @if (editRule != null)
-    {
-        <button class="btn btn-secondary ms-2" type="button" @onclick="CancelEdit">@Loc["Cancel"]</button>
-    }
-</EditForm>
+    <div class="modal-backdrop fade show"></div>
+}
 
 <style>
+.modal {
+    z-index: 1050;
+}
+.modal-backdrop {
+    z-index: 1040;
+}
+.btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
 .rules-table {
     background-color: var(--rz-header-background-color);
     color: var(--rz-text-color);

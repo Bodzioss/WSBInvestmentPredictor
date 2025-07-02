@@ -1,0 +1,103 @@
+@using WSBInvestmentPredictor.Expenses.Services
+@using WSBInvestmentPredictor.Expenses.Shared.Models
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+@using Radzen
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        <i class="bi bi-upload me-2"></i>@Loc["ImportBankTransactions"]
+    </h5>
+    <button type="button" class="btn-close" @onclick="CloseDialog"></button>
+</div>
+
+<div class="modal-body">
+    <p class="text-muted">@Loc["UploadBankStatementDescription"]</p>
+
+    <!-- File upload control -->
+    <div class="mb-3">
+        <InputFile OnChange="@LoadFiles" class="form-control" accept=".csv" />
+    </div>
+
+    <!-- Loading indicator -->
+    @if (isLoading)
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-hourglass-split me-2"></i>@Loc["LoadingFile"]
+        </div>
+    }
+
+    <!-- Error message display -->
+    @if (errorMessage != null)
+    {
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+        </div>
+    }
+
+    <!-- Transactions preview and actions -->
+    @if (transactions != null && transactions.Any())
+    {
+        <!-- Success message -->
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle me-2"></i>@Loc["SuccessfullyImported"] @transactions.Count @Loc["Transactions"]
+        </div>
+
+        <!-- Transactions preview table -->
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <RadzenDataGrid Data="@transactions" TItem="BankTransaction" Pageable="true" PageSize="10" Class="import-table rz-shadow-1" Responsive="true" AllowSorting="true" AllowColumnResize="true">
+                <Columns>
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="TransactionDate" Title="@Loc["TransactionDate"]" FormatString="{0:yyyy-MM-dd}" Width="120px" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Counterparty" Title="@Loc["Counterparty"]" Width="150px" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Title" Title="@Loc["Title"]" Width="200px" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Amount" Title="@Loc["Amount"]" Width="100px" TextAlign="TextAlign.Right">
+                        <Template Context="t">
+                            <span class="@(t.Amount < 0 ? "text-danger" : "text-success")">
+                                @t.Amount.ToString("N2")
+                            </span>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Currency" Title="@Loc["Currency"]" Width="80px" />
+                    <RadzenDataGridColumn TItem="BankTransaction" Property="Account" Title="@Loc["Account"]" Width="120px" />
+                </Columns>
+            </RadzenDataGrid>
+        </div>
+    }
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" @onclick="CloseDialog">
+        @Loc["Cancel"]
+    </button>
+    @if (transactions != null && transactions.Any())
+    {
+        <button class="btn btn-primary" @onclick="SaveTransactions" disabled="@isSaving">
+            @if (isSaving)
+            {
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="ms-1">@Loc["Saving"]</span>
+            }
+            else
+            {
+                <span>@Loc["SaveTransactions"]</span>
+            }
+        </button>
+    }
+</div>
+
+<style>
+.import-table {
+    background-color: var(--rz-header-background-color);
+    color: var(--rz-text-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--rz-shadow-1);
+    transition: background 0.2s, color 0.2s;
+}
+.import-table th, .import-table td {
+    border-color: var(--rz-border);
+}
+.import-table tbody tr:hover {
+    background-color: var(--rz-table-row-hover-bg);
+}
+</style> 

@@ -39,22 +39,27 @@ public class TransactionQueryHandler :
 
     public async Task<List<CategoryAnalysisDto>> Handle(GetCategoryAnalysis request, CancellationToken cancellationToken)
     {
-        var transactions = await _transactionRepository.GetAllAsync();
-        if (transactions == null || !transactions.Any())
+        var allTransactions = await _transactionRepository.GetAllAsync();
+        if (allTransactions == null || !allTransactions.Any())
             return new List<CategoryAnalysisDto>();
 
-        var totalCount = transactions.Count();
-        var grouped = transactions
+        // Filter only outflows (negative amounts)
+        var outflows = allTransactions.Where(t => t.Amount < 0).ToList();
+        if (!outflows.Any())
+            return new List<CategoryAnalysisDto>();
+
+        var totalCount = outflows.Count;
+        var grouped = outflows
             .GroupBy(t => string.IsNullOrWhiteSpace(t.Category) ? "Uncategorized" : t.Category!)
             .Select((g, idx) => new CategoryAnalysisDto
             {
                 CategoryName = g.Key,
                 TransactionCount = g.Count(),
                 Percentage = (double)g.Count() / totalCount * 100,
-                TotalAmount = g.Sum(t => t.Amount),
+                TotalAmount = Math.Abs(g.Sum(t => t.Amount)), // Use absolute value for display
                 Color = GetColor(idx)
             })
-            .OrderByDescending(c => c.TransactionCount)
+            .OrderByDescending(c => c.TotalAmount) // Sort by TotalAmount
             .ToList();
         return grouped;
     }

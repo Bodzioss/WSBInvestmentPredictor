@@ -22,13 +22,8 @@ public static class DI
         {
             Items =
             [
-                new ("NavigationExpenses", "/expenses", "bi bi-cash"),
-                new ("NavigationCategories", "/expenses/categories", "bi bi-tags"),
-                new ("NavigationImportTransactions", "/import", "bi bi-upload"),
-                new ("NavigationTransactions", "/transactions", "bi bi-list-ul"),
-                new ("Kategoryzuj transakcje", "/expenses/categorize", "bi bi-list-ul"),
-                new ("Reguły kategoryzacji", "/expenses/configuration/category-rules", "bi bi-list-ul"),
-                new ("Konfiguracja kategorii", "/expenses/configuration/categories", "bi bi-list-ul")
+                new ("NavigationTransactions", "/expenses/transactions", "bi bi-list-ul"),
+                new ("CategoriesConfiguration", "/expenses/configuration/categories", "bi bi-list-ul")
             ]
         });
     }

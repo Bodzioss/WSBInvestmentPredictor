@@ -7,6 +7,7 @@ using WSBInvestmentPredictor.Expenses.Shared.Dto;
 using WSBInvestmentPredictor.Frontend.Shared;
 using WSBInvestmentPredictor.Technology.Cqrs;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
 
 namespace WSBInvestmentPredictor.Expenses.Pages.Configuration;
 
@@ -14,6 +15,7 @@ public partial class Categories : ComponentBase
 {
     [Inject] private ICqrsRequestService RequestService { get; set; } = default!;
     [Inject] private Radzen.NotificationService NotificationService { get; set; } = default!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
     [Inject] private IStringLocalizer<SharedResource> Loc { get; set; } = default!;
 
     protected List<CategoryDto> categories = new();
@@ -22,10 +24,21 @@ public partial class Categories : ComponentBase
     protected string? editDescription = null;
     protected bool isLoading;
     protected string? error;
+    protected string? keywordFromQuery;
+    protected bool showAddDialog = false;
+    protected bool showHelpDialog = false;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadCategories();
+        await HandleQueryParameters();
+    }
+
+    protected async Task HandleQueryParameters()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var query = HttpUtility.ParseQueryString(uri.Query);
+        keywordFromQuery = query["keyword"];
     }
 
     protected async Task LoadCategories()
@@ -48,15 +61,45 @@ public partial class Categories : ComponentBase
         }
     }
 
+    protected void ShowAddDialog()
+    {
+        showAddDialog = true;
+        addCategoryModel = new();
+    }
+
+    protected void HideAddDialog()
+    {
+        showAddDialog = false;
+        addCategoryModel = new();
+    }
+
+    protected void ShowHelpDialog()
+    {
+        showHelpDialog = true;
+    }
+
+    protected void HideHelpDialog()
+    {
+        showHelpDialog = false;
+    }
+
     protected async Task AddCategory()
     {
         if (!string.IsNullOrWhiteSpace(addCategoryModel.Name))
         {
-            await RequestService.Handle<AddCategory, CategoryDto>(new AddCategory(addCategoryModel.Name, addCategoryModel.Description));
-            addCategoryModel.Name = string.Empty;
-            addCategoryModel.Description = null;
-            await LoadCategories();
-            StateHasChanged();
+            try
+            {
+                await RequestService.Handle<AddCategory, CategoryDto>(new AddCategory(addCategoryModel.Name, addCategoryModel.Description));
+                addCategoryModel = new();
+                HideAddDialog();
+                await LoadCategories();
+                NotificationService.Notify(NotificationSeverity.Success, Loc["Success"], Loc["CategoryAddedSuccessfully"]);
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(NotificationSeverity.Error, Loc["Error"], ex.Message);
+            }
         }
     }
 
@@ -90,6 +133,11 @@ public partial class Categories : ComponentBase
     {
         await RequestService.Handle<DeleteCategory>(new DeleteCategory(categoryId));
         await LoadCategories();
+    }
+
+    protected void GoToRules(int categoryId)
+    {
+        NavigationManager.NavigateTo($"/expenses/configuration/category-rules/{categoryId}");
     }
 
     public class AddCategoryModel

@@ -93,8 +93,9 @@ public class CategoryCommandHandler :
             var category = await _categoryRepo.GetByIdAsync(request.CategoryId);
             var categoryName = category?.Name ?? string.Empty;
             
-            var updatedTransaction = tx with { Category = categoryName };
-            await _transactionRepo.UpdateAsync(updatedTransaction);
+            // Directly modify the property instead of creating new instance
+            tx.Category = categoryName;
+            await _transactionRepo.UpdateAsync(tx);
         }
     }
 
@@ -120,18 +121,17 @@ public class CategoryCommandHandler :
                 if (category == null)
                     continue;
 
-                // Categorize only transactions that don't have a category yet
+                // Apply rules to all transactions that match the rule, regardless of current category
                 var matchingTransactions = transactions.Where(t => 
-                    string.IsNullOrWhiteSpace(t.Category) && // Only uncategorized transactions
                     IsTransactionMatchingRule(t, rule)).ToList();
 
                 foreach (var tx in matchingTransactions)
                 {
                     Console.WriteLine($"[ApplyCategoryRules] Categorizing transaction '{tx.Title}' -> '{category.Name}' (rule: {rule.Keyword} on field {rule.FieldType})");
                     
-                    // Create new transaction instance with updated category
-                    var updatedTransaction = tx with { Category = category.Name };
-                    await _transactionRepo.UpdateAsync(updatedTransaction);
+                    // Directly modify the property instead of creating new instance
+                    tx.Category = category.Name;
+                    await _transactionRepo.UpdateAsync(tx);
                     categorizedCount++;
                 }
             }
