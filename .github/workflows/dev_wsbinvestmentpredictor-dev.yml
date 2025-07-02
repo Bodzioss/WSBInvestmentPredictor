@@ -32,7 +32,7 @@ jobs:
         run: dotnet build WSBInvestmentPredictor.Backend.sln --configuration Release
 
       - name: dotnet publish
-        working-directory: ./Backend/src/Prediction/WSBInvestmentPredictor.Prediction.API
+        working-directory: ./Backend/src/WSBInvestmentPredictor.Backend.API
         run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
@@ -71,4 +71,66 @@ jobs:
           app-name: 'WSBInvestmentPredictor-Dev'
           slot-name: 'Production'
           package: .
+
+      - name: Debug - Show WebApp URL
+        run: |
+          Write-Host "Deployed WebApp URL: ${{ steps.deploy-to-webapp.outputs.webapp-url }}"
+
+      - name: Run database migrations
+        run: |
+          Write-Host "Running database migrations..."
+          $maxAttempts = 10
+          $attempt = 0
+          $success = $false
+          
+          while (-not $success -and $attempt -lt $maxAttempts) {
+              $attempt++
+              Write-Host "Attempt $attempt of $maxAttempts to run migrations..."
+              
+              try {
+                  $response = Invoke-WebRequest -Uri "${{ steps.deploy-to-webapp.outputs.webapp-url }}/api/expenses/migrate" -Method POST -TimeoutSec 30
+                  if ($response.StatusCode -eq 200) {
+                      $success = $true
+                      Write-Host "Database migrations completed successfully!"
+                      $response.Content | ConvertFrom-Json | Format-List
+                  }
+              }
+              catch {
+                  Write-Host "Migration endpoint not ready yet, waiting 15 seconds..."
+                  Start-Sleep -Seconds 15
+              }
+          }
+          
+          if (-not $success) {
+              Write-Warning "Database migrations may not have completed. Check application logs."
+          }
+
+      - name: Wait for API to be ready
+        run: |
+          $maxAttempts = 30
+          $attempt = 0
+          $success = $false
+          
+          while (-not $success -and $attempt -lt $maxAttempts) {
+              $attempt++
+              Write-Host "Attempt $attempt of $maxAttempts to check API status..."
+              
+              try {
+                  $response = Invoke-WebRequest -Uri "${{ steps.deploy-to-webapp.outputs.webapp-url }}/api/status" -Method GET -TimeoutSec 5
+                  if ($response.StatusCode -eq 200) {
+                      $success = $true
+                      Write-Host "API is responding successfully!"
+                      $response.Content | ConvertFrom-Json | Format-List
+                  }
+              }
+              catch {
+                  Write-Host "API not ready yet, waiting 10 seconds..."
+                  Start-Sleep -Seconds 10
+              }
+          }
+          
+          if (-not $success) {
+              Write-Error "API failed to respond after $maxAttempts attempts"
+              exit 1
+          }
           

@@ -29,7 +29,9 @@ public static class WebApplicationBuilderExtensions
                         "https://localhost:5175",
                         "http://localhost:5175",
                         "https://wsbinvestmentpredictor-frontend-g6gegxf5gdhnbpe8.polandcentral-01.azurewebsites.net",
-                        "https://wsbinvestmentpredictor.azurewebsites.net"
+                        "https://wsbinvestmentpredictor-frontend-dev-fzgbh8hcdbafbhaw.polandcentral-01.azurewebsites.net",
+                        "https://wsbinvestmentpredictor.azurewebsites.net",
+                        "https://wsbinvestmentpredictor-dev.polandcentral-01.azurewebsites.net"
                     )
                     .AllowAnyHeader()
                     .AllowAnyMethod();

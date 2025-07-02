@@ -20,7 +20,9 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 // Configure backend URL based on environment
 var backendUrl = builder.HostEnvironment.IsDevelopment()
     ? "https://localhost:7250"
-    : "https://wsbinvestmentpredictor-gvgxemaubagncrb0.polandcentral-01.azurewebsites.net";
+    : builder.HostEnvironment.BaseAddress.Contains("dev")
+        ? "https://wsbinvestmentpredictor-dev-dzafhchaa7b0hba3.polandcentral-01.azurewebsites.net" // Dev backend
+        : "https://wsbinvestmentpredictor-gvgxemaubagncrb0.polandcentral-01.azurewebsites.net"; // Production backend
 
 Console.WriteLine($"Using backend URL: {backendUrl}");
 

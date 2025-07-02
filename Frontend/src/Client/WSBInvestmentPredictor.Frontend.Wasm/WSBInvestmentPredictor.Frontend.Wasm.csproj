@@ -23,4 +23,13 @@
     <ProjectReference Include="..\WSBInvestmentPredictor.Frontend.Shared\WSBInvestmentPredictor.Frontend.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="assets/js/charts.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Link>wwwroot/js/charts.js</Link>
+      <TargetPath>wwwroot/js/charts.js</TargetPath>
+    </Content>
+  </ItemGroup>
+
 </Project>
