@@ -19,28 +19,22 @@ public partial class CategoryAnalysisChart : ComponentBase, IDisposable
     private IJSRuntime JSRuntime { get; set; } = default!;
 
     private DotNetObjectReference<CategoryAnalysisChart>? dotNetHelper;
+    private bool isDisposed = false;
 
     private int TotalTransactions => Analysis?.Sum(c => c.TransactionCount) ?? 0;
     private int UncategorizedTransactions => Analysis?.FirstOrDefault(c => c.CategoryName == "Uncategorized")?.TransactionCount ?? 0;
     private int CategorizedTransactions => Analysis?.Where(c => c.CategoryName != "Uncategorized").Sum(c => c.TransactionCount) ?? 0;
+    private decimal TotalAmount => Analysis?.Sum(c => c.TotalAmount) ?? 0m;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender && !isDisposed)
         {
             dotNetHelper = DotNetObjectReference.Create(this);
             await JSRuntime.InvokeVoidAsync("charts.setupFilterHandler", dotNetHelper);
         }
 
-        if (Analysis != null && Analysis.Any())
-        {
-            await RenderChart();
-        }
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        if (Analysis != null && Analysis.Any())
+        if (firstRender && Analysis != null && Analysis.Any() && !isDisposed)
         {
             await RenderChart();
         }
@@ -48,7 +42,7 @@ public partial class CategoryAnalysisChart : ComponentBase, IDisposable
 
     private async Task RenderChart()
     {
-        if (Analysis == null) return;
+        if (Analysis == null || isDisposed) return;
 
         try
         {
@@ -62,7 +56,7 @@ public partial class CategoryAnalysisChart : ComponentBase, IDisposable
                 {
                     new
                     {
-                        data = Analysis.Select(c => c.TransactionCount).ToArray(),
+                        data = Analysis.Select(c => (double)c.TotalAmount).ToArray(),
                         backgroundColor = GenerateColors(Analysis.Count),
                         borderWidth = 2,
                         borderColor = "#fff"
@@ -96,17 +90,32 @@ public partial class CategoryAnalysisChart : ComponentBase, IDisposable
 
     private async Task ClearFilter()
     {
-        await OnCategorySelected.InvokeAsync(null);
+        if (!isDisposed)
+        {
+            await OnCategorySelected.InvokeAsync(null);
+        }
     }
 
     [JSInvokable]
     public async Task OnPieChartCategorySelected(string? category)
     {
-        await OnCategorySelected.InvokeAsync(category);
+        if (!isDisposed)
+        {
+            try
+            {
+                await OnCategorySelected.InvokeAsync(category);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in OnPieChartCategorySelected: {ex.Message}");
+            }
+        }
     }
 
     public void Dispose()
     {
+        isDisposed = true;
+        
         try
         {
             // Destroy chart before disposing
@@ -117,6 +126,14 @@ public partial class CategoryAnalysisChart : ComponentBase, IDisposable
             Console.WriteLine($"Error destroying chart in Dispose: {ex.Message}");
         }
         
-        dotNetHelper?.Dispose();
+        try
+        {
+            dotNetHelper?.Dispose();
+            dotNetHelper = null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error disposing DotNetObjectReference: {ex.Message}");
+        }
     }
 } 

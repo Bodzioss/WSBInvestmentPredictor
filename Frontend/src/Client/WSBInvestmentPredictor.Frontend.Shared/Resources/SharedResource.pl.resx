@@ -417,6 +417,32 @@
   <data name="Saving" xml:space="preserve">
     <value>Zapisywanie...</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="ImportTransactionsHelpTitle" xml:space="preserve">
+    <value>Pomoc - Import Transakcji</value>
+  </data>
+  <data name="ImportTransactionsHelpContent" xml:space="preserve">
+    <value>To okno pozwala na import transakcji bankowych z plików CSV.
+
+**Jak używać:**
+1. Kliknij "Wybierz plik" aby wybrać plik CSV z wyciągiem bankowym
+2. System automatycznie przetworzy i wyświetli podgląd transakcji
+3. Przejrzyj transakcje w tabeli poniżej
+4. Kliknij "Zapisz transakcje" aby zaimportować je do systemu
+5. Po imporcie reguły kategorii zostaną automatycznie zastosowane
+
+**Obsługiwane formaty:**
+- Pliki CSV z większości głównych banków
+- Pliki powinny zawierać kolumny z datą, kwotą, opisem i informacjami o koncie
+
+**Co dzieje się po imporcie:**
+- Wszystkie transakcje są zapisywane w bazie danych
+- Reguły kategorii są automatycznie stosowane do kategoryzacji transakcji
+- Możesz przeglądać i edytować transakcje na głównej stronie transakcji
+- Wykres kołowy zaktualizuje się pokazując wydatki według kategorii</value>
+  </data>
 
   <!-- Categories translations -->
   <data name="CategoriesConfiguration" xml:space="preserve">
@@ -437,14 +463,14 @@
   <data name="SaveChanges" xml:space="preserve">
     <value>Zapisz Zmiany</value>
   </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Anuluj</value>
-  </data>
   <data name="AddCategory" xml:space="preserve">
     <value>Dodaj Kategorię</value>
   </data>
   <data name="Add" xml:space="preserve">
     <value>Dodaj</value>
+  </data>
+  <data name="Rules" xml:space="preserve">
+    <value>Reguły</value>
   </data>
   <data name="ErrorLoadingData" xml:space="preserve">
     <value>Błąd podczas ładowania danych</value>
@@ -525,5 +551,315 @@
   </data>
   <data name="SelectFieldType" xml:space="preserve">
     <value>Wybierz typ pola</value>
+  </data>
+  <data name="BackToCategories" xml:space="preserve">
+    <value>Powrót do kategorii</value>
+  </data>
+  <data name="SelectCategoryToViewRules" xml:space="preserve">
+    <value>Wybierz kategorię, aby zobaczyć jej reguły</value>
+  </data>
+  <data name="CreateRuleForKeyword" xml:space="preserve">
+    <value>Utwórz regułę dla słowa kluczowego</value>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Kategorie</value>
+  </data>
+  <data name="CategoryAddedSuccessfully" xml:space="preserve">
+    <value>Kategoria została dodana pomyślnie</value>
+  </data>
+  <data name="RuleAddedSuccessfully" xml:space="preserve">
+    <value>Reguła została dodana pomyślnie</value>
+  </data>
+  <data name="RuleUpdatedSuccessfully" xml:space="preserve">
+    <value>Reguła została zaktualizowana pomyślnie</value>
+  </data>
+  <data name="RuleDeletedSuccessfully" xml:space="preserve">
+    <value>Reguła została usunięta pomyślnie</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Pomoc</value>
+  </data>
+  <data name="CategoriesHelpTitle" xml:space="preserve">
+    <value>Kategorie - Pomoc</value>
+  </data>
+  <data name="WhatAreCategories" xml:space="preserve">
+    <value>Czym są kategorie?</value>
+  </data>
+  <data name="CategoriesExplanation" xml:space="preserve">
+    <value>Kategorie pomagają organizować transakcje poprzez grupowanie podobnych wydatków. Na przykład możesz mieć kategorie takie jak "Żywność", "Transport", "Rozrywka" itp. To ułatwia śledzenie wzorców wydatków i tworzenie raportów.</value>
+  </data>
+  <data name="HowToUseCategories" xml:space="preserve">
+    <value>Jak używać kategorii</value>
+  </data>
+  <data name="AddCategoryHelp" xml:space="preserve">
+    <value>Kliknij przycisk "Dodaj kategorię" aby utworzyć nową kategorię. Wprowadź nazwę i opcjonalny opis.</value>
+  </data>
+  <data name="EditCategoryHelp" xml:space="preserve">
+    <value>Kliknij ikonę ołówka aby edytować nazwę lub opis kategorii.</value>
+  </data>
+  <data name="RulesHelp" xml:space="preserve">
+    <value>Kliknij ikonę koła zębatego aby zarządzać regułami kategoryzacji dla tej kategorii. Reguły automatycznie przypisują transakcje do kategorii na podstawie słów kluczowych.</value>
+  </data>
+  <data name="DeleteCategoryHelp" xml:space="preserve">
+    <value>Kliknij ikonę kosza aby usunąć kategorię. To również usunie wszystkie powiązane reguły.</value>
+  </data>
+  <data name="Tips" xml:space="preserve">
+    <value>Wskazówki</value>
+  </data>
+  <data name="CategoryTips1" xml:space="preserve">
+    <value>Używaj jasnych, opisowych nazw dla kategorii aby były łatwe do identyfikacji.</value>
+  </data>
+  <data name="CategoryTips2" xml:space="preserve">
+    <value>Twórz reguły dla każdej kategorii aby automatycznie kategoryzować transakcje.</value>
+  </data>
+  <data name="CategoryTips3" xml:space="preserve">
+    <value>Możesz edytować kategorie w dowolnym momencie, ale bądź ostrożny przy ich usuwaniu, ponieważ wpłynie to na istniejące transakcje.</value>
+  </data>
+  <data name="GotIt" xml:space="preserve">
+    <value>Rozumiem!</value>
+  </data>
+  <data name="RulesHelpTitle" xml:space="preserve">
+    <value>Reguły kategorii - Pomoc</value>
+  </data>
+  <data name="WhatAreRules" xml:space="preserve">
+    <value>Czym są reguły kategorii?</value>
+  </data>
+  <data name="RulesExplanation" xml:space="preserve">
+    <value>Reguły kategorii automatycznie przypisują transakcje do kategorii na podstawie słów kluczowych znalezionych w danych transakcji. Reguły są stosowane natychmiast gdy je dodajesz, edytujesz lub usuwasz, a także gdy importowane są nowe transakcje. To oszczędza czas eliminując potrzebę ręcznego kategoryzowania każdej transakcji.</value>
+  </data>
+  <data name="HowRulesWork" xml:space="preserve">
+    <value>Jak działają reguły?</value>
+  </data>
+  <data name="RulesWorkExplanation" xml:space="preserve">
+    <value>Reguły są stosowane automatycznie w czasie rzeczywistym. Gdy tworzysz lub modyfikujesz regułę, system natychmiast skanuje wszystkie transakcje i szuka określonych słów kluczowych w wybranym polu. Jeśli znajdzie dopasowanie, transakcja jest automatycznie przypisana do kategorii. Nowe transakcje są również automatycznie kategoryzowane podczas importu.</value>
+  </data>
+  <data name="FieldTypes" xml:space="preserve">
+    <value>Typy pól</value>
+  </data>
+  <data name="FieldTypeTitleHelp" xml:space="preserve">
+    <value>Szukaj słów kluczowych w polu tytułu/opisu transakcji.</value>
+  </data>
+  <data name="FieldTypeCounterpartyHelp" xml:space="preserve">
+    <value>Szukaj słów kluczowych w polu nazwy odbiorcy/sklepu.</value>
+  </data>
+  <data name="HowToUseRules" xml:space="preserve">
+    <value>Jak używać reguł</value>
+  </data>
+  <data name="AddRuleHelp" xml:space="preserve">
+    <value>Kliknij "Dodaj regułę" aby utworzyć nową regułę. Wprowadź słowo kluczowe i wybierz w którym polu szukać.</value>
+  </data>
+  <data name="EditRuleHelp" xml:space="preserve">
+    <value>Kliknij ikonę ołówka aby zmodyfikować słowo kluczowe lub typ pola istniejącej reguły.</value>
+  </data>
+  <data name="DeleteRuleHelp" xml:space="preserve">
+    <value>Kliknij ikonę kosza aby usunąć regułę. To zatrzyma automatyczną kategoryzację dla tego słowa kluczowego.</value>
+  </data>
+  <data name="RuleTips1" xml:space="preserve">
+    <value>Używaj konkretnych słów kluczowych, które są unikalne dla kategorii aby uniknąć błędnych dopasowań.</value>
+  </data>
+  <data name="RuleTips2" xml:space="preserve">
+    <value>Testuj swoje reguły stosując je i sprawdzając czy transakcje są kategoryzowane poprawnie.</value>
+  </data>
+  <data name="RuleTips3" xml:space="preserve">
+    <value>Możesz mieć wiele reguł dla tej samej kategorii aby złapać różne warianty opisów transakcji.</value>
+  </data>
+  <data name="RuleAddedAndAppliedSuccessfully" xml:space="preserve">
+    <value>Reguła została dodana pomyślnie i zastosowana do wszystkich pasujących transakcji</value>
+  </data>
+  <data name="RuleUpdatedAndAppliedSuccessfully" xml:space="preserve">
+    <value>Reguła została zaktualizowana pomyślnie i zastosowana do wszystkich pasujących transakcji</value>
+  </data>
+  <data name="RuleDeletedAndAppliedSuccessfully" xml:space="preserve">
+    <value>Reguła została usunięta pomyślnie i pozostałe reguły zostały zastosowane do wszystkich transakcji</value>
+  </data>
+  <data name="TransactionsHelpTitle" xml:space="preserve">
+    <value>Pomoc - Strona Transakcji</value>
+  </data>
+  <data name="TransactionsHelpContent" xml:space="preserve">
+    <value>Ta strona pozwala przeglądać, filtrować i zarządzać Twoimi transakcjami bankowymi.
+
+**Główne funkcje:**
+- Przeglądaj wszystkie zaimportowane transakcje w przeszukiwalnej i sortowalnej tabeli
+- Filtrowanie transakcji po kategorii za pomocą wykresu kołowego lub przycisków
+- Importuj nowe transakcje przyciskiem "Importuj transakcje" (pliki CSV)
+- Edytuj pojedyncze transakcje
+- Zobacz wykres kołowy wydatków według kategorii (tylko wydatki)
+- Wszystkie importowane transakcje są automatycznie kategoryzowane według Twoich reguł
+
+**Jak używać:**
+1. Użyj wykresu kołowego, aby filtrować po kategorii lub kliknij "Wyczyść filtr", aby zobaczyć wszystkie
+2. Kliknij "Importuj transakcje", aby dodać nowe transakcje z wyciągu bankowego
+3. Użyj ikony ołówka, aby edytować transakcję
+4. Dodawaj lub edytuj reguły kategorii w sekcji konfiguracji, aby poprawić automatyczną kategoryzację
+
+**Wskazówki:**
+- Na wykresie kołowym widoczne są tylko wydatki (kwoty ujemne)
+- Po imporcie reguły są stosowane automatycznie, a wykres się aktualizuje
+- Możesz zawsze ponownie zaimportować lub edytować transakcje według potrzeb</value>
+  </data>
+  <data name="TransactionsHelpDescription" xml:space="preserve">
+    <value>Ta strona pozwala przeglądać, filtrować i zarządzać Twoimi transakcjami bankowymi.</value>
+  </data>
+  <data name="TransactionsHelpMainFeatures" xml:space="preserve">
+    <value>Główne funkcje:</value>
+  </data>
+  <data name="TransactionsHelpMainFeature1" xml:space="preserve">
+    <value>Przeglądaj wszystkie zaimportowane transakcje w przeszukiwalnej i sortowalnej tabeli</value>
+  </data>
+  <data name="TransactionsHelpMainFeature2" xml:space="preserve">
+    <value>Filtrowanie transakcji po kategorii za pomocą wykresu kołowego lub przycisków</value>
+  </data>
+  <data name="TransactionsHelpMainFeature3" xml:space="preserve">
+    <value>Importuj nowe transakcje przyciskiem "Importuj transakcje" (pliki CSV)</value>
+  </data>
+  <data name="TransactionsHelpMainFeature4" xml:space="preserve">
+    <value>Edytuj pojedyncze transakcje</value>
+  </data>
+  <data name="TransactionsHelpMainFeature5" xml:space="preserve">
+    <value>Zobacz wykres kołowy wydatków według kategorii (tylko wydatki)</value>
+  </data>
+  <data name="TransactionsHelpMainFeature6" xml:space="preserve">
+    <value>Wszystkie importowane transakcje są automatycznie kategoryzowane według Twoich reguł</value>
+  </data>
+  <data name="TransactionsHelpHowTo" xml:space="preserve">
+    <value>Jak używać:</value>
+  </data>
+  <data name="TransactionsHelpHowTo1" xml:space="preserve">
+    <value>Użyj wykresu kołowego, aby filtrować po kategorii lub kliknij "Wyczyść filtr", aby zobaczyć wszystkie</value>
+  </data>
+  <data name="TransactionsHelpHowTo2" xml:space="preserve">
+    <value>Kliknij "Importuj transakcje", aby dodać nowe transakcje z wyciągu bankowego</value>
+  </data>
+  <data name="TransactionsHelpHowTo3" xml:space="preserve">
+    <value>Użyj ikony ołówka, aby edytować transakcję</value>
+  </data>
+  <data name="TransactionsHelpHowTo4" xml:space="preserve">
+    <value>Dodawaj lub edytuj reguły kategorii w sekcji konfiguracji, aby poprawić automatyczną kategoryzację</value>
+  </data>
+  <data name="TransactionsHelpTips" xml:space="preserve">
+    <value>Wskazówki:</value>
+  </data>
+  <data name="TransactionsHelpTip1" xml:space="preserve">
+    <value>Na wykresie kołowym widoczne są tylko wydatki (kwoty ujemne)</value>
+  </data>
+  <data name="TransactionsHelpTip2" xml:space="preserve">
+    <value>Po imporcie reguły są stosowane automatycznie, a wykres się aktualizuje</value>
+  </data>
+  <data name="TransactionsHelpTip3" xml:space="preserve">
+    <value>Możesz zawsze ponownie zaimportować lub edytować transakcje według potrzeb</value>
+  </data>
+  <data name="TransactionsHelpGotIt" xml:space="preserve">
+    <value>Rozumiem</value>
+  </data>
+  <data name="ExpensesAnalysisTitle" xml:space="preserve">
+    <value>Analiza Wydatków (Tylko Wypływy)</value>
+  </data>
+  <data name="Summary" xml:space="preserve">
+    <value>Podsumowanie</value>
+  </data>
+  <data name="TotalExpenses" xml:space="preserve">
+    <value>Łączne Wydatki</value>
+  </data>
+  <data name="TotalTransactions" xml:space="preserve">
+    <value>Łączna Liczba Transakcji</value>
+  </data>
+  <data name="Categorized" xml:space="preserve">
+    <value>Zakategoryzowane</value>
+  </data>
+  <data name="Uncategorized" xml:space="preserve">
+    <value>Niezakategoryzowane</value>
+  </data>
+  <data name="NoExpenseDataAvailable" xml:space="preserve">
+    <value>Brak danych o wydatkach do analizy</value>
+  </data>
+  <data name="TechnologiesUsed" xml:space="preserve">
+    <value>Używane Technologie</value>
+  </data>
+  <data name="PredictionModel" xml:space="preserve">
+    <value>Model Predykcyjny</value>
+  </data>
+  <data name="PredictionModelDescription" xml:space="preserve">
+    <value>Zaawansowany model uczenia maszynowego do przewidywania rynku akcji wykorzystujący analizę sentymentu z społeczności Reddit WallStreetBets.</value>
+  </data>
+  <data name="PredictionFeature1" xml:space="preserve">
+    <value>Analiza sentymentu w czasie rzeczywistym z Reddit</value>
+  </data>
+  <data name="PredictionFeature2" xml:space="preserve">
+    <value>Przewidywania akcji oparte na uczeniu maszynowym</value>
+  </data>
+  <data name="PredictionFeature3" xml:space="preserve">
+    <value>Możliwości backtestingu do walidacji strategii</value>
+  </data>
+  <data name="PredictionFeature4" xml:space="preserve">
+    <value>Integracja i analiza danych rynkowych</value>
+  </data>
+  <data name="ExplorePrediction" xml:space="preserve">
+    <value>Eksploruj Predykcje</value>
+  </data>
+  <data name="ExpensesDescription" xml:space="preserve">
+    <value>Kompleksowy system zarządzania finansami osobistymi do śledzenia i kategoryzowania transakcji bankowych.</value>
+  </data>
+  <data name="ExpensesFeature1" xml:space="preserve">
+    <value>Import CSV z wyciągów bankowych</value>
+  </data>
+  <data name="ExpensesFeature2" xml:space="preserve">
+    <value>Automatyczna kategoryzacja transakcji</value>
+  </data>
+  <data name="ExpensesFeature3" xml:space="preserve">
+    <value>Niestandardowe reguły i zarządzanie kategoriami</value>
+  </data>
+  <data name="ExpensesFeature4" xml:space="preserve">
+    <value>Wizualna analiza wydatków z wykresami</value>
+  </data>
+  <data name="ManageExpenses" xml:space="preserve">
+    <value>Zarządzaj Wydatkami</value>
+  </data>
+  <data name="AllTransactions" xml:space="preserve">
+    <value>Wszystkie transakcje</value>
+  </data>
+  <data name="ImportTransactions" xml:space="preserve">
+    <value>Importuj transakcje</value>
+  </data>
+  <data name="AddSampleData" xml:space="preserve">
+    <value>Dodaj przykładowe dane</value>
+  </data>
+  <data name="ClearAllTransactions" xml:space="preserve">
+    <value>Usuń wszystkie transakcje</value>
+  </data>
+  <data name="ClearFilter" xml:space="preserve">
+    <value>Wyczyść filtr</value>
+  </data>
+  <data name="Transactions" xml:space="preserve">
+    <value>Transakcje</value>
+  </data>
+  <data name="Uncategorized" xml:space="preserve">
+    <value>Niezakategoryzowane</value>
+  </data>
+  <data name="LoadingTransactions" xml:space="preserve">
+    <value>Ładowanie transakcji...</value>
+  </data>
+  <data name="NoTransactionsFound" xml:space="preserve">
+    <value>Nie znaleziono transakcji</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edytuj</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Tytuł</value>
+  </data>
+  <data name="Counterparty" xml:space="preserve">
+    <value>Kontrahent</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Kwota</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Akcje</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Ładowanie...</value>
   </data>
 </root> 

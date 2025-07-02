@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using WSBInvestmentPredictor.Backend.API.Cqrs;
+using WSBInvestmentPredictor.Expenses.Infrastructure.Data;
 using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Commands;
 using WSBInvestmentPredictor.Prediction.Shared.Queries;
 using WSBInvestmentPredictor.Technology.Middleware;
@@ -17,6 +19,13 @@ public static class WebApplicationExtensions
     /// <returns>The configured WebApplication instance.</returns>
     public static async Task<WebApplication> ConfigureApplicationModules(this WebApplication app)
     {
+        // Ensure database is created and migrations are applied
+        using (var scope = app.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ExpensesDbContext>();
+            await context.Database.MigrateAsync();
+        }
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

@@ -1,15 +1,18 @@
 @using WSBInvestmentPredictor.Expenses.Models
 @using Microsoft.JSInterop
 @using WSBInvestmentPredictor.Expenses.Shared.Dto
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
 @namespace WSBInvestmentPredictor.Expenses.Components
+@inject IStringLocalizer<SharedResource> Loc
 
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Category Analysis</h5>
+        <h5 class="mb-0">@Loc["ExpensesAnalysisTitle"]</h5>
         @if (!string.IsNullOrEmpty(SelectedCategory))
         {
             <button class="btn btn-sm btn-outline-secondary" @onclick="ClearFilter">
-                <i class="bi bi-x-circle"></i> Clear Filter
+                <i class="bi bi-x-circle"></i> @Loc["ClearFilter"]
             </button>
         }
     </div>
@@ -22,17 +25,21 @@
                 </div>
                 <div class="col-md-4">
                     <div class="summary-stats">
-                        <h6>Summary</h6>
+                        <h6>@Loc["Summary"]</h6>
                         <div class="stat-item">
-                            <span class="stat-label">Total Transactions:</span>
+                            <span class="stat-label">@Loc["TotalExpenses"]:</span>
+                            <span class="stat-value">@TotalAmount.ToString("N2") PLN</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">@Loc["TotalTransactions"]:</span>
                             <span class="stat-value">@TotalTransactions</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-label">Categorized:</span>
+                            <span class="stat-label">@Loc["Categorized"]:</span>
                             <span class="stat-value">@CategorizedTransactions</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-label">Uncategorized:</span>
+                            <span class="stat-label">@Loc["Uncategorized"]:</span>
                             <span class="stat-value">@UncategorizedTransactions</span>
                         </div>
                     </div>
@@ -43,7 +50,7 @@
         {
             <div class="text-center text-muted">
                 <i class="bi bi-pie-chart" style="font-size: 3rem;"></i>
-                <p class="mt-2">No data available for analysis</p>
+                <p class="mt-2">@Loc["NoExpenseDataAvailable"]</p>
             </div>
         }
     </div>

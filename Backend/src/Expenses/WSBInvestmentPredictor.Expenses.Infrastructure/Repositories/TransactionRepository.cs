@@ -1,16 +1,22 @@
+using Microsoft.EntityFrameworkCore;
 using WSBInvestmentPredictor.Expenses.Domain.Interfaces;
+using WSBInvestmentPredictor.Expenses.Infrastructure.Data;
 using WSBInvestmentPredictor.Expenses.Shared.Models;
 
 namespace WSBInvestmentPredictor.Expenses.Infrastructure.Repositories;
 
 public class TransactionRepository : ITransactionRepository
 {
-    private static readonly List<BankTransaction> _transactions = new();
-    private static int _nextId = 1;
+    private readonly ExpensesDbContext _context;
+
+    public TransactionRepository(ExpensesDbContext context)
+    {
+        _context = context;
+    }
 
     public async Task<IEnumerable<BankTransaction>> GetTransactions(int? year = null, int? month = null, string? account = null, string? counterparty = null)
     {
-        var query = _transactions.AsQueryable();
+        var query = _context.Transactions.AsQueryable();
 
         if (year.HasValue)
         {
@@ -31,64 +37,71 @@ public class TransactionRepository : ITransactionRepository
             query = query.Where(t => t.Counterparty == counterparty);
         }
 
-        return query.OrderByDescending(t => t.TransactionDate).ToList();
+        return await query.OrderByDescending(t => t.TransactionDate).ToListAsync();
     }
 
     public async Task<IEnumerable<BankTransaction>> GetAllAsync()
     {
-        return _transactions.OrderByDescending(t => t.TransactionDate).ToList();
+        return await _context.Transactions.OrderByDescending(t => t.TransactionDate).ToListAsync();
     }
 
     public async Task<IEnumerable<string>> GetAllAccounts()
     {
-        return _transactions
+        return await _context.Transactions
             .Select(t => t.Account)
             .Where(a => !string.IsNullOrEmpty(a))
             .Distinct()
             .OrderBy(a => a)
-            .ToList();
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<string>> GetAllCounterparties()
     {
-        return _transactions
+        return await _context.Transactions
             .Select(t => t.Counterparty)
             .Where(c => !string.IsNullOrEmpty(c))
             .Distinct()
             .OrderBy(c => c)
-            .ToList();
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<int>> GetAllYears()
     {
-        return _transactions
+        return await _context.Transactions
             .Select(t => t.TransactionDate.Year)
             .Distinct()
             .OrderByDescending(y => y)
-            .ToList();
+            .ToListAsync();
     }
 
     public async Task AddTransactions(IEnumerable<BankTransaction> transactions)
     {
-        foreach (var tx in transactions)
-        {
-            tx.Id = _nextId++;
-            _transactions.Add(tx);
-        }
+        await _context.Transactions.AddRangeAsync(transactions);
+        await _context.SaveChangesAsync();
     }
 
-    public void Clear()
+    public async Task Clear()
     {
-        _transactions.Clear();
+        _context.Transactions.RemoveRange(_context.Transactions);
+        await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(BankTransaction transaction)
     {
-        var existingTransaction = _transactions.FirstOrDefault(t => t.Id == transaction.Id);
-        if (existingTransaction != null)
+        // Check if the entity is already being tracked
+        var existingEntity = _context.ChangeTracker.Entries<BankTransaction>()
+            .FirstOrDefault(e => e.Entity.Id == transaction.Id);
+
+        if (existingEntity != null)
         {
-            var index = _transactions.IndexOf(existingTransaction);
-            _transactions[index] = transaction;
+            // Entity is already tracked, just save changes
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            // Entity is not tracked, attach and update
+            _context.Transactions.Update(transaction);
+            await _context.SaveChangesAsync();
         }
     }
 }

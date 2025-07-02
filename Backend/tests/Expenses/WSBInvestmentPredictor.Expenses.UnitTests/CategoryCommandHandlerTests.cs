@@ -282,4 +282,39 @@ public class CategoryCommandHandlerTests
         // Assert
         _transactionRepositoryMock.Verify(x => x.UpdateAsync(It.IsAny<BankTransaction>()), Times.Never); // No updates should occur
     }
+
+    [Fact]
+    public async Task Handle_ApplyCategoryRules_ShouldOverrideExistingCategories()
+    {
+        // Arrange
+        var request = new ApplyCategoryRules();
+        var rules = new List<CategoryRule>
+        {
+            new CategoryRule { Id = 1, CategoryId = 1, Keyword = "grocery" }
+        };
+        var categories = new List<Category>
+        {
+            new Category { Id = 1, Name = "Groceries", Description = "Food shopping" }
+        };
+        var transactions = new List<BankTransaction>
+        {
+            new BankTransaction(DateTime.Now, "Grocery Store Purchase", 50m, "Account", "Counterparty") 
+            { 
+                Id = 1, 
+                Category = "Old Category" // Transaction already has a category
+            }
+        };
+        
+        _categoryRuleRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(rules);
+        _categoryRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(categories);
+        _transactionRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(transactions);
+        _transactionRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<BankTransaction>())).Returns(Task.CompletedTask);
+
+        // Act
+        await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        _transactionRepositoryMock.Verify(x => x.UpdateAsync(It.Is<BankTransaction>(t => t.Id == 1 && t.Category == "Groceries")), Times.Once);
+        // Should override the existing "Old Category" with "Groceries"
+    }
 } 

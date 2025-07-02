@@ -9,6 +9,7 @@
 @inject IStringLocalizer<SharedResource> Loc 
 @inject Radzen.ThemeService ThemeService
 @inject NavigationRegistry NavigationRegistry
+@inject NavigationManager NavigationManager
 
 @code {
     // Controls sidebar visibility state
@@ -56,16 +57,22 @@
     {
         return Loc[((ThemeOption)theme).LocalizationKey];
     }
+
+    private void GoToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
 }
 
 <!-- Global notification component -->
 <RadzenNotification />
+<RadzenDialog />
 
 <RadzenLayout>
     <RadzenHeader>
         <div class="d-flex align-items-center h-100">
             <RadzenButton Icon="menu" Variant="Variant.Text" Click="@(() => sidebarVisible = !sidebarVisible)" Class="ms-3 me-2" />
-            <span class="navbar-brand fw-bold">📊 WSB Investment Predictor</span>
+            <span class="navbar-brand fw-bold" style="cursor: pointer;" @onclick="GoToHome">📊 WSB Investment Predictor</span>
             <div class="ms-auto d-flex align-items-center gap-3 me-3">
                 <RadzenButton Icon="@ThemeIcon" Click="@ToggleTheme" Variant="Variant.Text" />
                 <LanguageSelector />

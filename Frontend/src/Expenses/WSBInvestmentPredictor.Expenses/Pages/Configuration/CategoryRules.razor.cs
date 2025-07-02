@@ -14,17 +14,21 @@ namespace WSBInvestmentPredictor.Expenses.Pages.Configuration;
 
 public partial class CategoryRules : ComponentBase
 {
+    [Parameter] public int? CategoryId { get; set; }
+    
     [Inject] private ICqrsRequestService RequestService { get; set; } = default!;
     [Inject] private Radzen.NotificationService NotificationService { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
     [Inject] private IStringLocalizer<SharedResource> Loc { get; set; } = default!;
 
     protected List<CategoryRuleDto> rules = new();
-    protected List<CategoryDto> categories = new();
+    protected CategoryDto? selectedCategory = null;
     protected CategoryRuleFormModel formModel = new();
     protected CategoryRuleDto? editRule = null;
     protected bool isLoading;
     protected string? error;
+    protected bool showDialog = false;
+    protected bool showHelpDialog = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,26 +43,74 @@ public partial class CategoryRules : ComponentBase
         }
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        if (CategoryId.HasValue)
+        {
+            await LoadData();
+        }
+    }
+
     protected async Task LoadData()
     {
         try
         {
             isLoading = true;
             error = null;
-            rules = await RequestService.Handle<GetCategoryRules, List<CategoryRuleDto>>(new GetCategoryRules());
-            categories = await RequestService.Handle<GetCategories, List<CategoryDto>>(new GetCategories());
+            
+            if (CategoryId.HasValue)
+            {
+                // Load rules for specific category
+                var allRules = await RequestService.Handle<GetCategoryRules, List<CategoryRuleDto>>(new GetCategoryRules());
+                rules = allRules.Where(r => r.CategoryId == CategoryId.Value).ToList();
+                
+                // Load category details
+                var categories = await RequestService.Handle<GetCategories, List<CategoryDto>>(new GetCategories());
+                selectedCategory = categories.FirstOrDefault(c => c.Id == CategoryId.Value);
+                
+                // Pre-fill category ID in form
+                formModel.CategoryId = CategoryId.Value;
+            }
+            else
+            {
+                // Load all rules (for backward compatibility)
+                rules = await RequestService.Handle<GetCategoryRules, List<CategoryRuleDto>>(new GetCategoryRules());
+            }
         }
         catch (Exception ex)
         {
             error = $"{Loc["ErrorLoadingData"]}: {ex.Message}";
             NotificationService.Notify(NotificationSeverity.Error, Loc["Error"], error);
             rules = new();
-            categories = new();
         }
         finally
         {
             isLoading = false;
         }
+    }
+
+    protected void ShowAddDialog()
+    {
+        showDialog = true;
+        editRule = null;
+        formModel = new() { CategoryId = CategoryId ?? 0 };
+    }
+
+    protected void HideDialog()
+    {
+        showDialog = false;
+        editRule = null;
+        formModel = new() { CategoryId = CategoryId ?? 0 };
+    }
+
+    protected void ShowHelpDialog()
+    {
+        showHelpDialog = true;
+    }
+
+    protected void HideHelpDialog()
+    {
+        showHelpDialog = false;
     }
 
     protected async Task HandleValidSubmit()
@@ -68,13 +120,14 @@ public partial class CategoryRules : ComponentBase
             if (editRule == null)
             {
                 await RequestService.Handle<AddCategoryRule, CategoryRuleDto>(new AddCategoryRule(formModel.Keyword, formModel.CategoryId, formModel.FieldType));
+                NotificationService.Notify(NotificationSeverity.Success, Loc["Success"], Loc["RuleAddedAndAppliedSuccessfully"]);
             }
             else
             {
                 await RequestService.Handle<UpdateCategoryRule, CategoryRuleDto>(new UpdateCategoryRule(formModel.Id, formModel.Keyword, formModel.CategoryId, formModel.FieldType));
+                NotificationService.Notify(NotificationSeverity.Success, Loc["Success"], Loc["RuleUpdatedAndAppliedSuccessfully"]);
             }
-            formModel = new();
-            editRule = null;
+            HideDialog();
             await LoadData();
             StateHasChanged();
         }
@@ -87,6 +140,7 @@ public partial class CategoryRules : ComponentBase
 
     protected void EditRule(CategoryRuleDto rule)
     {
+        editRule = rule;
         formModel = new CategoryRuleFormModel 
         { 
             Id = rule.Id, 
@@ -94,7 +148,7 @@ public partial class CategoryRules : ComponentBase
             CategoryId = rule.CategoryId,
             FieldType = rule.FieldType
         };
-        editRule = rule;
+        showDialog = true;
     }
 
     protected async Task DeleteRule(int id)
@@ -103,6 +157,7 @@ public partial class CategoryRules : ComponentBase
         {
             await RequestService.Handle<DeleteCategoryRule>(new DeleteCategoryRule(id));
             await LoadData();
+            NotificationService.Notify(NotificationSeverity.Success, Loc["Success"], Loc["RuleDeletedAndAppliedSuccessfully"]);
             StateHasChanged();
         }
         catch (Exception ex)
@@ -112,10 +167,9 @@ public partial class CategoryRules : ComponentBase
         }
     }
 
-    protected void CancelEdit()
+    protected void GoBack()
     {
-        formModel = new();
-        editRule = null;
+        NavigationManager.NavigateTo("/expenses/configuration/categories");
     }
 
     public class CategoryRuleFormModel

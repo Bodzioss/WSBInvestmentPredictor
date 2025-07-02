@@ -1,42 +1,44 @@
+using Microsoft.EntityFrameworkCore;
 using WSBInvestmentPredictor.Expenses.Domain.Categorization;
 using WSBInvestmentPredictor.Expenses.Domain.Interfaces;
+using WSBInvestmentPredictor.Expenses.Infrastructure.Data;
 
 namespace WSBInvestmentPredictor.Expenses.Infrastructure.Categorization;
 
 public class CategoryRuleRepository : ICategoryRuleRepository
 {
-    private static readonly List<CategoryRule> _rules = new();
-    private static int _nextId = 1;
+    private readonly ExpensesDbContext _context;
 
-    public Task<List<CategoryRule>> GetAllAsync()
-        => Task.FromResult(_rules.ToList());
-
-    public Task<CategoryRule?> GetByIdAsync(int id)
-        => Task.FromResult(_rules.FirstOrDefault(r => r.Id == id));
-
-    public Task AddAsync(CategoryRule rule)
+    public CategoryRuleRepository(ExpensesDbContext context)
     {
-        rule.Id = _nextId++;
-        _rules.Add(rule);
-        return Task.CompletedTask;
+        _context = context;
     }
 
-    public Task UpdateAsync(CategoryRule rule)
+    public async Task<List<CategoryRule>> GetAllAsync()
+        => await _context.CategoryRules.Include(r => r.Category).ToListAsync();
+
+    public async Task<CategoryRule?> GetByIdAsync(int id)
+        => await _context.CategoryRules.Include(r => r.Category).FirstOrDefaultAsync(r => r.Id == id);
+
+    public async Task AddAsync(CategoryRule rule)
     {
-        var existing = _rules.FirstOrDefault(r => r.Id == rule.Id);
-        if (existing != null)
-        {
-            existing.Keyword = rule.Keyword;
-            existing.CategoryId = rule.CategoryId;
-        }
-        return Task.CompletedTask;
+        await _context.CategoryRules.AddAsync(rule);
+        await _context.SaveChangesAsync();
     }
 
-    public Task DeleteAsync(int id)
+    public async Task UpdateAsync(CategoryRule rule)
     {
-        var rule = _rules.FirstOrDefault(r => r.Id == id);
+        _context.CategoryRules.Update(rule);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var rule = await _context.CategoryRules.FirstOrDefaultAsync(r => r.Id == id);
         if (rule != null)
-            _rules.Remove(rule);
-        return Task.CompletedTask;
+        {
+            _context.CategoryRules.Remove(rule);
+            await _context.SaveChangesAsync();
+        }
     }
 } 

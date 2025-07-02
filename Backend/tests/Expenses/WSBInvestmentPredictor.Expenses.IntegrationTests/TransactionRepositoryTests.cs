@@ -1,16 +1,33 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using WSBInvestmentPredictor.Expenses.Infrastructure.Data;
 using WSBInvestmentPredictor.Expenses.Infrastructure.Repositories;
 using WSBInvestmentPredictor.Expenses.Shared.Models;
 using Xunit;
 
 namespace WSBInvestmentPredictor.Expenses.IntegrationTests;
 
-public class TransactionRepositoryTests
+public class TransactionRepositoryTests : IDisposable
 {
-    private readonly TransactionRepository _repository = new();
+    private readonly ExpensesDbContext _context;
+    private readonly TransactionRepository _repository;
 
     public TransactionRepositoryTests()
     {
-        _repository.Clear();
+        var services = new ServiceCollection();
+        services.AddDbContext<ExpensesDbContext>(options =>
+            options.UseInMemoryDatabase("TestDb_" + Guid.NewGuid()));
+        
+        var serviceProvider = services.BuildServiceProvider();
+        _context = serviceProvider.GetRequiredService<ExpensesDbContext>();
+        _context.Database.EnsureCreated();
+        
+        _repository = new TransactionRepository(_context);
+    }
+
+    public void Dispose()
+    {
+        _context?.Dispose();
     }
 
     [Fact]

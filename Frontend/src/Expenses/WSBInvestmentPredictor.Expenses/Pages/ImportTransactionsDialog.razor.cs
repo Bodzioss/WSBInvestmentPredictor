@@ -4,32 +4,34 @@ using Radzen;
 using WSBInvestmentPredictor.Expenses.Services;
 using WSBInvestmentPredictor.Expenses.Shared.Models;
 using WSBInvestmentPredictor.Technology.Cqrs;
+using WSBInvestmentPredictor.Frontend.Shared;
+using Microsoft.Extensions.Localization;
 
 namespace WSBInvestmentPredictor.Expenses.Pages;
 
 /// <summary>
-/// Component for importing bank transactions from CSV files.
+/// Dialog component for importing bank transactions from CSV files.
 /// Provides functionality to upload, process, and save transaction data.
 /// </summary>
-public partial class ImportTransactions
+public partial class ImportTransactionsDialog
 {
     /// <summary>
     /// Service for processing bank transaction data from CSV files.
     /// </summary>
     [Inject]
-    public IBankTransactionService BankTransactionService { get; set; }
+    public IBankTransactionService BankTransactionService { get; set; } = default!;
 
     /// <summary>
     /// Service for storing and managing transaction data.
     /// </summary>
     [Inject]
-    public ITransactionStore TransactionStore { get; set; }
+    public ITransactionStore TransactionStore { get; set; } = default!;
 
     /// <summary>
-    /// Service for managing navigation between pages.
+    /// Service for displaying dialogs.
     /// </summary>
     [Inject]
-    public NavigationManager NavigationManager { get; set; }
+    public Radzen.DialogService DialogService { get; set; } = default!;
 
     /// <summary>
     /// Service for handling CQRS requests.
@@ -42,6 +44,12 @@ public partial class ImportTransactions
     /// </summary>
     [Inject]
     public Radzen.NotificationService NotificationService { get; set; } = default!;
+
+    /// <summary>
+    /// Service for accessing localized strings.
+    /// </summary>
+    [Inject]
+    public IStringLocalizer<SharedResource> Loc { get; set; } = default!;
 
     /// <summary>
     /// Collection of processed transactions from the uploaded file.
@@ -107,7 +115,7 @@ public partial class ImportTransactions
 
     /// <summary>
     /// Saves the processed transactions to the database.
-    /// Navigates to the transactions view on success.
+    /// Closes the dialog on success.
     /// </summary>
     private async Task SaveTransactions()
     {
@@ -122,7 +130,9 @@ public partial class ImportTransactions
             isSaving = true;
             await TransactionStore.AddTransactions(transactions);
             NotificationService.Notify(NotificationSeverity.Success, "Success", $"Successfully saved {transactions.Count} transactions");
-            NavigationManager.NavigateTo("/transactions");
+            
+            // Close the dialog and return true to indicate success
+            DialogService.Close(true);
         }
         catch (Exception ex)
         {
@@ -136,10 +146,10 @@ public partial class ImportTransactions
     }
 
     /// <summary>
-    /// Navigates to the transactions view page.
+    /// Closes the dialog without saving.
     /// </summary>
-    private void ViewTransactions()
+    private void CloseDialog()
     {
-        NavigationManager.NavigateTo("/transactions");
+        DialogService.Close(false);
     }
-}
+} 

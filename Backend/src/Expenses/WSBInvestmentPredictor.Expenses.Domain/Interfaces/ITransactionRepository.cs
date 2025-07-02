@@ -17,4 +17,6 @@ public interface ITransactionRepository
     Task<IEnumerable<int>> GetAllYears();
 
     Task AddTransactions(IEnumerable<BankTransaction> transactions);
+
+    Task Clear();
 }

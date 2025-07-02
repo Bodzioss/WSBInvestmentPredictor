@@ -1,0 +1,71 @@
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+@inject IStringLocalizer<SharedResource> Loc
+@inject Radzen.DialogService DialogService
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        <i class="bi bi-question-circle me-2"></i>@Loc["TransactionsHelpTitle"]
+    </h5>
+</div>
+
+<div class="modal-body">
+    <div class="help-content">
+        <p>@Loc["TransactionsHelpDescription"]</p>
+        
+        <h3>@Loc["TransactionsHelpMainFeatures"]</h3>
+        <ul>
+            <li>@Loc["TransactionsHelpMainFeature1"]</li>
+            <li>@Loc["TransactionsHelpMainFeature2"]</li>
+            <li>@Loc["TransactionsHelpMainFeature3"]</li>
+            <li>@Loc["TransactionsHelpMainFeature4"]</li>
+            <li>@Loc["TransactionsHelpMainFeature5"]</li>
+            <li>@Loc["TransactionsHelpMainFeature6"]</li>
+        </ul>
+        
+        <h3>@Loc["TransactionsHelpHowTo"]</h3>
+        <ol>
+            <li>@Loc["TransactionsHelpHowTo1"]</li>
+            <li>@Loc["TransactionsHelpHowTo2"]</li>
+            <li>@Loc["TransactionsHelpHowTo3"]</li>
+            <li>@Loc["TransactionsHelpHowTo4"]</li>
+        </ol>
+        
+        <h3>@Loc["TransactionsHelpTips"]</h3>
+        <ul>
+            <li>@Loc["TransactionsHelpTip1"]</li>
+            <li>@Loc["TransactionsHelpTip2"]</li>
+            <li>@Loc["TransactionsHelpTip3"]</li>
+        </ul>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" @onclick="CloseDialog">@Loc["TransactionsHelpGotIt"]</button>
+</div>
+
+<style>
+.help-content {
+    line-height: 1.6;
+}
+.help-content h3 {
+    color: var(--bs-primary);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.help-content ul {
+    margin-bottom: 1rem;
+}
+.help-content li {
+    margin-bottom: 0.25rem;
+}
+</style>
+
+@code {
+    private void CloseDialog()
+    {
+        DialogService.Close();
+    }
+} 

@@ -1,45 +1,47 @@
+using Microsoft.EntityFrameworkCore;
 using WSBInvestmentPredictor.Expenses.Domain.Categorization;
 using WSBInvestmentPredictor.Expenses.Domain.Interfaces;
+using WSBInvestmentPredictor.Expenses.Infrastructure.Data;
 
 namespace WSBInvestmentPredictor.Expenses.Infrastructure.Categorization;
 
 public class CategoryRepository : ICategoryRepository
 {
-    private static readonly List<Category> _categories = new();
-    private static int _nextId = 1;
+    private readonly ExpensesDbContext _context;
 
-    public Task<List<Category>> GetAllAsync()
-        => Task.FromResult(_categories.ToList());
-
-    public Task<Category?> GetByIdAsync(int id)
-        => Task.FromResult(_categories.FirstOrDefault(c => c.Id == id));
-
-    public Task<Category?> GetByNameAsync(string name)
-        => Task.FromResult(_categories.FirstOrDefault(c => c.Name == name));
-
-    public Task AddAsync(Category category)
+    public CategoryRepository(ExpensesDbContext context)
     {
-        category.Id = _nextId++;
-        _categories.Add(category);
-        return Task.CompletedTask;
+        _context = context;
     }
 
-    public Task UpdateAsync(Category category)
+    public async Task<List<Category>> GetAllAsync()
+        => await _context.Categories.ToListAsync();
+
+    public async Task<Category?> GetByIdAsync(int id)
+        => await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+
+    public async Task<Category?> GetByNameAsync(string name)
+        => await _context.Categories.FirstOrDefaultAsync(c => c.Name == name);
+
+    public async Task AddAsync(Category category)
     {
-        var existing = _categories.FirstOrDefault(c => c.Id == category.Id);
-        if (existing != null)
-        {
-            existing.Name = category.Name;
-            existing.Description = category.Description;
-        }
-        return Task.CompletedTask;
+        await _context.Categories.AddAsync(category);
+        await _context.SaveChangesAsync();
     }
 
-    public Task DeleteAsync(int id)
+    public async Task UpdateAsync(Category category)
     {
-        var category = _categories.FirstOrDefault(c => c.Id == id);
+        _context.Categories.Update(category);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
         if (category != null)
-            _categories.Remove(category);
-        return Task.CompletedTask;
+        {
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+        }
     }
 } 

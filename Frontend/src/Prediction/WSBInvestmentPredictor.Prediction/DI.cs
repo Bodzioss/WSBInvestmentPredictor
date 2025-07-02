@@ -29,8 +29,8 @@ public static class DI
         {
             Items =
             [
-                new ("NavigationQuickPrediction", "/quick-predict", "bi bi-lightning-charge"),
-                new("NavigationAdvancedPrediction", "/predict", "bi bi-sliders"),
+                /*new ("NavigationQuickPrediction", "/quick-predict", "bi bi-lightning-charge"),
+                new("NavigationAdvancedPrediction", "/predict", "bi bi-sliders"),*/
                 new ("NavigationBacktest", "/backtest", "bi bi-arrow-repeat")
             ]
         });
