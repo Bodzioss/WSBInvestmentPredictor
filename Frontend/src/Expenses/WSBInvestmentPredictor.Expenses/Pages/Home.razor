@@ -1,0 +1,148 @@
+@page "/test"
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+@inject IStringLocalizer<SharedResource> Loc
+
+<PageTitle>WSB Investment Predictor - Home</PageTitle>
+
+<div class="container-fluid">
+    <!-- Top section with two equal columns -->
+    <div class="row mb-4">
+        <!-- Prediction Model Section -->
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-graph-up me-2"></i>@Loc["PredictionModel"]
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p class="lead">@Loc["PredictionModelDescription"]</p>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>@Loc["PredictionFeature1"]</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>@Loc["PredictionFeature2"]</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>@Loc["PredictionFeature3"]</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>@Loc["PredictionFeature4"]</li>
+                    </ul>
+                    <div class="mt-3">
+                        <a href="/backtest" class="btn btn-primary">
+                            <i class="bi bi-arrow-right me-1"></i>@Loc["ExplorePrediction"]
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expenses Management Section -->
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-wallet2 me-2"></i>@Loc["ExpensesManagement"]
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p class="lead">@Loc["ExpensesDescription"]</p>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>@Loc["ExpensesFeature1"]</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>@Loc["ExpensesFeature2"]</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>@Loc["ExpensesFeature3"]</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>@Loc["ExpensesFeature4"]</li>
+                    </ul>
+                    <div class="mt-3">
+                        <a href="/expenses/transactions" class="btn btn-success">
+                            <i class="bi bi-arrow-right me-1"></i>@Loc["ManageExpenses"]
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom section with technology icons -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="card-title mb-0">
+                        <i class="bi bi-gear me-2"></i>@Loc["TechnologiesUsed"]
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-2 col-4 mb-3">
+                            <div class="tech-icon">
+                                <i class="bi bi-filetype-cshtml" style="font-size: 3rem; color: #512BD4;"></i>
+                                <p class="mt-2 mb-0 fw-bold">.NET</p>
+                                <small class="text-muted">Framework</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-4 mb-3">
+                            <div class="tech-icon">
+                                <i class="bi bi-lightning" style="font-size: 3rem; color: #007ACC;"></i>
+                                <p class="mt-2 mb-0 fw-bold">Blazor</p>
+                                <small class="text-muted">Web Framework</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-4 mb-3">
+                            <div class="tech-icon">
+                                <i class="bi bi-box" style="font-size: 3rem; color: #2496ED;"></i>
+                                <p class="mt-2 mb-0 fw-bold">Docker</p>
+                                <small class="text-muted">Containerization</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-4 mb-3">
+                            <div class="tech-icon">
+                                <i class="bi bi-cloud" style="font-size: 3rem; color: #0078D4;"></i>
+                                <p class="mt-2 mb-0 fw-bold">Azure</p>
+                                <small class="text-muted">Cloud Platform</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-4 mb-3">
+                            <div class="tech-icon">
+                                <i class="bi bi-database" style="font-size: 3rem; color: #CC2927;"></i>
+                                <p class="mt-2 mb-0 fw-bold">SQLite</p>
+                                <small class="text-muted">Database</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-4 mb-3">
+                            <div class="tech-icon">
+                                <i class="bi bi-bootstrap" style="font-size: 3rem; color: #7952B3;"></i>
+                                <p class="mt-2 mb-0 fw-bold">Bootstrap</p>
+                                <small class="text-muted">CSS Framework</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.tech-icon {
+    transition: transform 0.2s ease-in-out;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.tech-icon:hover {
+    transform: translateY(-5px);
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    border-bottom: none;
+}
+
+.lead {
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+</style> 

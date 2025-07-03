@@ -1,0 +1,172 @@
+@using WSBInvestmentPredictor.Expenses.Shared.Models
+@using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Queries
+@using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Commands
+@using WSBInvestmentPredictor.Expenses.Shared.Dto
+@using WSBInvestmentPredictor.Technology.Cqrs
+@inject ICqrsRequestService CqrsService
+
+<div class="modal-header">
+    <h5 class="modal-title">Edit Transaction</h5>
+    <button type="button" class="btn-close" @onclick="OnCancel"></button>
+</div>
+
+<div class="modal-body">
+    @if (EditableModel != null)
+    {
+        <EditForm Model="EditableModel" OnValidSubmit="SaveTransaction">
+            <DataAnnotationsValidator />
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <InputDate id="date" class="form-control" @bind-Value="EditableModel.TransactionDate" />
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="amount" class="form-label">Amount</label>
+                    <InputNumber id="amount" class="form-control" @bind-Value="EditableModel.Amount" />
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <InputText id="title" class="form-control" @bind-Value="EditableModel.Title" />
+            </div>
+            
+            <div class="mb-3">
+                <label for="counterparty" class="form-label">Counterparty</label>
+                <InputText id="counterparty" class="form-control" @bind-Value="EditableModel.Counterparty" />
+            </div>
+            
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <InputSelect id="category" class="form-control" @bind-Value="EditableModel.Category">
+                    <option value="">-- Select Category --</option>
+                    @if (categories != null)
+                    {
+                        @foreach (var category in categories)
+                        {
+                            <option value="@category.Name">@category.Name</option>
+                        }
+                    }
+                </InputSelect>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="account" class="form-label">Account</label>
+                    <InputText id="account" class="form-control" @bind-Value="EditableModel.Account" />
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="currency" class="form-label">Currency</label>
+                    <InputText id="currency" class="form-control" @bind-Value="EditableModel.Currency" />
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="OnCancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" disabled="@isSaving">
+                    @if (isSaving)
+                    {
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span class="ms-1">Saving...</span>
+                    }
+                    else
+                    {
+                        <span>Save</span>
+                    }
+                </button>
+            </div>
+        </EditForm>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public BankTransaction? Transaction { get; set; }
+
+    [Parameter]
+    public EventCallback OnSave { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    private List<CategoryDto>? categories;
+    private bool isSaving;
+    private EditableTransaction? EditableModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategories();
+        if (Transaction != null)
+        {
+            EditableModel = new EditableTransaction
+            {
+                Id = Transaction.Id,
+                TransactionDate = Transaction.TransactionDate,
+                Title = Transaction.Title,
+                Amount = Transaction.Amount,
+                Account = Transaction.Account,
+                Counterparty = Transaction.Counterparty,
+                Category = Transaction.Category,
+                Currency = Transaction.Currency
+            };
+        }
+    }
+
+    private async Task LoadCategories()
+    {
+        try
+        {
+            var query = new GetCategories();
+            categories = await CqrsService.Handle<GetCategories, List<CategoryDto>>(query);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading categories: {ex.Message}");
+        }
+    }
+
+    private async Task SaveTransaction()
+    {
+        if (EditableModel == null) return;
+
+        try
+        {
+            isSaving = true;
+            var command = new UpdateTransactionCommand(
+                EditableModel.Id,
+                EditableModel.TransactionDate,
+                EditableModel.Title ?? string.Empty,
+                EditableModel.Counterparty ?? string.Empty,
+                EditableModel.Amount,
+                EditableModel.Category,
+                EditableModel.Account ?? string.Empty,
+                EditableModel.Currency ?? string.Empty
+            );
+            await CqrsService.Handle(command);
+            await OnSave.InvokeAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving transaction: {ex.Message}");
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    public class EditableTransaction
+    {
+        public int Id { get; set; }
+        public DateTime TransactionDate { get; set; }
+        public string? Title { get; set; }
+        public decimal Amount { get; set; }
+        public string? Account { get; set; }
+        public string? Counterparty { get; set; }
+        public string? Category { get; set; }
+        public string? Currency { get; set; }
+    }
+} 

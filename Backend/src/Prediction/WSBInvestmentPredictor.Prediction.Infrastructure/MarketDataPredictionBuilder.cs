@@ -6,19 +6,21 @@ namespace WSBInvestmentPredictor.Prediction.Infrastructure;
 public class MarketDataPredictionBuilder
 {
     /// <summary>
-    /// Przetwarza podstawowe dane OHLCV i zwraca listę gotowych rekordów MarketData z obliczonymi cechami.
+    /// Processes basic OHLCV data and returns a list of ready MarketData records with calculated features.
     /// </summary>
-    /// <param name="rawData">Lista podstawowych danych (z API lub CSV)</param>
-    /// <returns>Lista MarketData gotowa do treningu/predykcji</returns>
+    /// <param name="rawData">List of basic data (from API or CSV)</param>
+    /// <returns>List of MarketData ready for training/prediction</returns>
     public List<MarketDataInput> Build(List<RawMarketData> rawData)
     {
+        if (rawData.Count < 50) return new List<MarketDataInput>();
+
         var results = new List<MarketDataInput>();
 
-        // Minimalny indeks, od którego można obliczyć wszystkie wskaźniki (okno 20 dni i RSI 14 dni)
+        // Minimum index from which all indicators can be calculated (20-day window and 14-day RSI)
         int startIndex = 20;
-
-        // Maksymalny indeks, aby mieć 30 dni na target do przodu
-        int endIndex = rawData.Count - 31; // -31 bo i+30 musi być < Count
+        
+        // Maximum index to have 30 days for target forward
+        int endIndex = rawData.Count - 31; // -31 because i+30 must be < Count
 
         for (int i = startIndex; i <= endIndex; i++)
         {

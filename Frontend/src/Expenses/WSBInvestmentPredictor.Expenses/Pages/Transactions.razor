@@ -1,0 +1,154 @@
+@page "/expenses/transactions"
+@using WSBInvestmentPredictor.Expenses.Shared.Models
+@using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Queries
+@using WSBInvestmentPredictor.Expenses.Shared.Cqrs.Commands
+@using WSBInvestmentPredictor.Expenses.Shared.Dto
+@using WSBInvestmentPredictor.Expenses.Models
+@using WSBInvestmentPredictor.Frontend.Shared.Services
+@using WSBInvestmentPredictor.Technology.Cqrs
+@using Radzen
+@using Radzen.Blazor
+@using WSBInvestmentPredictor.Expenses.Components
+@namespace WSBInvestmentPredictor.Expenses.Pages
+@inject ICqrsRequestService CqrsService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Transactions - WSB Investment Predictor</PageTitle>
+
+<div class="container-fluid">
+    @if (categoryAnalysis != null && categoryAnalysis.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <CategoryAnalysisChart 
+                    Analysis="categoryAnalysis" 
+                    OnCategorySelected="OnCategorySelected" />
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        @if (!string.IsNullOrEmpty(selectedCategory))
+                        {
+                            <span>@Loc["Transactions"] - @selectedCategory</span>
+                        }
+                        else
+                        {
+                            <span>@Loc["AllTransactions"]</span>
+                        }
+                    </h5>
+                    <div class="d-flex align-items-center gap-2">
+                        @if (!string.IsNullOrEmpty(selectedCategory))
+                        {
+                            <button class="btn btn-outline-secondary btn-sm me-2" @onclick="ClearFilter">
+                                <i class="bi bi-x-circle"></i> @Loc["ClearFilter"]
+                            </button>
+                        }
+                        <button class="btn btn-primary btn-sm" @onclick="OpenImportDialog">
+                            <i class="bi bi-upload"></i> @Loc["ImportTransactions"]
+                        </button>
+                        <button class="btn btn-success btn-sm" @onclick="AddSampleData">
+                            <i class="bi bi-plus-circle"></i> @Loc["AddSampleData"]
+                        </button>
+                        <button class="btn btn-danger btn-sm" @onclick="ClearAllTransactions">
+                            <i class="bi bi-trash"></i> @Loc["ClearAllTransactions"]
+                        </button>
+                        <button class="btn btn-outline-info btn-sm" @onclick="ShowHelp" title="@Loc["Help"]">
+                            <i class="bi bi-question-circle"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (transactions != null)
+                    {
+                        <RadzenDataGrid @ref="dataGrid" 
+                                       Data="@filteredTransactions" 
+                                       TItem="BankTransaction"
+                                       AllowFiltering="true"
+                                       AllowSorting="true"
+                                       AllowPaging="true"
+                                       PageSize="20"
+                                       ShowPagingSummary="true"
+                                       PagingSummaryFormat="Page {0} of {1} ({2} records)"
+                                       EmptyText="@Loc["NoTransactionsFound"]">
+                            
+                            <Columns>
+                                <RadzenDataGridColumn TItem="BankTransaction" Property="TransactionDate" Title="@Loc["Date"]" Width="120px">
+                                    <Template Context="transaction">
+                                        @transaction.TransactionDate.ToString("yyyy-MM-dd")
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                
+                                <RadzenDataGridColumn TItem="BankTransaction" Property="Title" Title="@Loc["Title"]" Width="300px">
+                                    <Template Context="transaction">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2">@transaction.Title</span>
+                                            @if (!string.IsNullOrEmpty(transaction.Category))
+                                            {
+                                                <span class="badge bg-primary">@transaction.Category</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">@Loc["Uncategorized"]</span>
+                                            }
+                                        </div>
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                
+                                <RadzenDataGridColumn TItem="BankTransaction" Property="Counterparty" Title="@Loc["Counterparty"]" Width="200px" />
+                                
+                                <RadzenDataGridColumn TItem="BankTransaction" Property="Amount" Title="@Loc["Amount"]" Width="120px" TextAlign="TextAlign.Right">
+                                    <Template Context="transaction">
+                                        <span class="@(transaction.Amount < 0 ? "text-danger" : "text-success")">
+                                            @transaction.Amount.ToString("N2") PLN
+                                        </span>
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                
+                                <RadzenDataGridColumn TItem="BankTransaction" Title="@Loc["Actions"]" Width="100px" TextAlign="TextAlign.Center">
+                                    <Template Context="transaction">
+                                        <button class="btn btn-sm btn-outline-primary" @onclick="() => EditTransaction(transaction)">
+                                            <i class="bi bi-pencil"></i> @Loc["Edit"]
+                                        </button>
+                                    </Template>
+                                </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGrid>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">@Loc["Loading"]</span>
+                            </div>
+                            <p class="mt-2">@Loc["LoadingTransactions"]</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.help-content {
+    line-height: 1.6;
+}
+.help-content h3 {
+    color: var(--bs-primary);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.help-content ul {
+    margin-bottom: 1rem;
+}
+.help-content li {
+    margin-bottom: 0.25rem;
+}
+</style> 

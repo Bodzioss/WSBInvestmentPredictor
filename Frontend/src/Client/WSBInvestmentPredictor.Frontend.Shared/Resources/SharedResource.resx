@@ -231,4 +231,307 @@
   <data name="ErrorExporting" xml:space="preserve">
     <value>Error exporting: {0}</value>
   </data>
+
+  <!-- QuickPrediction translations -->
+  <data name="QuickPredictionTitle" xml:space="preserve">
+    <value>⚡️ Quick Company Prediction</value>
+  </data>
+  <data name="LoadingTickers" xml:space="preserve">
+    <value>Loading ticker list...</value>
+  </data>
+  <data name="SearchCompany" xml:space="preserve">
+    <value>Search company:</value>
+  </data>
+  <data name="SearchCompanyPlaceholder" xml:space="preserve">
+    <value>e.g. Apple, MSFT, Tesla...</value>
+  </data>
+  <data name="SelectCompany" xml:space="preserve">
+    <value>Select company:</value>
+  </data>
+  <data name="NoMatchingCompanies" xml:space="preserve">
+    <value>No matching companies found.</value>
+  </data>
+  <data name="NumberOfDays" xml:space="preserve">
+    <value>Number of days:</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
+  <data name="CalculatePrediction" xml:space="preserve">
+    <value>Calculate prediction</value>
+  </data>
+  <data name="LoadingDataAndGeneratingPrediction" xml:space="preserve">
+    <value>Loading data and generating prediction...</value>
+  </data>
+  <data name="NoHistoricalDataAvailable" xml:space="preserve">
+    <value>No historical data available for the selected symbol.</value>
+  </data>
+  <data name="Prediction30DayReturn" xml:space="preserve">
+    <value>30-day return prediction:</value>
+  </data>
+
+  <!-- PredictionForm translations -->
+  <data name="PredictionTitle" xml:space="preserve">
+    <value>📈 Prediction</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="High" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="Low" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Predict" xml:space="preserve">
+    <value>Predict</value>
+  </data>
+  <data name="PredictionResult" xml:space="preserve">
+    <value>Prediction (30d return):</value>
+  </data>
+
+  <!-- Navigation translations -->
+  <data name="NavigationPredictions" xml:space="preserve">
+    <value>Predictions</value>
+  </data>
+  <data name="NavigationQuickPrediction" xml:space="preserve">
+    <value>Quick Prediction</value>
+  </data>
+  <data name="NavigationAdvancedPrediction" xml:space="preserve">
+    <value>Advanced Prediction</value>
+  </data>
+  <data name="NavigationBacktest" xml:space="preserve">
+    <value>Backtest</value>
+  </data>
+  <data name="NavigationPersonalFinance" xml:space="preserve">
+    <value>Personal Finance</value>
+  </data>
+  <data name="NavigationExpenses" xml:space="preserve">
+    <value>Expenses</value>
+  </data>
+  <data name="NavigationBudget" xml:space="preserve">
+    <value>Budget</value>
+  </data>
+  <data name="NavigationCategories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="NavigationReports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="NavigationImportTransactions" xml:space="preserve">
+    <value>Import Transactions</value>
+  </data>
+  <data name="NavigationTransactions" xml:space="preserve">
+    <value>Transactions</value>
+  </data>
+
+  <!-- Expenses translations -->
+  <data name="ExpensesManagement" xml:space="preserve">
+    <value>Expenses Management</value>
+  </data>
+  <data name="ImportBankTransactions" xml:space="preserve">
+    <value>Import Bank Transactions</value>
+  </data>
+  <data name="UploadBankStatementDescription" xml:space="preserve">
+    <value>Upload your bank statement CSV file to import transactions.</value>
+  </data>
+  <data name="ImportedTransactions" xml:space="preserve">
+    <value>Imported Transactions</value>
+  </data>
+  <data name="LoadingFile" xml:space="preserve">
+    <value>Loading file...</value>
+  </data>
+  <data name="SuccessfullyImported" xml:space="preserve">
+    <value>Successfully imported</value>
+  </data>
+  <data name="Transactions" xml:space="preserve">
+    <value>transactions</value>
+  </data>
+  <data name="AllYears" xml:space="preserve">
+    <value>All Years</value>
+  </data>
+  <data name="AllMonths" xml:space="preserve">
+    <value>All Months</value>
+  </data>
+  <data name="AllAccounts" xml:space="preserve">
+    <value>All Accounts</value>
+  </data>
+  <data name="AllCounterparties" xml:space="preserve">
+    <value>All Counterparties</value>
+  </data>
+  <data name="TotalFor" xml:space="preserve">
+    <value>Total for</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="NoTransactionsFound" xml:space="preserve">
+    <value>No transactions found.</value>
+  </data>
+  <data name="PleaseImportSomeTransactionsFirst" xml:space="preserve">
+    <value>Please import some transactions first.</value>
+  </data>
+  <data name="TransactionDate" xml:space="preserve">
+    <value>Transaction Date</value>
+  </data>
+  <data name="BookingDate" xml:space="preserve">
+    <value>Booking Date</value>
+  </data>
+  <data name="Counterparty" xml:space="preserve">
+    <value>Counterparty</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="Balance" xml:space="preserve">
+    <value>Balance</value>
+  </data>
+
+  <!-- Home page translations -->
+  <data name="ViewAndManageTransactions" xml:space="preserve">
+    <value>View and manage your imported bank transactions.</value>
+  </data>
+  <data name="ViewTransactions" xml:space="preserve">
+    <value>View Transactions</value>
+  </data>
+
+  <!-- New translations -->
+  <data name="SaveTransactions" xml:space="preserve">
+    <value>Save Transactions</value>
+  </data>
+  <data name="ViewAllTransactions" xml:space="preserve">
+    <value>View All Transactions</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Saving...</value>
+  </data>
+
+  <!-- Categories translations -->
+  <data name="CategoriesConfiguration" xml:space="preserve">
+    <value>Categories Configuration</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Save Changes</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AddCategory" xml:space="preserve">
+    <value>Add Category</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>Error loading data</value>
+  </data>
+  <data name="ApplyRules" xml:space="preserve">
+    <value>Apply Rules</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="RulesAppliedSuccessfully" xml:space="preserve">
+    <value>Rules applied successfully</value>
+  </data>
+  <data name="ErrorApplyingRules" xml:space="preserve">
+    <value>Error applying rules</value>
+  </data>
+  <data name="CategorizeTransactions" xml:space="preserve">
+    <value>Categorize Transactions</value>
+  </data>
+  <data name="NoUncategorizedTransactions" xml:space="preserve">
+    <value>No uncategorized transactions found</value>
+  </data>
+  <data name="SelectCategory" xml:space="preserve">
+    <value>Select Category</value>
+  </data>
+  <data name="AddRule" xml:space="preserve">
+    <value>Add Rule</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ErrorSavingRule" xml:space="preserve">
+    <value>Error saving rule</value>
+  </data>
+  <data name="ErrorDeletingRule" xml:space="preserve">
+    <value>Error deleting rule</value>
+  </data>
+  <data name="EditRule" xml:space="preserve">
+    <value>Edit Rule</value>
+  </data>
+  <data name="FieldIsRequired" xml:space="preserve">
+    <value>This field is required</value>
+  </data>
+  <data name="CategoryNameTooLong" xml:space="preserve">
+    <value>Category name cannot be longer than 100 characters</value>
+  </data>
+  <data name="CategoryDescriptionTooLong" xml:space="preserve">
+    <value>Description cannot be longer than 500 characters</value>
+  </data>
+  <data name="KeywordTooLong" xml:space="preserve">
+    <value>Keyword cannot be longer than 200 characters</value>
+  </data>
+  <data name="CategoryIsRequired" xml:space="preserve">
+    <value>Category is required</value>
+  </data>
+  <data name="YouMustSelectCategory" xml:space="preserve">
+    <value>You must select a category</value>
+  </data>
+
+  <!-- Category Analysis translations -->
+  <data name="CategoryAnalysis" xml:space="preserve">
+    <value>Category Analysis</value>
+  </data>
+  <data name="NoDataForAnalysis" xml:space="preserve">
+    <value>No data available for analysis</value>
+  </data>
+  <data name="Transactions" xml:space="preserve">
+    <value>transactions</value>
+  </data>
+
+  <!-- New translations -->
+  <data name="FieldType" xml:space="preserve">
+    <value>Field Type</value>
+  </data>
+  <data name="FieldTypeTitle" xml:space="preserve">
+    <value>Transaction Title</value>
+  </data>
+  <data name="FieldTypeCounterparty" xml:space="preserve">
+    <value>Transaction Counterparty</value>
+  </data>
+  <data name="SelectFieldType" xml:space="preserve">
+    <value>Select field type</value>
+  </data>
 </root> 

@@ -17,7 +17,7 @@ public class PredictionEngine : IPredictionEngine
 
     public Task<PredictionResult> PredictAsync(List<RawMarketData> history)
     {
-        // Budujemy cechy z raw danych
+        // Build features from raw data
         var featureData = _featureBuilder.Build(history);
 
         if (featureData.Count == 0)
@@ -29,19 +29,19 @@ public class PredictionEngine : IPredictionEngine
             });
         }
 
-        // Trenujemy model na dostępnych danych (lub w praktyce z zewnętrznego źródła)
+        // Train model on available data (or in practice from external source)
         _predictorService.Train(featureData);
 
-        // Bierzemy ostatni element jako bazę predykcji
+        // Take the last element as prediction base
         var latestSample = featureData.Last();
 
-        // Predykcja zwraca "Score" - czyli prognozowaną zmianę
+        // Prediction returns "Score" - i.e., predicted change
         var predictionScore = _predictorService.Predict(latestSample);
 
         return Task.FromResult(new PredictionResult
         {
             Score = predictionScore,
-            ChangePercentage = predictionScore // możesz mapować inaczej jeśli chcesz
+            ChangePercentage = predictionScore // you can map differently if needed
         });
     }
 }

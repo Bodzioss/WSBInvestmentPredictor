@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WSBInvestmentPredictor.Expenses.Application\WSBInvestmentPredictor.Expenses.Application.csproj" />
+    <ProjectReference Include="..\WSBInvestmentPredictor.Expenses.Domain\WSBInvestmentPredictor.Expenses.Domain.csproj" />
+    <ProjectReference Include="..\WSBInvestmentPredictor.Expenses.Infrastructure\WSBInvestmentPredictor.Expenses.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

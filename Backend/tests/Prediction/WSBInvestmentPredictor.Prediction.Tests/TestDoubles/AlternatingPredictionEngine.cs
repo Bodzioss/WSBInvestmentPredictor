@@ -6,7 +6,7 @@ namespace WSBInvestmentPredictor.Prediction.UnitTests.TestDoubles;
 
 /// <summary>
 /// Test double: naprzemiennie zwraca dodatnie i ujemne predykcje.
-/// Umożliwia testowanie częściowo trafnych predykcji.
+/// Enables testing of partially accurate predictions.
 /// </summary>
 public class AlternatingPredictionEngine : IPredictionEngine
 {

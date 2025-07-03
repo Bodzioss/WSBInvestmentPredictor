@@ -1,0 +1,211 @@
+@page "/expenses/configuration/categories"
+@using Microsoft.Extensions.Localization
+@using WSBInvestmentPredictor.Frontend.Shared
+@using WSBInvestmentPredictor.Expenses.Shared.Dto
+
+<PageTitle>@Loc["CategoriesConfiguration"]</PageTitle>
+
+<h1>@Loc["CategoriesConfiguration"]</h1>
+
+@if (!string.IsNullOrEmpty(keywordFromQuery))
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        @Loc["CreateRuleForKeyword"]: <strong>@keywordFromQuery</strong>
+    </div>
+}
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">@Loc["Loading"]</span>
+        </div>
+    </div>
+}
+else if (error != null)
+{
+    <div class="alert alert-danger">
+        @error
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>@Loc["Categories"]</h4>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-info btn-sm" @onclick="ShowHelpDialog" title="@Loc["Help"]">
+                <i class="bi bi-question-circle"></i>
+            </button>
+            <button class="btn btn-primary" @onclick="ShowAddDialog">
+                <i class="bi bi-plus-circle me-1"></i>@Loc["AddCategory"]
+            </button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>@Loc["Category"]</th>
+                    <th>@Loc["Description"]</th>
+                    <th style="width: 200px;">@Loc["Actions"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in categories)
+                {
+                    <tr>
+                        <td>
+                            @if (editCategory?.Id == category.Id)
+                            {
+                                <InputText class="form-control form-control-sm" @bind-Value="editValue" />
+                            }
+                            else
+                            {
+                                @category.Name
+                            }
+                        </td>
+                        <td>
+                            @if (editCategory?.Id == category.Id)
+                            {
+                                <InputText class="form-control form-control-sm" @bind-Value="editDescription" />
+                            }
+                            else
+                            {
+                                @category.Description
+                            }
+                        </td>
+                        <td>
+                            @if (editCategory?.Id == category.Id)
+                            {
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-success" @onclick="SaveEdit" title="@Loc["SaveChanges"]">
+                                        <i class="bi bi-check-lg"></i>
+                                    </button>
+                                    <button class="btn btn-secondary" @onclick="CancelEdit" title="@Loc["Cancel"]">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary" @onclick="() => StartEdit(category)" title="@Loc["Edit"]">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-outline-info" @onclick="() => GoToRules(category.Id)" title="@Loc["Rules"]">
+                                        <i class="bi bi-gear"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger" @onclick="() => DeleteCategory(category.Id)" title="@Loc["Delete"]">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<!-- Add Category Dialog -->
+@if (showAddDialog)
+{
+    <div class="modal fade show" style="display: block;" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Loc["AddCategory"]</h5>
+                    <button type="button" class="btn-close" @onclick="HideAddDialog"></button>
+                </div>
+                <EditForm Model="addCategoryModel" OnValidSubmit="AddCategory">
+                    <DataAnnotationsValidator />
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">@Loc["Category"] *</label>
+                            <InputText class="form-control" @bind-Value="addCategoryModel.Name" />
+                            <ValidationMessage For="@(() => addCategoryModel.Name)" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">@Loc["Description"]</label>
+                            <InputText class="form-control" @bind-Value="addCategoryModel.Description" />
+                            <ValidationMessage For="@(() => addCategoryModel.Description)" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="HideAddDialog">@Loc["Cancel"]</button>
+                        <button type="submit" class="btn btn-primary">@Loc["Add"]</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+<!-- Help Dialog -->
+@if (showHelpDialog)
+{
+    <div class="modal fade show" style="display: block;" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-question-circle me-2"></i>@Loc["CategoriesHelpTitle"]
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="HideHelpDialog"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h6>@Loc["WhatAreCategories"]</h6>
+                            <p>@Loc["CategoriesExplanation"]</p>
+                            
+                            <h6>@Loc["HowToUseCategories"]</h6>
+                            <ul>
+                                <li><strong>@Loc["AddCategory"]:</strong> @Loc["AddCategoryHelp"]</li>
+                                <li><strong>@Loc["Edit"]:</strong> @Loc["EditCategoryHelp"]</li>
+                                <li><strong>@Loc["Rules"]:</strong> @Loc["RulesHelp"]</li>
+                                <li><strong>@Loc["Delete"]:</strong> @Loc["DeleteCategoryHelp"]</li>
+                            </ul>
+                            
+                            <h6>@Loc["Tips"]</h6>
+                            <ul>
+                                <li>@Loc["CategoryTips1"]</li>
+                                <li>@Loc["CategoryTips2"]</li>
+                                <li>@Loc["CategoryTips3"]</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="HideHelpDialog">@Loc["GotIt"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+<style>
+.modal {
+    z-index: 1050;
+}
+.modal-backdrop {
+    z-index: 1040;
+}
+.btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+.table th {
+    border-top: none;
+    font-weight: 600;
+}
+</style>
+
+@code {
+    private AddCategoryModel addCategoryModel = new();
+}

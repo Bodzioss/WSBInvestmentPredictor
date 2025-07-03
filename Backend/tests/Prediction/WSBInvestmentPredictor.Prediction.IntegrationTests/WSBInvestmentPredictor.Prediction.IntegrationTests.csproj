@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Shared\src\WSBInvestmentPredictor.Prediction.Shared\WSBInvestmentPredictor.Prediction.Shared.csproj" />
-    <ProjectReference Include="..\..\..\src\Prediction\WSBInvestmentPredictor.Prediction.API\WSBInvestmentPredictor.Prediction.API.csproj" />
+    <ProjectReference Include="..\..\..\src\WSBInvestmentPredictor.Backend.API\WSBInvestmentPredictor.Backend.API.csproj" />
   </ItemGroup>
 
 </Project>

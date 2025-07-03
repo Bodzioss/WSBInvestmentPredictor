@@ -18,7 +18,7 @@ public class BacktestQueryHandlerTests
             .Build();
 
         var fakePolygonClient = new FakePolygonClient(marketData);
-        var fakePredictionEngine = new FakePredictionEngine(0.05f); // stała predykcja +5%
+        var fakePredictionEngine = new FakePredictionEngine(0.05f); // constant prediction +5%
 
         var handler = new BacktestQueryHandler(fakePolygonClient, fakePredictionEngine);
         var query = new RunBacktestQuery("TEST", 2024);
@@ -55,10 +55,11 @@ public class BacktestQueryHandlerTests
     [Fact]
     public async Task Handle_SkipsPoints_WhenNotEnoughHistoricalData()
     {
-        // Arrange – tylko 10 dni historii, czyli za mało (wymaga min. 30)
+        // Arrange - only 10 days of data = too little for prediction
         var marketData = new RawMarketDataBuilder()
-            .WithDateRange(new DateTime(2024, 1, 1), 10)
+            .WithDateRange(new DateTime(2024, 1, 1), 10) 
             .Build();
+
 
         var fakePolygonClient = new FakePolygonClient(marketData);
         var fakePredictionEngine = new FakePredictionEngine(0.1f);
@@ -76,9 +77,10 @@ public class BacktestQueryHandlerTests
     [Fact]
     public async Task Handle_SkipsPoints_WhenNoFutureCandleAvailable()
     {
+        // Arrange – no candles for 30 days ahead
         // Arrange – brak świec za 30 dni
         var marketData = new RawMarketDataBuilder()
-            .WithDateRange(new DateTime(2024, 1, 1), 60) // tylko historia
+            .WithDateRange(new DateTime(2024, 1, 1), 60) 
             .Build();
 
         var fakePolygonClient = new FakePolygonClient(marketData);
@@ -114,14 +116,14 @@ public class BacktestQueryHandlerTests
 
         // Assert
         Assert.True(result.Points.Count > 0);
-        Assert.Equal(1f, result.Accuracy); // wszystkie trafione znaki
+        Assert.Equal(1f, result.Accuracy); // all signs correct
         Assert.True(result.MeanSquaredError < 0.0001f);
     }
 
     [Fact]
     public async Task Handle_ReturnsZeroAccuracyAndMSE_WhenNoPointsGenerated()
     {
-        // Arrange – tylko 10 dni danych = za mało do predykcji
+        // Arrange - only 10 days of data = too little for prediction
         var marketData = new RawMarketDataBuilder()
             .WithDateRange(new DateTime(2023, 1, 1), 10)
             .Build();
@@ -144,14 +146,14 @@ public class BacktestQueryHandlerTests
     [Fact]
     public async Task Handle_ReturnsZeroAccuracy_WhenPredictionsAlwaysWrongDirection()
     {
-        // Arrange – ceny rosną (faktyczna zmiana dodatnia)
+        // Arrange - prices are rising (positive actual change)
         var marketData = new RawMarketDataBuilder()
             .WithDateRange(new DateTime(2023, 1, 1), 400, i => 100 + i) // wzrosty
             .Build();
 
-        // Predykcja mówi: spadki (ujemny znak)
+
         var fakePolygonClient = new FakePolygonClient(marketData);
-        var fakePredictionEngine = new FakePredictionEngine(-0.1f);
+        var fakePredictionEngine = new FakePredictionEngine(-0.01f); // prediction says: falling (negative sign)
 
         var handler = new BacktestQueryHandler(fakePolygonClient, fakePredictionEngine);
         var query = new RunBacktestQuery("TEST", 2023);

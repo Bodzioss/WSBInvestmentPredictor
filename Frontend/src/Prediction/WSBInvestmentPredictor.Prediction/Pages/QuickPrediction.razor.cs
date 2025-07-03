@@ -11,28 +11,52 @@ using WSBInvestmentPredictor.Technology.Cqrs;
 
 namespace WSBInvestmentPredictor.Prediction.Pages;
 
+/// <summary>
+/// Component for making quick predictions based on historical market data.
+/// Allows users to select a company and time period to get predictions.
+/// </summary>
 public partial class QuickPrediction : ComponentBase
 {
     [Inject] protected HttpClient Http { get; set; } = default!;
 
+    // List of available company tickers
     protected List<CompanyTicker> availableTickers = [];
+
+    // Selected company symbol
     protected string symbol = string.Empty;
+
+    // Available time period options for historical data
     protected List<int> dayOptions = [30, 60, 100, 150];
+
+    // Selected number of days for historical data
     protected int selectedDays = 100;
+
+    // Search term for filtering companies
     protected string searchTerm = string.Empty;
 
+    /// <summary>
+    /// Filters the available tickers based on the search term.
+    /// </summary>
     protected IEnumerable<CompanyTicker> FilteredTickers =>
         availableTickers
             .Where(t => string.IsNullOrEmpty(searchTerm) ||
                         t.Ticker.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
                         t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
 
+    // Loading state indicator
     protected bool isLoading = false;
+
+    // Error message if prediction fails
     protected string error;
+
+    // Prediction result
     protected float? prediction;
 
     [Inject] protected ICqrsRequestService Cqrs { get; set; } = default!;
 
+    /// <summary>
+    /// Initializes the component by loading available tickers.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         try
@@ -44,7 +68,7 @@ public partial class QuickPrediction : ComponentBase
         }
         catch (Exception ex)
         {
-            error = $"Nie udało się pobrać listy tickerów: {ex.Message}";
+            error = $"Failed to load ticker list: {ex.Message}";
             availableTickers = [
                 new( "AAPL", "Apple Inc.")
             ];
@@ -52,6 +76,9 @@ public partial class QuickPrediction : ComponentBase
         }
     }
 
+    /// <summary>
+    /// Makes a prediction based on historical data for the selected company and time period.
+    /// </summary>
     protected async Task PredictAsync()
     {
         isLoading = true;
@@ -69,7 +96,7 @@ public partial class QuickPrediction : ComponentBase
 
             if (rawData == null || rawData.Count < 1)
             {
-                error = "Brak danych historycznych dla wybranego symbolu.";
+                error = "No historical data available for the selected symbol.";
                 return;
             }
 
@@ -81,7 +108,7 @@ public partial class QuickPrediction : ComponentBase
         }
         catch (Exception ex)
         {
-            error = $"Błąd: {ex.Message}";
+            error = $"Error: {ex.Message}";
         }
 
         isLoading = false;

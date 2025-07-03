@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WSBInvestmentPredictor.Prediction.Domain\WSBInvestmentPredictor.Prediction.Domain.csproj" />
+    <ProjectReference Include="..\WSBInvestmentPredictor.Prediction.Application\WSBInvestmentPredictor.Prediction.Application.csproj" />
+  </ItemGroup>
+
 </Project>

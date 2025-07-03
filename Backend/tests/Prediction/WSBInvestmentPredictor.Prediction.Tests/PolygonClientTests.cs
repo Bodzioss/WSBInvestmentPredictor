@@ -57,7 +57,7 @@ public class PolygonClientTests
         // Assert
         Assert.NotNull(result);
         Assert.NotEmpty(result);
-        Assert.Equal("2023-01-01", result[0].Date); // Twój klient mapuje t na Date yyyy-MM-dd
+        Assert.Equal("2023-01-01", result[0].Date); // Your client maps t to Date yyyy-MM-dd
         Assert.Equal(100f, result[0].Open);
     }
 

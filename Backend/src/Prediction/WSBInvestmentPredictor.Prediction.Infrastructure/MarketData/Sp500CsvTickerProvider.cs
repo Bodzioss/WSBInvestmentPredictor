@@ -22,8 +22,8 @@ public class Sp500CsvTickerProvider : ISp500TickerProvider
             throw new FileNotFoundException("Nie znaleziono pliku sp500.csv w katalogu Resources.", _csvPath);
 
         var lines = File.ReadAllLines(_csvPath, Encoding.UTF8)
-                        .Skip(1) // pomiń nagłówek
-                        .Where(l => !string.IsNullOrWhiteSpace(l));
+                        .Skip(1) // skip header
+                        .Where(line => !string.IsNullOrWhiteSpace(line));
 
         var result = new List<CompanyTicker>();
 
